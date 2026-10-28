@@ -19,7 +19,7 @@ SHOWLOG = [
     ('2024', 'Power Weekend Gulpen', 'Licht programming, operating', 'Hoedemakers.PRO', None),
     ('2024', 'Essential Festival · Harddance stage', 'Licht design, programming, operating', 'Heijnens Audio - Light - Vision', None),
     ('2024–2026', 'The Notorious IBE · Cypher 1', 'Licht programming, operating', 'Demo Productions', None),
-    ('2025', 'ZLF 2025 · Zuid-Limburgs Federatiefestival, Ubachsberg', 'Licht- en stagedesign, programming, operating en video', 'GTF Franzen Sound Light Vision', None),
+    ('2025', 'ZLF 2025 · Zuid-Limburgs Federatiefestival, Ubachsberg', 'Licht- en stagedesign, programming, operating en video', 'GTF Franzen Sound Light Vision', 'zlf-2025'),
     ('2025', 'Groëte Gulpener Vastelaoves Finale (GGVF)', 'Licht design, programming, operating', 'Hoedemakers.PRO', None),
     ('2025', 'Soenda Presents', 'Licht programming, operating', 'T.Y.S. Productions', None),
     ('2025', 'Sportclub’25 Bocholtz · 100 jaar', 'Stage- en lichtdesign; programming en operating van licht, video en special FX; technische ondersteuning', 'GTF Franzen Sound Light Vision', 'sportclub-jubileum'),

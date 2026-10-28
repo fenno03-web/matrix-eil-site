@@ -379,7 +379,7 @@ def projecten():
           <td class="yr">{year_of(meta)}</td>
           <td class="go"><span class="btnlike">{label} →</span></td>
         </tr>'''
-    pages = {slug for slug, *_ in PROJECTS}
+    pages = {slug for slug, *_ in PROJECTS} | set(STORIES)
     years = []
     for span, show, role, client, slug in SHOWLOG:
         y = span[:4]
@@ -1154,7 +1154,7 @@ DOELGROEPEN = [
 
 def doelgroep_page(d):
     rows = [r for r in SHOWLOG if any(k.lower() in r[1].lower() for k in d['keys'])]
-    pages = {slug for slug, *_ in PROJECTS}
+    pages = {slug for slug, *_ in PROJECTS} | set(STORIES)
     lis = ''.join(f'<li><span class="sl-show">{f"<a href=\'project-{r[4]}.html\'>{r[1]}</a>" if r[4] in pages else r[1]}</span><span class="sl-role">{r[2]}</span><span class="sl-client">{r[0]}</span></li>' for r in reversed(rows))
     others = ''.join(f'<a href="{o["slug"]}.html">{o["short"]} →</a>' for o in DOELGROEPEN if o is not d)
     svc_ld = {'@context': 'https://schema.org', '@type': 'Service', 'name': f"Licht en visuals voor {d['short'].lower()}", 'description': d['desc'],
@@ -1302,9 +1302,50 @@ def woordenlijst():
 {footer()}'''
 
 
+
+# ---------------------------------------------------------------- Verhaalpagina's zonder fotoreeks
+def story_page(slug):
+    st = STORIES[slug]
+    log = next(r for r in SHOWLOG if r[4] == slug)
+    year, show, role, client = log[0], log[1], log[2], log[3]
+    url = press_for(year[:4], show)
+    press = f'<div><span class="tag">In de pers</span><a class="link-arrow" href="{url}" target="_blank" rel="noopener">Artikel op Highlite</a></div>' if url else ''
+    desc = f"{st['name']}, {st['meta']} ({year}): {role}. Een project van MATRIX E.I.L. voor {client}."
+    ld = [ORG, {'@context': 'https://schema.org', '@type': 'CreativeWork', 'name': st['name'], 'description': desc, 'creator': {'@id': BASE + '#matrix'}},
+          crumbs(('Projecten', 'projecten.html'), (st['name'], f'project-{slug}.html'))]
+    return f'''{head(f"{st['name']} | Project | MATRIX E.I.L.", desc, ld=ld)}
+<body class="page-project">
+{header(f'project-{slug}.html')}
+<main>
+<section class="pp-hero pp-hero-text" data-cue="Q1" data-cue-name="{st['name']}">
+  <div class="wrap">
+    <nav class="crumb tag" aria-label="Kruimelpad"><a href="projecten.html">Projecten</a> / <b>{st['name']}</b></nav>
+    <h1 class="display">{st['name']}</h1>
+    <div class="pp-meta"><span>{st['meta']}, {year}</span></div>
+  </div>
+</section>
+<section class="section" data-cue="Q2" data-cue-name="De opdracht">
+  <div class="wrap pp-facts">
+    <div><span class="tag">Rol van MATRIX</span><b>{role}</b></div>
+    <div><span class="tag">Voor</span><b>{client}</b></div>
+    {press}
+  </div>
+</section>
+{story_html(slug)}
+<section class="section" style="padding-top:0">
+  <div class="wrap others reveal"><span class="tag">Meer</span><a href="projecten.html#showlog">Terug naar het showlog →</a><a href="voor-verenigingen.html">Voor verenigingen →</a></div>
+</section>
+{contact_block('Q4')}
+</main>
+{footer()}'''
+
+
 PAGES = {'index.html': home, 'diensten.html': diensten, 'projecten.html': projecten, 'over.html': over,
          'argus.html': argus, 'privacy.html': privacy, '404.html': not_found,
          'operators.html': operators, 'faq.html': faq, 'woordenlijst.html': woordenlijst}
+for _s in STORIES:
+    if _s not in {p[0] for p in PROJECTS}:
+        PAGES[f'project-{_s}.html'] = (lambda k: lambda: story_page(k))(_s)
 for _g in DOELGROEPEN:
     PAGES[_g['slug'] + '.html'] = (lambda g: lambda: doelgroep_page(g))(_g)
 for _d in DIENSTEN:

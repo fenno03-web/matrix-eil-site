@@ -21,4 +21,16 @@ STORIES = {
         facts=[('130+', 'fixtures'), ('100', 'jaar clubgeschiedenis'), ('2025', 'Bocholtz')],
         quote='Er waren alleen maar hoogtepunten eigenlijk, nu ik eraan terugdenk.',
     ),
+    'zlf-2025': dict(
+        name='ZLF 2025',
+        meta='Zuid-Limburgs Federatiefestival, Ubachsberg',
+        title='Eén tent, <em>elke dag nieuw.</em>',
+        body=[
+            'Vier dagen Zuid-Limburgs Federatiefestival in Ubachsberg, georganiseerd door Schietvereniging St. Hubertus. Eén grote tent die elke dag iets anders moest zijn: van bingo tot een avond met LaFuente, tot de dag waar het eigenlijk om draait, het schieten zelf.',
+            'MATRIX tekende het stage- en lichtontwerp en leverde de VJ en de operator voor licht en special effects. Het materiaal kwam van twee bedrijven: voornamelijk van GTF Franzen Sound Light Vision, aangevuld met fixtures van Conjaerts Audio &amp; Light. Daar moest één beeld uit komen, met genoeg contrast voor artiesten als Tonca en LaFuente.',
+            'De grootste uitdaging was de tent elke dag om te toveren tot een nieuwe ervaring. Het mooiste moment? LaFuente, die nog lang niet wilde stoppen en Ratata een keer of tien opnieuw inzette.',
+        ],
+        facts=[('4', 'dagen, elke dag een andere tent'), ('2', 'leveranciers, één beeld'), ('10×', 'Ratata')],
+        quote='LaFuente wilde nog niet stoppen en zette Ratata een stuk of tien keer in.',
+    ),
 }
