@@ -5,7 +5,7 @@ import json
 import math
 from pathlib import Path
 
-from src.showlog import SHOWLOG, HIGHLIGHTS
+from src.showlog import SHOWLOG, HIGHLIGHTS, press_for
 
 ROOT = Path(__file__).parent
 MAIL = 'info@matrixeventsupport.nl'
@@ -170,10 +170,10 @@ def contact_block(q='Q6'):
 # ---------------------------------------------------------------- Home
 WORK = [
     ('proj/woeesj-stock/01.jpg', 1600, 1067, 'Woeësj-Stock', 'Simpelveld, 2026', 'woeesj-stock',
-     'Stage design · Lighting design<br>Programming · Live operation<br>Commissioned by GTF Franzen'),
+     'Stage design · Lighting design<br>Programming · Live operation<br>Commissioned by GTF Franzen Sound Light Vision'),
     ('electrisize.jpg', 1345, 745, 'Electrisize', 'Main Stage &amp; Tapuya, 2026', 'electrisize',
      'LED systems · Infrastructure<br>Setup &amp; commissioning<br>For Djem LED Screens'),
-    ('proj/parkcity-live/01.jpg', 1600, 1067, 'Parkcity Live', 'Dance tent, 2026', 'parkcity-live',
+    ('proj/parkcity-live/01.jpg', 1600, 1067, 'ParkCity Live', 'Dance tent, 2026', 'parkcity-live',
      'Custom visual content · VJ<br>For WE-AV'),
     ('boiler-room.jpg', 704, 481, 'Boiler Room', 'Complex Maastricht, 2026', 'boiler-room',
      'Programming · Live operation'),
@@ -335,11 +335,11 @@ def home():
 # ---------------------------------------------------------------- Projecten
 # (slug, titel, plaats/jaar, rol, opdrachtgever, losse foto als er geen set is)
 PROJECTS = [
-    ('woeesj-stock', 'Woeësj-Stock', 'Simpelveld, 2026', 'Stage design · Lighting design · Programming · Live operation', 'Commissioned by GTF Franzen', None),
-    ('sportclub-jubileum', 'Sportclub ’25 Jubileum', '2025', 'Stage &amp; lighting design · Visuals · Programming · Live operation · VJ', 'Commissioned by GTF Franzen', None),
-    ('parkcity-live', 'Parkcity Live', 'Dance tent, 2026', 'Custom visual content · VJ', 'For WE-AV', None),
+    ('woeesj-stock', 'Woeësj-Stock', 'Simpelveld, 2026', 'Stage design · Lighting design · Programming · Live operation', 'Commissioned by GTF Franzen Sound Light Vision', None),
+    ('sportclub-jubileum', 'Sportclub’25', '100 jaar jubileum, Bocholtz, 2025', 'Stage &amp; lighting design · Visuals · Programming · Live operation · VJ', 'Commissioned by GTF Franzen Sound Light Vision', None),
+    ('parkcity-live', 'ParkCity Live', 'Dance tent, 2026', 'Custom visual content · VJ', 'For WE-AV', None),
     ('electrisize', 'Electrisize', 'Main Stage &amp; Tapuya, 2026', 'LED systems · Infrastructure · Setup &amp; commissioning', 'For Djem LED Screens', 'electrisize.jpg'),
-    ('carnaval-radio', 'Carnaval Radio', '', 'VJ · Programming · Live operation (licht)', 'For Heijnens Audio Light', None),
+    ('carnaval-radio', 'Carnaval Radio', '', 'VJ · Programming · Live operation (licht)', 'For Heijnens Audio - Light - Vision', None),
     ('paul-elstak', 'Complex × Paul Elstak', '', 'Programming · Live operation', 'For Stod', None),
     ('usc-lustrum', 'USC Lustrum', '2026', 'Programming · Live operation', 'For Spectrum AV', None),
     ('outrageous', 'Outrageous Festival', 'Mainstage, 2025', 'Programming · Live operation (licht)', 'For Bongers BLG', None),
@@ -382,6 +382,9 @@ def projecten():
     years = []
     for span, show, role, client, slug in SHOWLOG:
         y = span[:4]
+        url = press_for(y, show)
+        if url:
+            role += f' <a class="sl-press" href="{url}" target="_blank" rel="noopener">Artikel op Highlite ↗</a>'
         if len(span) > 4:
             show += f' <small>({span})</small>'
         if not years or years[-1][0] != y:
@@ -401,7 +404,7 @@ def projecten():
         </ul>
       </div>'''
     sheet = '\n'.join(f'      <figure><img src="assets/img/galerij/{i:02d}.jpg" alt="" width="1400" height="933" loading="lazy"><figcaption><b>▸ {i:02d}A</b><span>Uit het veld</span></figcaption></figure>' for i in range(1, 13))
-    return f'''{head("Projecten | MATRIX E.I.L.", f"Het logboek van MATRIX E.I.L.: {len(SHOWLOG)} producties sinds 2022, van Paaspop en Pinkpop tot Decibel en Electrisize. Lichtontwerp, programmering, visuals en LED.", "assets/img/electrisize.jpg")}
+    return f'''{head("Projecten | MATRIX E.I.L.", f"Het logboek van MATRIX E.I.L.: {len(SHOWLOG)} producties sinds 2022, van Paaspop en Pinkpop tot Decibel Outdoor en Electrisize. Lichtontwerp, programmering, visuals en LED.", "assets/img/electrisize.jpg")}
 <body class="page-log">
 {header('projecten.html')}
 <main>
@@ -647,7 +650,7 @@ STEPS = [
     ('Voorbereiding', 'Programmeren, content maken en afstemmen met je productie en technische partners.'),
     ('Show', 'We staan zelf achter de tafel, zodat het ontwerp op het podium ook echt zo staat.'),
 ]
-CLIENTS = ['GTF Franzen', 'WE-AV', 'Djem LED Screens', 'Heijnens Audio Light', 'Stod', 'Spectrum AV', 'Bongers BLG', 'T.Y.S. Productions', 'Hoedemakers.PRO', 'SL Productions', 'Cowanzo', 'ROOT Productions', 'Demo Productions']
+CLIENTS = ['GTF Franzen Sound Light Vision', 'WE-AV', 'Djem LED Screens', 'Heijnens Audio - Light - Vision', 'Stod', 'Spectrum AV', 'Bongers BLG', 'T.Y.S. Productions', 'Hoedemakers.PRO', 'SL Productions', 'Cowanzo', 'ROOT Productions', 'Demo Productions']
 
 DIENSTEN = [
     dict(slug='lichtontwerp', short='Stage- en lichtontwerp', img='proj/woeesj-stock/01.jpg', match=('design',),
@@ -817,6 +820,10 @@ def project_page(idx):
     ld = [ORG, work_ld, crumbs(('Projecten', 'projecten.html'), (plain, f'project-{slug}.html'))]
     meta_html = f'<span>{meta}</span>' if meta else ''
     client_html = f'<div><span class="tag">Voor</span><b>{client}</b></div>' if client else ''
+    log = next((r for r in SHOWLOG if r[4] == slug), None)
+    url = log and press_for(log[0][:4], log[1])
+    if url:
+        client_html += f'<div><span class="tag">In de pers</span><a class="link-arrow" href="{url}" target="_blank" rel="noopener">Artikel op Highlite</a></div>'
     n = len(photos)
     count = f"{n} foto's" if n > 1 else '1 foto'
     return f'''{head(f"{plain} | Project | MATRIX E.I.L.", desc, cover, ld=ld)}
