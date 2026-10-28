@@ -35,7 +35,7 @@ def ver(path):
     return hashlib.md5((ROOT / path).read_bytes()).hexdigest()[:8]
 
 
-NAV = [('diensten.html', 'Diensten'), ('projecten.html', 'Projecten'), ('over.html', 'Over'), ('argus.html', 'Argus')]
+NAV = [('diensten.html', 'Diensten'), ('projecten.html', 'Projecten'), ('operators.html', 'Operators'), ('over.html', 'Over'), ('argus.html', 'Argus')]
 PORTAL = '<div class="portal" aria-hidden="true"><div class="void"></div><div class="ring"></div></div>'
 
 
