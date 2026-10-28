@@ -5,6 +5,8 @@ import json
 import math
 from pathlib import Path
 
+from src.showlog import SHOWLOG, HIGHLIGHTS
+
 ROOT = Path(__file__).parent
 MAIL = 'info@matrixeventsupport.nl'
 TEL = '+31630971404'
@@ -216,6 +218,7 @@ def home():
     steps = ''.join(f'''
       <li class="reveal"><span class="sn">0{i + 1}</span><h3>{t}</h3><p>{d}</p></li>''' for i, (t, d) in enumerate(STEPS))
     clients = ''.join(f'<li>{c}</li>' for c in CLIENTS)
+    names = ''.join(f'<li>{n}</li>' for n in HIGHLIGHTS)
     strip = ''.join(f'<img src="assets/img/galerij/{n:02d}.jpg" alt="" width="1400" height="933" loading="lazy">' for n in [2, 3, 6, 7, 8, 9, 11, 12])
     return f'''{head("MATRIX E.I.L. | Stage, licht, visuals en LED", "MATRIX E.I.L. verzorgt stage- en lichtontwerp, programmering, live operation, VJ en LED-techniek voor live producties.")}
 <body class="home">
@@ -271,6 +274,11 @@ def home():
     </div>
     <ol class="steps">{steps}
     </ol>
+    <div class="clients names reveal">
+      <span class="tag">Gewerkt op o.a.</span>
+      <ul>{names}</ul>
+      <a class="link-arrow" href="projecten.html#showlog">{len(SHOWLOG)} producties sinds 2022</a>
+    </div>
     <div class="clients reveal">
       <span class="tag">Ingehuurd door en samengewerkt met</span>
       <ul>{clients}</ul>
@@ -333,8 +341,8 @@ PROJECTS = [
     ('electrisize', 'Electrisize', 'Main Stage &amp; Tapuya, 2026', 'LED systems · Infrastructure · Setup &amp; commissioning', 'For Djem LED Screens', 'electrisize.jpg'),
     ('carnaval-radio', 'Carnaval Radio', '', 'VJ · Programming · Live operation (licht)', 'For Heijnens Audio Light', None),
     ('paul-elstak', 'Complex × Paul Elstak', '', 'Programming · Live operation', 'For Stod', None),
-    ('usc-lustrum', 'USC Lustrum', '', 'Programming · Live operation', 'For Spectrum AV', None),
-    ('outrageous', 'Outrageous Festival', '2025', 'Programming · Live operation (licht)', 'For Bongers BLG', None),
+    ('usc-lustrum', 'USC Lustrum', '2026', 'Programming · Live operation', 'For Spectrum AV', None),
+    ('outrageous', 'Outrageous Festival', 'Mainstage, 2025', 'Programming · Live operation (licht)', 'For Bongers BLG', None),
     ('oranjeroes', 'OranjeRoes Festival', '', 'Programming · Live operation', 'With and for T.Y.S. Productions', None),
     ('fissafari', 'Fissafari', '2026', 'Programming · Live operation (licht)', 'For Bongers BLG', None),
     ('k3', 'K3', '2026', 'Programming · Live operation (licht)', 'For Bongers BLG', None),
@@ -370,19 +378,41 @@ def projecten():
           <td class="yr">{year_of(meta)}</td>
           <td class="go"><span class="btnlike">{label} →</span></td>
         </tr>'''
+    pages = {slug for slug, *_ in PROJECTS}
+    years = []
+    for span, show, role, client, slug in SHOWLOG:
+        y = span[:4]
+        if len(span) > 4:
+            show += f' <small>({span})</small>'
+        if not years or years[-1][0] != y:
+            years.append((y, []))
+        years[-1][1].append((show, role, client, slug))
+    log = ''
+    for y, items in reversed(years):
+        lis = ''
+        for show, role, client, slug in items:
+            name = f'<a href="project-{slug}.html">{show} <span aria-hidden="true">→</span></a>' if slug in pages else show
+            lis += f'''
+          <li><span class="sl-show">{name}</span><span class="sl-role">{role}</span><span class="sl-client">{client or '—'}</span></li>'''
+        log += f'''
+      <div class="sl-year reveal">
+        <h3><b>{y}</b><span>{len(items)} {'productie' if len(items) == 1 else 'producties'}</span></h3>
+        <ul>{lis}
+        </ul>
+      </div>'''
     sheet = '\n'.join(f'      <figure><img src="assets/img/galerij/{i:02d}.jpg" alt="" width="1400" height="933" loading="lazy"><figcaption><b>▸ {i:02d}A</b><span>Uit het veld</span></figcaption></figure>' for i in range(1, 13))
-    return f'''{head("Projecten | MATRIX E.I.L.", "Het logboek van MATRIX E.I.L.: producties waar we licht, visuals en LED verzorgden.", "assets/img/electrisize.jpg")}
+    return f'''{head("Projecten | MATRIX E.I.L.", f"Het logboek van MATRIX E.I.L.: {len(SHOWLOG)} producties sinds 2022, van Paaspop en Pinkpop tot Decibel en Electrisize. Lichtontwerp, programmering, visuals en LED.", "assets/img/electrisize.jpg")}
 <body class="page-log">
 {header('projecten.html')}
 <main>
 <section class="section page-top" data-cue="Q1" data-cue-name="Show log">
   <div class="wrap">
-    {cue_head('Q1', 'Show log', '2024 – 2026')}
+    {cue_head('Q1', 'Show log', '2022 – 2026')}
     <div class="log-head">
       <h1 class="display reveal">Show<br><em>log.</em></h1>
       <div class="reveal">
-        <p class="lead">Elke regel een productie, elke productie een eigen opdracht. Klik op een show voor het verhaal en de foto's.</p>
-        <div class="log-stats"><div><b>{len(PROJECTS)}</b><span>Producties</span></div><div><b>{total}</b><span>Foto's</span></div><div><b>’24–’26</b><span>Seizoenen</span></div></div>
+        <p class="lead">Elke regel een productie, elke productie een eigen opdracht. Hieronder een selectie met foto's, daarna het volledige logboek sinds 2022.</p>
+        <div class="log-stats"><div><b>{len(SHOWLOG)}</b><span>Producties</span></div><div><b>{total}</b><span>Foto's</span></div><div><b>’22–’26</b><span>Seizoenen</span></div></div>
       </div>
     </div>
     <table class="log reveal">
@@ -390,6 +420,18 @@ def projecten():
       <tbody>{rows}
       </tbody>
     </table>
+  </div>
+</section>
+
+<section class="section" id="showlog" style="padding-top:0" data-cue="Q1.5" data-cue-name="Volledig log">
+  <div class="wrap">
+    {cue_head('Q1.5', 'Volledig log', f'{len(SHOWLOG)} producties')}
+    <div class="intro-line">
+      <h2 class="title reveal">Het hele<br><em>logboek.</em></h2>
+      <p class="lead reveal">Van ontwerp tot een avond achter de tafel: alles wat we sinds 2022 draaiden, per seizoen. Per productie staat erbij wat onze rol was.</p>
+    </div>
+    <div class="showlog">{log}
+    </div>
   </div>
 </section>
 
@@ -605,7 +647,7 @@ STEPS = [
     ('Voorbereiding', 'Programmeren, content maken en afstemmen met je productie en technische partners.'),
     ('Show', 'We staan zelf achter de tafel, zodat het ontwerp op het podium ook echt zo staat.'),
 ]
-CLIENTS = ['GTF Franzen', 'WE-AV', 'Djem LED Screens', 'Heijnens Audio Light', 'Stod', 'Spectrum AV', 'Bongers BLG', 'T.Y.S. Productions']
+CLIENTS = ['GTF Franzen', 'WE-AV', 'Djem LED Screens', 'Heijnens Audio Light', 'Stod', 'Spectrum AV', 'Bongers BLG', 'T.Y.S. Productions', 'Hoedemakers.PRO', 'SL Productions', 'Cowanzo', 'ROOT Productions', 'Demo Productions']
 
 DIENSTEN = [
     dict(slug='lichtontwerp', short='Stage- en lichtontwerp', img='proj/woeesj-stock/01.jpg', match=('design',),

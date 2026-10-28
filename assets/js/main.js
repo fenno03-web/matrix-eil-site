@@ -415,78 +415,72 @@ if (!reduce) {
 // Voor wie in de console kijkt
 console.log('%cMATRIX E.I.L.%c\nExecution is the chariot of genius.\n\nZelfstandige specialist met een eigen blik? info@matrixeventsupport.nl\nTip: typ "argus" op de site, of probeer B.', 'font: 700 28px sans-serif; color: #ec0a8c', 'font: 13px monospace; color: #9a938a');
 
-// ---------------------------------------------------------------- Organisch: groei, vuur en hittetrilling
+// ---------------------------------------------------------------- Organisch: rook, stof, vuur en hittetrilling
 const SVGNS = 'http://www.w3.org/2000/svg';
 
-// Groeiende lijnen: als wortels of kabels lopen ze door de pagina en groeien mee met het scrollen
-(function growth() {
-  if (innerWidth < 700) return;
-  let seed = [...location.pathname].reduce((a, c) => a + c.charCodeAt(0), 7);
-  const rnd = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
-  const svg = document.createElementNS(SVGNS, 'svg');
-  svg.setAttribute('class', 'growth'); svg.setAttribute('aria-hidden', 'true');
-  document.body.appendChild(svg);
-  let runs = [], nodes = [];
-  function build() {
-    seed = [...location.pathname].reduce((a, c) => a + c.charCodeAt(0), 7);
-    svg.innerHTML = ''; runs = []; nodes = [];
-    const H = document.documentElement.scrollHeight, W = document.documentElement.clientWidth;
-    svg.setAttribute('width', W); svg.setAttribute('height', H); svg.style.height = H + 'px';
-    const wrap = document.querySelector('main .wrap');
-    const r = wrap ? wrap.getBoundingClientRect() : { left: 40, width: W - 80 };
-    const pad = parseFloat(getComputedStyle(wrap || document.body).paddingLeft) || 40;
-    const left = r.left + pad * .5, width = r.width - pad;
-    const cols = [0, .25, .5, .75, 1].map(f => left + f * width);
-    const strands = [0, 4, rnd() > .5 ? 2 : 1];
-    strands.forEach((ci, si) => {
-      let x = cols[ci], y = innerHeight * (.7 + rnd() * .5) + si * 180;
-      let d = `M${x.toFixed(1)},${y.toFixed(1)}`, start = y;
-      while (y < H - 200) {
-        const step = 140 + rnd() * 220;
-        let nx = cols[ci] + (rnd() - .5) * 46;
-        if (rnd() < .16) { // tak naar een buurkolom
-          const nci = Math.max(0, Math.min(4, ci + (rnd() < .5 ? -1 : 1)));
-          const tx = cols[nci], ty = y + step * .6;
-          const tw = `M${x.toFixed(1)},${y.toFixed(1)} C${x.toFixed(1)},${(y + step * .4).toFixed(1)} ${tx.toFixed(1)},${(ty - step * .3).toFixed(1)} ${tx.toFixed(1)},${(ty + step).toFixed(1)}`;
-          runs.push({ d: tw, y0: y, y1: ty + step, twig: true });
-          nodes.push({ x: tx, y: ty + step, hot: rnd() < .3 });
-        }
-        const cy1 = y + step * .35, cy2 = y + step * .7;
-        d += ` C${(x + (rnd() - .5) * 60).toFixed(1)},${cy1.toFixed(1)} ${(nx + (rnd() - .5) * 60).toFixed(1)},${cy2.toFixed(1)} ${nx.toFixed(1)},${(y + step).toFixed(1)}`;
-        x = nx; y += step;
-        if (rnd() < .22) nodes.push({ x, y, hot: rnd() < .25 });
-      }
-      runs.push({ d, y0: start, y1: y, twig: false });
+// Rook en stof: een dunne laag haze die traag door de pagina drijft, met stofjes die oplichten in het licht van de cursor
+(function smoke() {
+  if (reduce) return;
+  const cv = document.createElement('canvas');
+  cv.className = 'smoke'; cv.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(cv);
+  const ctx = cv.getContext('2d');
+  const small = innerWidth < 700;
+  let w, h, mx = -999, my = -999, lx = -999, ly = -999, t = 0, running = true;
+  const size = () => { const dpr = Math.min(1.5, devicePixelRatio || 1); w = innerWidth; h = innerHeight; cv.width = w * dpr; cv.height = h * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); };
+  size(); addEventListener('resize', size);
+  addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; }, { passive: true });
+  document.addEventListener('mouseleave', () => { mx = my = -999; });
+  // Rookwolken: grote zachte vlekken die langzaam zijwaarts drijven en ademen
+  const clouds = Array.from({ length: small ? 4 : 7 }, (_, i) => ({
+    x: Math.random(), y: Math.random(), r: .35 + Math.random() * .35,
+    vx: (.00004 + Math.random() * .00008) * (i % 2 ? 1 : -1), ph: Math.random() * 6.28,
+    warm: Math.random() < .35,
+  }));
+  // Stofjes: klein, traag, zwevend
+  const motes = Array.from({ length: small ? 34 : 110 }, () => ({
+    x: Math.random(), y: Math.random(), z: .3 + Math.random() * .7,
+    vx: (Math.random() - .5) * .00006, vy: -(.00002 + Math.random() * .00008), ph: Math.random() * 6.28,
+  }));
+  let lastY = scrollY;
+  function tick() {
+    if (!running) return;
+    t++;
+    const dy = (scrollY - lastY) / h; lastY = scrollY;
+    lx += ((mx < 0 ? -999 : mx) - lx) * (lx < -900 ? 1 : .06); ly += ((my < 0 ? -999 : my) - ly) * (ly < -900 ? 1 : .06);
+    ctx.clearRect(0, 0, w, h);
+    const R = Math.max(w, h);
+    clouds.forEach(c => {
+      c.x += c.vx; if (c.x > 1.4) c.x = -.4; if (c.x < -.4) c.x = 1.4;
+      c.y -= dy * .25; if (c.y < -.4) c.y += 1.8; if (c.y > 1.4) c.y -= 1.8;
+      const breathe = .5 + .5 * Math.sin(t / 420 + c.ph);
+      const x = c.x * w, y = c.y * h, r = c.r * R * (.9 + breathe * .2);
+      const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+      const col = c.warm ? '236, 190, 160' : '170, 200, 190';
+      g.addColorStop(0, `rgba(${col}, ${.035 + breathe * .02})`);
+      g.addColorStop(.6, `rgba(${col}, .012)`);
+      g.addColorStop(1, `rgba(${col}, 0)`);
+      ctx.fillStyle = g; ctx.fillRect(x - r, y - r, r * 2, r * 2);
     });
-    runs.forEach(run => {
-      const p = document.createElementNS(SVGNS, 'path');
-      p.setAttribute('d', run.d);
-      if (run.twig) p.setAttribute('class', 'twig');
-      svg.appendChild(p);
-      run.el = p; run.len = p.getTotalLength();
-      p.style.strokeDasharray = run.len; p.style.strokeDashoffset = run.len;
+    motes.forEach(m => {
+      m.x += m.vx + Math.sin(t / 160 + m.ph) * .00012 * m.z;
+      m.y += m.vy - dy * m.z * .6;
+      if (m.y < -.02) { m.y = 1.02; m.x = Math.random(); }
+      if (m.y > 1.02) { m.y = -.02; m.x = Math.random(); }
+      if (m.x < -.02) m.x = 1.02; if (m.x > 1.02) m.x = -.02;
+      const x = m.x * w, y = m.y * h;
+      const d = lx > -900 ? Math.hypot(x - lx, y - ly) : 999;
+      const lit = Math.max(0, 1 - d / 280) ** 1.5;
+      const tw = .5 + .5 * Math.sin(t / 50 + m.ph * 3);
+      const a = (.12 + tw * .1) * m.z + lit * .8;
+      ctx.beginPath(); ctx.arc(x, y, (.6 + m.z * 1.1) * (1 + lit * .8), 0, 6.283);
+      ctx.fillStyle = `rgba(255, 236, 214, ${a.toFixed(3)})`;
+      ctx.fill();
     });
-    nodes.forEach(n => {
-      const c = document.createElementNS(SVGNS, 'circle');
-      c.setAttribute('cx', n.x.toFixed(1)); c.setAttribute('cy', n.y.toFixed(1)); c.setAttribute('r', n.hot ? 2.6 : 3.2);
-      if (n.hot) c.setAttribute('class', 'hot');
-      svg.appendChild(c); n.el = c;
-    });
-    draw();
+    requestAnimationFrame(tick);
   }
-  function draw() {
-    const front = scrollY + innerHeight * .8;
-    runs.forEach(run => {
-      const p = Math.max(0, Math.min(1, (front - run.y0) / (run.y1 - run.y0)));
-      run.el.style.strokeDashoffset = reduce ? 0 : run.len * (1 - p);
-    });
-    nodes.forEach(n => n.el.classList.toggle('on', reduce || n.y < front));
-  }
-  let rt;
-  addEventListener('scroll', () => requestAnimationFrame(draw), { passive: true });
-  addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(build, 300); });
-  addEventListener('load', build);
-  build();
+  document.addEventListener('visibilitychange', () => { running = !document.hidden; if (running) tick(); });
+  tick();
 })();
 
 // Vonken die opstijgen boven het manifest
