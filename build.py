@@ -318,8 +318,8 @@ def home():
       {cue_head('Q5', 'Argus Systems', 'In ontwikkeling')}
       <div class="reveal">
         <h2 class="title">Honderd ogen<br>op <em>de show.</em></h2>
-        <p>ARGUS Systems is de softwaretak van MATRIX, vernoemd naar Argus Panoptes, de wachter met honderd ogen. Vier tools voor productie en showoperators, gebouwd op de vloer en getest waar het telt: live, in het veld.</p>
-        <div class="chips"><span>CHRONOS</span><span class="t">AXIS</span><span class="t">METRON</span><span class="t">HOROS</span></div>
+        <p>ARGUS Systems is de softwaretak van MATRIX, vernoemd naar Argus Panoptes, de wachter met honderd ogen. Elf tools voor licht, video en productie, gebouwd op de vloer en getest waar het telt: live, in het veld.</p>
+        <div class="chips"><span>CHRONOS</span><span>BIFROST</span><span>IRIS</span><span class="t">AXIS</span><span class="t">METRON</span><span class="t">HOROS</span><span class="t">KANON</span><span class="t">+4</span></div>
         <a class="btn" href="argus.html">Open de regiekamer</a>
       </div>
     </div>
@@ -554,9 +554,139 @@ def eye_svg():
     </svg>'''
 
 
+# ---------------------------------------------------------------- ARGUS OS
+# (slug, naam, logo, status, statusklasse, kernzin, uitleg, punten, accentkleur, demo-markup of None)
+ARGUS_TOOLS = [
+    ('chronos', 'CHRONOS', 'chronos.png', 'Alpha · in het veld', 'field', 'Eén klok voor de hele productie.',
+     'Regie, backstage, kleedkamers en FOH zien live dezelfde tijd, op elk scherm en zonder internet.',
+     ['Alle stages naast elkaar, met uitloop en curfew', 'Schermen voor backstage en kleedkamers', 'Volledig offline'], 'petrol', None),
+    ('axis', 'AXIS', 'axis.png', 'In test', 'test', 'Planning, magazijn en show in één systeem.',
+     'Een modulair platform voor de evenementenbranche: van planning en materiaal tot schermen en accreditatie.',
+     ['Planning &amp; magazijn', 'LIVE: schermen en zones aansturen', 'Accreditatie, ook voor kleinere events'], 'gold', None),
+    ('metron', 'METRON', 'metron.jpg', 'In test', 'test', 'Licht dat de beat kent.',
+     'Tempo en positie in de track rechtstreeks van de DJ-set naar je licht, zodat effecten en drops vanzelf kloppen.',
+     ['BPM en beatpositie live binnen', 'Tempo naar je speedmasters', 'Markers voor drops en breaks'], 'gold', None),
+    ('horos', 'HOROS', 'horos.png', 'In test', 'test', 'Navigatie die weet hoe hoog je truck is.',
+     'Op basis van RDW-data waarschuwt HOROS voor milieuzones en bruggen of viaducten waar je niet onderdoor past.',
+     ['Milieuzones op je route', 'Doorrijhoogte per brug en viaduct', 'Live route, locatiecheck en routecheck'], 'gold', None),
+    ('bifrost', 'BIFROST', 'bifrost.webp', 'In ontwikkeling · live testing', 'live', 'De brug tussen consoles, met een wachter die meekijkt.',
+     'BIFROST verbindt lichttafels met elkaar en houdt tijdens de show alles in de gaten. Heimdall, de ingebouwde AI-assistent, ziet afwijkingen meteen en helpt je op het moment dat het telt.',
+     ['Console bridge tussen tafels', 'Wachter die de show bewaakt', 'Heimdall AI als hulp naast de tafel'], 'petrol', 'bifrost'),
+    ('visual', 'VISUAL INTELLIGENCE', 'visual-intelligence.webp', 'In ontwikkeling', 'dev', 'Richt je lampen vanaf de vloer.',
+     'Positioneer lampen op locatie draadloos met een handheld, zoals een MSI Claw. Je wijst aan waar het licht moet komen en de lampen volgen. Dat maakt programmeren sneller en preciezer.',
+     ['Draadloos vanaf een handheld', 'Lampen richten door aan te wijzen', 'Sneller posities en focus programmeren'], 'petrol', 'visual'),
+    ('hyperion', 'HYPERION', 'hyperion.webp', 'Concept', 'concept', 'Een lichttafel in je laptop.',
+     'Voor kleine evenementen zonder budget voor een echte lichttafel of lichtontwerper. HYPERION leest MVR-bestanden en maakt van een pc of laptop een overzichtelijke lichttool.',
+     ['MVR-bestanden inlezen', 'Draait op een gewone pc of laptop', 'Gemaakt voor kleine events'], 'magenta', 'hyperion'),
+    ('treehouse', 'TREEHOUSE', 'treehouse.webp', 'Vroege ontwikkeling', 'dev', 'Macro’s voor de Infinity Chimp.',
+     'Een macrotool voor de Infinity Chimp G2 en G3 van Highlite. Bouw een reeks handelingen één keer op en roep die daarna aan met één druk.',
+     ['Voor Infinity Chimp G2 en G3', 'Macro’s overzichtelijk in een boom', 'Eén druk in plaats van tien'], 'petrol', 'treehouse'),
+    ('tartarus', 'TARTARUS', 'tartarus.webp', 'Vroege ontwikkeling', 'dev', 'De kluis voor je showfiles.',
+     'TARTARUS spoort showfiles op, zet ze veilig weg en sorteert en filtert ze, zodat je altijd de nieuwste versie pakt. Volledig offline.',
+     ['Vindt showfiles op al je schijven', 'Sorteert per show en filtert op nieuwste versie', 'Volledig offline'], 'red', 'tartarus'),
+    ('kanon', 'KANON', 'kanon.webp', 'Vroege ontwikkeling · binnenkort live testing', 'dev', 'Volgspots die zelf volgen.',
+     'Tracking op basis van camerabeeld voor live events. KANON herkent waar de artiest staat en laat het licht meebewegen.',
+     ['Tracking op basis van camerabeeld', 'Lampen volgen de artiest live', 'Gemaakt voor podium en tent'], 'petrol', 'kanon'),
+    ('iris', 'IRIS', 'iris.webp', 'Vroege ontwikkeling · live testing', 'live', 'Stream Deck en Resolume, direct verbonden.',
+     'Een directe koppeling van Stream Deck naar Resolume. Veel sneller en overzichtelijker dan een tussenlaag, met thumbnails die live terugkomen uit Resolume op je knoppen.',
+     ['Directe koppeling, geen tussenlaag', 'Live thumbnails uit Resolume op de knoppen', 'Overzichtelijk ingedeeld per laag'], 'petrol', 'iris'),
+]
+DEMO_HINT = '<p class="aw-hint">Impressie · geen echte software</p>'
+
+
+def aos_demo(kind):
+    if kind == 'bifrost':
+        return '''<div class="bf">
+          <canvas class="bf-cv" width="560" height="170" aria-hidden="true"></canvas>
+          <ol class="bf-log" aria-live="polite"></ol>
+          <form class="bf-ask"><label class="visually-hidden" for="bf-q">Vraag Heimdall</label><input id="bf-q" autocomplete="off" placeholder="Vraag Heimdall iets, bijv. “hoe staat de backup?”"><button>Vraag</button></form>
+          <div class="bf-ans"></div>
+        </div>'''
+    if kind == 'visual':
+        return '''<div class="vi"><canvas class="vi-cv" width="560" height="300" aria-label="Bovenaanzicht van een podium: tik om de lampen te richten"></canvas>
+          <div class="vi-read"><span>Doel <b class="vi-xy">—</b></span><span>Lampen <b>6 / 6</b></span><span>Verbinding <b class="ok">draadloos</b></span></div></div>'''
+    if kind == 'hyperion':
+        return '''<div class="hy"><div class="hy-file">showfile.mvr <b>· 24 fixtures · 3 trussen</b></div>
+          <canvas class="hy-cv" width="560" height="250" aria-hidden="true"></canvas>
+          <div class="hy-scenes"><button data-s="warm" class="on">Warm</button><button data-s="koel">Koel</button><button data-s="chase">Chase</button><button data-s="blind">Blinders</button></div></div>'''
+    if kind == 'treehouse':
+        return '''<div class="th"><ul class="th-tree">
+            <li><span>Show</span><ul><li><button data-m="Opening">Opening</button></li><li><button data-m="Drop">Drop</button></li><li><button data-m="Blackout">Blackout</button></li></ul></li>
+            <li><span>Programmeren</span><ul><li><button data-m="Kleurpalet">Kleurpalet</button></li><li><button data-m="Fan-out">Fan-out</button></li><li><button data-m="Wis alles">Wis alles</button></li></ul></li>
+          </ul><pre class="th-out">Kies een macro.</pre></div>'''
+    if kind == 'tartarus':
+        return '''<div class="ta"><div class="ta-bar"><button class="ta-go">Scan opnieuw</button><span class="ta-st">Klaar</span></div>
+          <div class="ta-cols"><ul class="ta-found"></ul><div class="ta-vault"></div></div></div>'''
+    if kind == 'kanon':
+        return '''<div class="ka"><canvas class="ka-cv" width="560" height="280" aria-hidden="true"></canvas>
+          <div class="ka-bar"><button class="on" data-mode="auto">Volgen</button><button data-mode="hand">Handmatig</button><span>Lock <b class="ka-conf">98%</b></span></div></div>'''
+    if kind == 'iris':
+        keys = ''.join(f'<button class="ir-k" data-i="{i}" style="--h:{(i * 37) % 360}"><i></i><span>{n}</span></button>'
+                       for i, n in enumerate(['Intro', 'Tunnel', 'Strobe', 'Logo', 'Nebula', 'Glitch', 'Lines', 'Fire', 'Drop', 'Smoke', 'Grid', 'Out', 'BPM', 'Flash', 'Black']))
+        return f'''<div class="ir"><div class="ir-deck">{keys}</div>
+          <div class="ir-out"><div class="ir-prev"><i></i><span class="ir-name">Black</span></div><div class="ir-read"><span>Resolume <b class="ok">verbonden</b></span><span>Reactietijd <b class="ir-ms">—</b></span></div></div></div>'''
+    return ''
+
+
+def aos_templates():
+    out = ''
+    for slug, name, logo, status, cls, line, desc, pts, acc, demo in ARGUS_TOOLS:
+        lis = ''.join(f'<li>{p}</li>' for p in pts)
+        body = (aos_demo(demo) + DEMO_HINT) if demo else f'<ul class="aw-pts">{lis}</ul><a class="btn aw-go" href="#{slug}">Naar de live demo ↓</a>'
+        out += f'''
+<template id="tpl-{slug}"><section class="win tool-win acc-{acc}" data-win="{slug}" aria-label="{name}">
+  <div class="win-bar"><span class="win-dots"><button class="win-x" aria-label="Sluit {name}"></button><i></i><i></i></span><b>{name}</b><span class="st st-{cls}">{status}</span></div>
+  <div class="win-body"><img class="aw-logo" src="assets/img/argus/{logo}" alt="ARGUS {name}" loading="lazy"><p class="aw-line">{line}</p>{body}</div>
+</section></template>'''
+    return out
+
+
+def aos_html():
+    dock = ''.join(f'<button class="dk acc-{acc}" data-open="{slug}" title="{name} · {status}"><span class="dk-g">{name[0]}</span><span class="dk-n">{name.title() if len(name) > 8 else name}</span><i class="dot st-{cls}"></i></button>'
+                   for slug, name, logo, status, cls, *_ , acc, demo in ARGUS_TOOLS)
+    return f'''<div class="aos reveal" id="os">
+      <div class="aos-top"><img src="assets/img/argus/favicon.png" alt="" width="18" height="18"><b>ARGUS OS</b><span class="aos-v">build 0.11 · {len(ARGUS_TOOLS)} tools</span><span class="aos-sp"></span><span class="aos-eyes">ogen <b>100</b>/100</span><span class="aos-clock">--:--:--</span></div>
+      <div class="aos-body">
+        <nav class="aos-dock" aria-label="Tools in ARGUS OS">{dock}<button class="dk dk-t" data-open="terminal"><span class="dk-g">&gt;_</span><span class="dk-n">Terminal</span></button></nav>
+        <div class="aos-desk">
+          <img class="aos-mark" src="assets/img/argus/argus-embleem.png" alt="" aria-hidden="true">
+          <section class="win term" data-win="terminal" aria-label="ARGUS terminal">
+            <div class="win-bar"><span class="win-dots"><button class="win-x" aria-label="Sluit terminal"></button><i></i><i></i></span><b>argus — terminal</b><span class="st">tty1</span></div>
+            <div class="win-body term-body"><div class="term-out" aria-live="polite"></div><form class="term-line"><label for="term-in">argus@matrix:~$</label><input id="term-in" autocomplete="off" spellcheck="false" aria-label="Typ een commando"></form></div>
+          </section>
+        </div>
+      </div>
+      <div class="aos-task"><span class="aos-hint">Klik op een tool, of typ <b>help</b> in de terminal</span><span class="aos-wins"></span></div>
+    </div>
+    {aos_templates()}'''
+
+
+def argus_cards():
+    cards = ''
+    for slug, name, logo, status, cls, line, desc, pts, acc, demo in ARGUS_TOOLS[4:]:
+        lis = ''.join(f'<li>{p}</li>' for p in pts)
+        cards += f'''
+      <article class="ac acc-{acc} reveal" id="{slug}">
+        <div class="ac-logo"><img src="assets/img/argus/{logo}" alt="ARGUS {name}" loading="lazy"></div>
+        <span class="st st-{cls}">{status}</span>
+        <h3>{line}</h3>
+        <p>{desc}</p>
+        <ul>{lis}</ul>
+        <button class="btn ac-open" data-open="{slug}">Open in ARGUS OS</button>
+      </article>'''
+    return cards + '''
+      <article class="ac ac-next reveal">
+        <div class="ac-logo"><img src="assets/img/argus/argus-embleem.png" alt="" loading="lazy"></div>
+        <span class="st">Volgende</span>
+        <h3>Het twaalfde oog?</h3>
+        <p>Loop je op de vloer tegen iets aan waar nog geen goede tool voor is? Vertel het ons. De beste ideeën komen uit het veld.</p>
+        <a class="btn" href="#contact">Deel je idee</a>
+      </article>'''
+
+
 def argus():
     tools = (ROOT / 'src' / 'argus-tools.html').read_text()
-    return f'''{head("ARGUS Systems | MATRIX E.I.L.", "ARGUS Systems is de softwaretak van MATRIX E.I.L.: CHRONOS, AXIS, METRON en HOROS, tools gebouwd vanuit de praktijk van live producties.", "assets/img/chronos-overzicht.jpg", "assets/img/argus/favicon.png")}
+    return f'''{head("ARGUS Systems | MATRIX E.I.L.", "ARGUS Systems is de softwaretak van MATRIX E.I.L.: CHRONOS, AXIS, METRON, HOROS, BIFROST, VISUAL INTELLIGENCE, HYPERION, TREEHOUSE, TARTARUS, KANON en IRIS. Software voor licht, video en productie, gebouwd vanuit de praktijk.", "assets/img/chronos-overzicht.jpg", "assets/img/argus/favicon.png")}
 <body class="argus-page">
 {header('argus.html')}
 <main>
@@ -574,20 +704,14 @@ def argus():
   </div>
 </section>
 
-<section class="section" style="padding-top:clamp(40px,6vw,90px)" data-cue="Q2" data-cue-name="Systeemstart">
+<section class="section" style="padding-top:clamp(40px,6vw,90px)" data-cue="Q2" data-cue-name="ARGUS OS">
   <div class="wrap">
-    {cue_head('Q2', 'Systeemstart', 'argus://boot')}
-    <div class="why">
-      <div class="boot reveal" aria-label="Status van de ARGUS-tools">
-        <div class="bar"><i></i><i></i><i></i><span>argus — regie</span></div>
-        <pre class="boot-out"></pre>
-      </div>
-      <div class="reveal">
-        <p class="lead">Op de vloer zien we elke week waar het schuurt.</p>
-        <p>Timetables die niet meer kloppen. Planningen verspreid over losse lijstjes. Informatie die net te laat aankomt. Tappen op een knop terwijl je eigenlijk de show wilt vormgeven.</p>
-        <p>ARGUS Systems bouwt de software die we zelf misten. Niet achter een bureau, maar tussen de cases, op echte producties, door de mensen die er elke dag mee werken. Elke tool wordt eerst in het veld getest voordat hij verder gaat.</p>
-      </div>
+    {cue_head('Q2', 'ARGUS OS', 'argus://desktop')}
+    <div class="intro-line">
+      <h2 class="title reveal">Elf tools.<br><em>Eén wachter.</em></h2>
+      <p class="lead reveal">ARGUS Systems bouwt de software die we op de vloer zelf misten, tussen de cases en op echte producties. Open hieronder een tool, sleep de vensters rond of typ een commando in de terminal.</p>
     </div>
+    {aos_html()}
   </div>
 </section>
 
@@ -597,20 +721,31 @@ def argus():
     <h2 class="title reveal">Van idee<br>naar <em>het veld.</em></h2>
     <div class="roadmap reveal">
       <span class="prog"></span>
-      <div class="stage done"><div class="pt"></div><h4>Concept</h4><p>Een probleem dat we op de vloer zelf tegenkwamen.</p></div>
-      <div class="stage done"><div class="pt"></div><h4>Bouw</h4><p>Eerste versies, gebouwd rond hoe een productie echt loopt.</p></div>
+      <div class="stage done"><div class="pt"></div><h4>Concept</h4><p>Een probleem dat we op de vloer zelf tegenkwamen.</p><div class="who"><span>HYPERION</span></div></div>
+      <div class="stage done"><div class="pt"></div><h4>Ontwikkeling</h4><p>Eerste versies, gebouwd rond hoe een productie echt loopt.</p><div class="who"><span>TREEHOUSE</span><span>TARTARUS</span><span>KANON</span><span>VISUAL INTELLIGENCE</span></div></div>
       <div class="stage now"><div class="pt"></div><h4>Test</h4><p>Intern en met operators uittesten en bijschaven.</p><div class="who"><span>AXIS</span><span>METRON</span><span>HOROS</span></div></div>
-      <div class="stage now"><div class="pt"></div><h4>Alpha in het veld</h4><p>Draaien op echte evenementen, onder echte druk.</p><div class="who"><span class="f">CHRONOS</span></div></div>
+      <div class="stage now"><div class="pt"></div><h4>Live testing</h4><p>Draaien op echte evenementen, onder echte druk.</p><div class="who"><span class="f">CHRONOS</span><span class="f">BIFROST</span><span class="f">IRIS</span></div></div>
       <div class="stage"><div class="pt"></div><h4>Release</h4><p>Beschikbaar voor andere producties en operators.</p></div>
     </div>
   </div>
 </section>
 
 {tools}
-<section class="section argus-cta" id="contact" data-cue="Q8" data-cue-name="Meedoen">
+<section class="section" data-cue="Q8" data-cue-name="Werkplaats">
+  <div class="wrap">
+    {cue_head('Q8', 'De werkplaats', 'Nieuw in ontwikkeling')}
+    <div class="intro-line">
+      <h2 class="title reveal">Wat er nog<br><em>aan komt.</em></h2>
+      <p class="lead reveal">Zeven nieuwe tools, van een kluis voor showfiles tot volgspots die zelf volgen. Elk ontstaan uit een probleem dat we op de vloer tegenkwamen.</p>
+    </div>
+    <div class="acards">{argus_cards()}
+    </div>
+  </div>
+</section>
+<section class="section argus-cta" id="contact" data-cue="Q9" data-cue-name="Meedoen">
   <div class="wrap">
     <div class="reveal">
-      {cue_head('Q8', 'Meedoen', 'Testers gezocht')}
+      {cue_head('Q9', 'Meedoen', 'Testers gezocht')}
       <h2 class="title">Zet ARGUS in op<br><em>jouw productie.</em></h2>
     </div>
     <div class="reveal">
@@ -620,7 +755,7 @@ def argus():
   </div>
 </section>
 </main>
-{footer(chr(10) + '<script src="assets/js/argus.js?v=' + ver('assets/js/argus.js') + '"></script>')}'''
+{footer(chr(10) + '<script src="assets/js/argus.js?v=' + ver('assets/js/argus.js') + '"></script>' + chr(10) + '<script src="assets/js/argus-os.js?v=' + ver('assets/js/argus-os.js') + '"></script>')}'''
 
 
 # ---------------------------------------------------------------- Privacy
