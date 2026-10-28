@@ -7,6 +7,7 @@ from pathlib import Path
 
 from src.showlog import SHOWLOG, HIGHLIGHTS, press_for
 from src.stories import STORIES
+from src.i18n import TR
 
 ROOT = Path(__file__).parent
 MAIL = 'info@matrixeventsupport.nl'
@@ -17,6 +18,25 @@ WHATSAPP = 'https://wa.me/31630971404'
 # Zet op 'https://matrixeil.nl/' zodra het domein aan GitHub Pages hangt
 BASE = 'https://fenno03-web.github.io/matrix-eil-site/'
 CURRENT = 'index.html'
+LANG = 'nl'
+# Vertaalde pagina's: NL-bestand -> (Engels, Duits). De rest van de site blijft Nederlands.
+I18N = {'index.html': ('index.html', 'index.html'), 'diensten.html': ('services.html', 'leistungen.html'),
+        'projecten.html': ('projects.html', 'projekte.html'), 'operators.html': ('operators.html', 'operators.html'),
+        'over.html': ('about.html', 'ueber-uns.html')}
+LANGS = ('nl', 'en', 'de')
+LOCALE = {'nl': 'nl_NL', 'en': 'en_GB', 'de': 'de_DE'}
+
+
+def lang_path(lang, page):
+    """Pad vanaf de root naar een pagina in een taal."""
+    if lang == 'nl':
+        return page
+    return f'{lang}/' + I18N.get(page, ('index.html', 'index.html'))[LANGS.index(lang) - 1]
+
+
+def lang_href(lang, page):
+    """Link vanaf de huidige pagina naar een pagina in een taal."""
+    return ('' if LANG == 'nl' else '../') + lang_path(lang, page)
 
 QUOTES = [
     ('Niemand stapt twee keer in dezelfde rivier.', 'Heraclitus'),
@@ -37,6 +57,7 @@ def ver(path):
 
 
 NAV = [('diensten.html', 'Diensten'), ('projecten.html', 'Projecten'), ('operators.html', 'Operators'), ('over.html', 'Over'), ('argus.html', 'Argus')]
+NAV_T = {'en': ['Services', 'Projects', 'Operators', 'About', 'Argus'], 'de': ['Leistungen', 'Projekte', 'Operators', 'Über uns', 'Argus']}
 PORTAL = '<div class="portal" aria-hidden="true"><div class="void"></div><div class="ring"></div></div>'
 
 
@@ -55,20 +76,24 @@ def crumbs(*items):
 
 
 def head(title, desc, image='assets/img/hero.jpg', icon='assets/img/favicon.png', ld=None):
-    url = BASE + ('' if CURRENT == 'index.html' else CURRENT)
+    url = BASE + lang_path(LANG, CURRENT).replace('index.html', '')
     ld = ld if ld is not None else [ORG]
     ld_html = ''.join(f'\n<script type="application/ld+json">{json.dumps(x, ensure_ascii=False)}</script>' for x in ld)
+    alt = ''
+    if CURRENT in I18N:
+        alt = ''.join(f'\n<link rel="alternate" hreflang="{l}" href="{BASE}{lang_path(l, CURRENT).replace("index.html", "")}">' for l in LANGS)
+        alt += f'\n<link rel="alternate" hreflang="x-default" href="{BASE}{CURRENT.replace("index.html", "")}">'
     return f'''<!doctype html>
-<html lang="nl">
+<html lang="{LANG}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>{title}</title>
 <meta name="description" content="{desc}">
-<link rel="canonical" href="{url}">
+<link rel="canonical" href="{url}">{alt}
 <meta name="robots" content="index, follow">
 <meta property="og:type" content="website">
-<meta property="og:locale" content="nl_NL">
+<meta property="og:locale" content="{LOCALE[LANG]}">
 <meta property="og:site_name" content="MATRIX E.I.L.">
 <meta property="og:url" content="{url}">
 <meta property="og:title" content="{title}">
@@ -86,7 +111,9 @@ def head(title, desc, image='assets/img/hero.jpg', icon='assets/img/favicon.png'
 
 def header(current):
     cur = ' aria-current="page"'
-    links = ''.join(f'<a href="{href}"{cur if href == current else ""}>{label}</a>' for href, label in NAV)
+    labels = NAV_T.get(LANG, [l for _, l in NAV])
+    links = ''.join(f'<a href="{href}"{cur if href == current else ""}>{label}</a>' for (href, _), label in zip(NAV, labels))
+    langs = ''.join(f'<a href="{lang_href(l, current)}" hreflang="{l}" lang="{l}"{" class=on" if l == LANG else ""}>{l.upper()}</a>' for l in LANGS)
     portal_in = '<div class="portal-in" aria-hidden="true"></div>\n' if current == 'argus.html' else ''
     return f'''{portal_in}{PORTAL}
 <div class="standby" aria-hidden="true"><div class="sb">Standby<b class="go">GO</b></div></div>
@@ -96,7 +123,7 @@ def header(current):
     <a class="logo" href="index.html" aria-label="MATRIX E.I.L. home"><img src="assets/img/logo-matrix.png" alt="MATRIX E.I.L." width="600" height="179"></a>
     <div class="showbar" aria-hidden="true"><span class="live">Live</span><span class="sep"></span><span class="tc-wrap">TC <span class="tc">00:00:00:00</span></span><span class="sep s2"></span><span class="cue-now"></span></div>
     <button class="menu-btn" aria-label="Menu" aria-expanded="false" aria-controls="nav"><span></span><span></span><span></span></button>
-    <nav class="nav" id="nav" aria-label="Hoofdmenu">{links}<a class="nav-cta" href="#contact">Contact</a></nav>
+    <nav class="nav" id="nav" aria-label="Hoofdmenu">{links}<a class="nav-cta" href="#contact">Contact</a><span class="lang" aria-label="Taal / Language / Sprache">{langs}</span></nav>
   </div>
 </header>'''
 
@@ -1353,14 +1380,46 @@ for _d in DIENSTEN:
 for _i, _p in enumerate(PROJECTS):
     PAGES[f'project-{_p[0]}.html'] = (lambda i: lambda: project_page(i))(_i)
 
+import re
+
+_TR = sorted(((nl.replace('{N}', str(len(SHOWLOG))), en.replace('{N}', str(len(SHOWLOG))), de.replace('{N}', str(len(SHOWLOG))))
+              for nl, en, de in TR), key=lambda t: -len(t[0]))
+
+
+def localize(html, lang):
+    """Vertaalt een Nederlandse pagina en zet de links om naar de taalmap."""
+    i = LANGS.index(lang)
+    for t in _TR:
+        html = html.replace(t[0], t[i])
+
+    def fix(m):
+        attr, val = m.group(1), m.group(2)
+        if re.match(r'(https?:|mailto:|tel:|#|\.\./|data:|//)', val) or not val:
+            return m.group(0)
+        path, _, frag = val.partition('#')
+        if path in I18N:
+            path = I18N[path][i - 1]
+        else:
+            path = '../' + path
+        return f'{attr}="{path}{"#" + frag if frag else ""}"'
+    return re.sub(r'\b(href|src|data-cover|data-href|poster)="([^"]*)"', fix, html)
+
+
 if __name__ == '__main__':
     import datetime
     for name, fn in PAGES.items():
         CURRENT = name
         (ROOT / name).write_text(fn())
+    for LANG in LANGS[1:]:
+        (ROOT / LANG).mkdir(exist_ok=True)
+        for name in I18N:
+            CURRENT = name
+            (ROOT / lang_path(LANG, name)).write_text(localize(PAGES[name](), LANG))
+    LANG = 'nl'
     today = datetime.date.today().isoformat()
-    urls = ''.join(f'  <url><loc>{BASE}{"" if n == "index.html" else n}</loc><lastmod>{today}</lastmod></url>\n'
-                   for n in PAGES if n != '404.html')
+    locs = [n for n in PAGES if n != '404.html'] + [lang_path(l, n) for l in LANGS[1:] for n in I18N]
+    urls = ''.join(f'  <url><loc>{BASE}{n.replace("index.html", "")}</loc><lastmod>{today}</lastmod></url>\n'
+                   for n in locs)
     (ROOT / 'sitemap.xml').write_text(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{urls}</urlset>\n')
     (ROOT / 'robots.txt').write_text(f'User-agent: *\nAllow: /\n\nSitemap: {BASE}sitemap.xml\n')
-    print('gebouwd:', len(PAGES), "pagina's + sitemap.xml + robots.txt")
+    print('gebouwd:', len(PAGES), "pagina's +", 2 * len(I18N), "vertaald + sitemap.xml + robots.txt")

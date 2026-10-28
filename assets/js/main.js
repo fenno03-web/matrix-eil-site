@@ -1,4 +1,23 @@
-const QUOTES = [
+const LANG = document.documentElement.lang || 'nl';
+const QUOTES = LANG === 'en' ? [
+  ['No man ever steps in the same river twice.', 'Heraclitus'],
+  ['Everything flows.', 'Heraclitus'],
+  ['The way up and the way down are one and the same.', 'Heraclitus'],
+  ['Character is destiny.', 'Heraclitus'],
+  ['The hidden harmony is better than the obvious.', 'Heraclitus'],
+  ['If you do not expect the unexpected, you will not find it.', 'Heraclitus'],
+  ['The sun is new each day.', 'Heraclitus'],
+  ['Execution is the chariot of genius.', 'William Blake'],
+] : LANG === 'de' ? [
+  ['Niemand steigt zweimal in denselben Fluss.', 'Heraklit'],
+  ['Alles fließt.', 'Heraklit'],
+  ['Der Weg hinauf und hinab ist ein und derselbe.', 'Heraklit'],
+  ['Charakter ist Schicksal.', 'Heraklit'],
+  ['Die verborgene Harmonie ist stärker als die offenbare.', 'Heraklit'],
+  ['Wer das Unerwartete nicht erwartet, wird es nicht finden.', 'Heraklit'],
+  ['Die Sonne ist jeden Tag neu.', 'Heraklit'],
+  ['Execution is the chariot of genius.', 'William Blake'],
+] : [
   ['Niemand stapt twee keer in dezelfde rivier.', 'Heraclitus'],
   ['Alles stroomt.', 'Heraclitus'],
   ['De weg omhoog en de weg omlaag zijn één en dezelfde.', 'Heraclitus'],
@@ -249,7 +268,7 @@ if (standby && !reduce) {
   try { first = document.body.classList.contains('home') && !sessionStorage.getItem('matrix-intro'); sessionStorage.setItem('matrix-intro', '1'); } catch (e) { first = false; }
   if (first) {
     document.body.classList.add('intro');
-    const steps = [['Zaallicht uit', '…'], ['Standby', 'Q1'], ['', 'GO']];
+    const steps = [[{ en: 'House lights out', de: 'Saallicht aus' }[LANG] || 'Zaallicht uit', '…'], ['Standby', 'Q1'], ['', 'GO']];
     steps.forEach(([small, big], k) => setTimeout(() => {
       sb.innerHTML = `${small}<b${big === 'GO' ? ' class="go"' : ''}>${big}</b>`;
     }, k * 650));
@@ -261,7 +280,7 @@ if (standby && !reduce) {
       e.preventDefault();
       const target = a.getAttribute('href').split('#')[0];
       const portal = document.querySelector('.portal');
-      if (portal && (target === 'argus.html') !== document.body.classList.contains('argus-page')) {
+      if (portal && (target.endsWith('argus.html')) !== document.body.classList.contains('argus-page')) {
         portal.classList.add('go');
         setTimeout(() => { location.href = a.href; }, 950);
         return;
@@ -405,7 +424,7 @@ if (logoEl) {
 if (!reduce) {
   const ss = document.createElement('div');
   ss.className = 'screensaver';
-  ss.innerHTML = '<div><img src="assets/img/logo-matrix.png" alt=""><p>Pauze tussen twee acts</p><q></q></div>';
+  ss.innerHTML = `<div><img src="${document.querySelector('.logo img').getAttribute('src')}" alt=""><p>${{ en: 'Changeover between two acts', de: 'Umbaupause zwischen zwei Acts' }[LANG] || 'Pauze tussen twee acts'}</p><q></q></div>`;
   document.body.appendChild(ss);
   let idle;
   const wake = () => {

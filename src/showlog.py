@@ -12,7 +12,7 @@ SHOWLOG = [
     ('2024', 'Koning Carnaval Brunssum', 'Licht design, programming, operating', 'Heijnens Audio - Light - Vision', None),
     ('2024', 'Duikboot Lente Festival · House stage', 'Licht programming, operating', 'T.Y.S. Productions', None),
     ('2024', 'Paaspop · Pixl Stage', 'Licht en pixelstrips, programming, operating', 'T.Y.S. Productions', None),
-    ('2024', 'Talentenshow Brandenberg College', 'Stage- en lichtdesign, programming, operating', 'GTF Franzen Sound Light Vision', None),
+    ('2024', 'Talentenshow Brandenberg College', 'Stage- en lichtdesign, programming, operating', 'GTF Franzen Sound Light Vision', 'talentenshow-brandenberg'),
     ('2024', '90 jaar G.V. Wilhelmina', 'Stage- en lichtdesign, programming, operating', 'GTF Franzen Sound Light Vision', 'wilhelmina-90'),
     ('2024', 'Knaltibal Festival · Mainstage', 'Licht design, programming, operating', 'Heijnens Audio - Light - Vision', None),
     ('2024', 'Lake Dance Winterpark', 'Licht programming, operating', 'T.Y.S. Productions', None),

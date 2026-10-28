@@ -45,4 +45,16 @@ STORIES = {
         facts=[('90', 'jaar G.V. Wilhelmina'), ('3', 'dagen feest'), ('1e', 'verdieping, alles via de achterkant')],
         quote='Dit lijkt niet meer op een standaard zaal.',
     ),
+    'talentenshow-brandenberg': dict(
+        name='Talentenshow Brandenberg College',
+        meta='Schoolkantine, 2024',
+        title='Een kantine als <em>echt podium.</em>',
+        body=[
+            'Voor de talentenshow van het Brandenberg College verzorgde GTF Franzen Sound Light Vision de techniek en MATRIX het stage- en lichtontwerp, de programmering en de bediening. Het doel: een schoolkantine omtoveren tot een podium waar iedereen van zou opkijken. Iets wat je nooit verwacht in een kantine.',
+            'Elke act was anders, van dans tot zang. Daarom zat er veel variatie in de rig, van S601’s tot IW1240’s en sunstrips. Zo kreeg ieder optreden een eigen look, zonder dat er tussendoor iets omgebouwd hoefde te worden.',
+            'De lastigste puzzel was het podium zelf. De kantine en het bestaande podium hadden een beperkte hoogte, en binnen die grenzen moest er toch een fatsoenlijk podium staan, met licht dat de acts goed neerzette.',
+        ],
+        facts=[('1', 'schoolkantine, één echt podium'), ('S601 → IW1240', 'en sunstrips: een look per act'), ('2024', 'Brandenberg College')],
+        quote='Dit verwacht je niet in een schoolkantine.',
+    ),
 }
