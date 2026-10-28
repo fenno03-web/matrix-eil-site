@@ -116,7 +116,7 @@ def footer(extra_js=''):
       </div>
       <div>
         <h4>Pagina's</h4>
-        <ul><li><a href="index.html">Home</a></li><li><a href="projecten.html">Projecten</a></li><li><a href="over.html">Over</a></li><li><a href="argus.html">Argus Systems</a></li></ul>
+        <ul><li><a href="projecten.html">Projecten</a></li><li><a href="over.html">Over</a></li><li><a href="operators.html">Operators</a></li><li><a href="voor-festivals.html">Festivals</a></li><li><a href="voor-carnaval.html">Carnaval</a></li><li><a href="voor-verenigingen.html">Verenigingen</a></li><li><a href="faq.html">FAQ</a></li><li><a href="woordenlijst.html">Woordenlijst</a></li><li><a href="argus.html">Argus Systems</a></li></ul>
       </div>
       <div>
         <h4>Contact</h4>
@@ -1008,7 +1008,14 @@ def not_found():
   <div class="wrap">
     {cue_head('Q404', 'Cue niet gevonden', 'Error')}
     <h1 class="display reveal">Deze cue<br><em>bestaat niet.</em></h1>
-    <p class="lead reveal" style="max-width:640px;margin-top:30px">“Wie het onverwachte niet verwacht, zal het niet vinden.” Heraclitus had gelijk, maar deze pagina vind je hier echt niet.</p>
+    <p class="lead reveal" style="max-width:640px;margin-top:30px">“Wie het onverwachte niet verwacht, zal het niet vinden.” Heraclitus had gelijk, maar ergens tussen de tafel en deze pagina is de DMX-lijn doorgeknipt.</p>
+    <div class="dmx reveal" aria-hidden="true"><svg viewBox="0 0 1000 150" preserveAspectRatio="none">
+      <path class="cable" d="M0,110 C150,110 250,60 420,80 L470,86"/><path class="core" d="M0,110 C150,110 250,60 420,80 L470,86"/>
+      <path class="cable" d="M520,70 C620,40 760,120 900,60"/><path class="core dead" d="M520,70 C620,40 760,120 900,60"/>
+      <circle class="spark" cx="474" cy="84" r="4"/><circle class="spark" cx="482" cy="78" r="2" style="animation-delay:.3s"/>
+      <rect class="fix" x="900" y="30" width="60" height="60" rx="6"/><circle class="lens" cx="930" cy="60" r="18"/>
+    </svg>
+    <div class="dmx-cap"><span>Universe <b>404</b></span><span>Signaal <b>verloren</b></span><span>Fixture <b>geen data</b></span></div></div>
     <div class="btns reveal" style="margin-top:40px"><a class="btn fill" href="index.html">Terug naar Q1</a><a class="btn" href="projecten.html">Projecten</a><a class="btn" href="diensten.html">Diensten</a></div>
   </div>
 </section>
@@ -1016,8 +1023,270 @@ def not_found():
 {footer()}'''
 
 
+# ---------------------------------------------------------------- Operators
+CONSOLES = [
+    ('grandMA3', 'Lichttafel', 'Voor grote shows en complexe rigs: van programmeren tot live busking.'),
+    ('Infinity Chimp', 'Lichttafel', 'Snel en flexibel, ook voor kleinere podia en tours. Met eigen macro’s uit ARGUS TREEHOUSE in ontwikkeling.'),
+    ('Resolume', 'Video', 'Visuals en content live op het ritme van de show, op LED-wanden en schermen.'),
+    ('Capture', 'Visualisatie', 'Shows vooraf in 3D opbouwen en programmeren, zodat je op locatie tijd wint.'),
+]
+RIDER = [
+    ('Plek aan FOH', 'Met vrij zicht op het podium en op de schermen.'),
+    ('Stroom', 'Een eigen, schone groep voor tafel en laptop.'),
+    ('Data', 'Netwerk of DMX tot aan FOH, liefst met een reservelijn.'),
+    ('Info vooraf', 'Timetable, rigplot, patch en het contact van de productie, een paar dagen voor de show.'),
+    ('Tijd om te focussen', 'Een donker moment in de opbouw om posities en focus te zetten.'),
+    ('Crewcatering', 'Eten en drinken. Een operator op een lege maag mist cues.'),
+]
+
+
+def operators():
+    con = ''.join(f'<article class="con reveal"><span class="tag">{k}</span><h3>{n}</h3><p>{d}</p></article>' for n, k, d in CONSOLES)
+    rider = ''.join(f'<li class="reveal"><span class="sn">{i + 1:02d}</span><div><h3>{t}</h3><p>{d}</p></div></li>' for i, (t, d) in enumerate(RIDER))
+    ld = [ORG, crumbs(('Operators', 'operators.html'))]
+    return f'''{head("Licht- en video-operator inhuren | MATRIX E.I.L.", "Een ervaren lichtoperator, programmeur of VJ nodig op grandMA3, Infinity Chimp of Resolume? Of ben je zelf operator en wil je met MATRIX werken? Lees hier hoe.", ld=ld)}
+<body class="page-svc page-ops">
+{header('operators.html')}
+<main>
+<section class="section page-top" data-cue="Q1" data-cue-name="Operators">
+  <div class="wrap">
+    {cue_head('Q1', 'Operators', 'Achter de tafel')}
+    <div class="intro-line">
+      <h1 class="display reveal">Achter<br><em>de tafel.</em></h1>
+      <p class="lead reveal">Een show is zo goed als de persoon die hem draait. Of je nu een operator zoekt voor je podium, of zelf achter de tafel staat en met ons wilt werken: hier lees je hoe dat gaat.</p>
+    </div>
+    <div class="ops-split">
+      <a class="ops-card reveal" href="#inhuren"><span class="tag">Voor producties</span><h2>Operator inhuren</h2><p>Licht programmeren en draaien, of visuals live op je schermen.</p><span class="link-arrow">Lees meer</span></a>
+      <a class="ops-card reveal" href="#aanmelden"><span class="tag">Voor operators</span><h2>Werken met MATRIX</h2><p>Freelance operator, programmeur of VJ? Meld je.</p><span class="link-arrow">Lees meer</span></a>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="inhuren" style="padding-top:0" data-cue="Q2" data-cue-name="Inhuren">
+  <div class="wrap">
+    {cue_head('Q2', 'Operator inhuren', 'Licht · Video')}
+    <div class="svc-body">
+      <div class="body-text reveal">
+        <p>MATRIX levert lichtprogrammeurs, lichtoperators en VJ’s voor festivals, evenementen en tours. We stappen in op jouw rig en jouw ontwerp, of nemen het ontwerp zelf mee.</p>
+        <p>We komen voorbereid: de showfile staat vooraf klaar waar dat kan, de timetable is doorgenomen en we weten wie je productiecontact is. Op de dag zelf draaien we de show op het moment, met oog voor de artiest en het publiek.</p>
+        <p>Van een enkele avond op een stage tot meerdere dagen festival: <a href="lichtprogrammeur.html">lees meer over lichtprogrammering</a> of <a href="vj-visuals.html">over VJ en visuals</a>.</p>
+      </div>
+      <div class="cons">{con}</div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0" data-cue="Q3" data-cue-name="Rider">
+  <div class="wrap">
+    {cue_head('Q3', 'Operator rider', 'Wat we nodig hebben')}
+    <h2 class="title reveal">De rider<br><em>van de tafel.</em></h2>
+    <ol class="rider-list">{rider}
+    </ol>
+  </div>
+</section>
+
+<section class="section" id="aanmelden" style="padding-top:0" data-cue="Q4" data-cue-name="Aanmelden">
+  <div class="wrap">
+    {cue_head('Q4', 'Werken met MATRIX', 'Freelancers')}
+    <div class="intro-line">
+      <h2 class="title reveal">Sta jij<br><em>achter de tafel?</em></h2>
+      <div class="reveal">
+        <p class="lead">We werken graag met operators, programmeurs en VJ’s die hun vak verstaan en rustig blijven als het spannend wordt.</p>
+        <p style="margin-top:18px;color:var(--muted)">Stuur een mail met wie je bent, op welke tafels en software je werkt, een paar shows die je draaide en waar je woont. Een showreel of Instagram helpt.</p>
+        <div class="btns" style="margin-top:26px"><a class="btn fill" href="mailto:{MAIL}?subject=Operator%20bij%20MATRIX">Meld je aan</a><a class="btn" href="{WHATSAPP}" target="_blank" rel="noopener">WhatsApp</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+{contact_block('Q5')}
+</main>
+{footer()}'''
+
+
+# ---------------------------------------------------------------- Voor wie
+DOELGROEPEN = [
+    dict(slug='voor-festivals', short='Festivals', h1='Licht voor<br><em>festivals.</em>',
+         seo='Lichtontwerp en lichtoperator voor festivals | MATRIX E.I.L.',
+         desc='Lichtontwerp, programmering, operators en LED voor festivals en stages. MATRIX werkte op o.a. Paaspop, Pinkpop, Essential, Decibel Outdoor en Electrisize.',
+         lead='Meerdere stages, wisselende acts en een strakke timetable. Wij zorgen dat elk podium een eigen gezicht heeft en dat de show op elke stage staat.',
+         body=['Op een festival komt alles samen: veel artiesten achter elkaar, korte changeovers en weinig tijd om te programmeren. Daarom bereiden we de show vooraf voor waar het kan, en weten we op de dag precies wat er per act nodig is.',
+               'We leveren het lichtontwerp voor een stage, programmeren en draaien de shows, of stappen in als operator op een bestaande rig. Ook visuals en LED nemen we mee, zodat licht en beeld één geheel vormen.'],
+         points=['Lichtontwerp per stage', 'Programmering vooraf, in 3D waar het kan', 'Operators voor elke act', 'Visuals en LED in dezelfde lijn'],
+         keys=['Festival', 'Paaspop', 'Pinkpop', 'Decibel', 'Electrisize', 'Soenda', 'Lake Dance', 'Groove Garden', 'Harmony', 'ParkCity', 'Woeësj', 'Power Weekend']),
+    dict(slug='voor-carnaval', short='Carnaval', h1='Licht voor<br><em>carnaval.</em>',
+         seo='Licht en visuals voor carnaval | MATRIX E.I.L.',
+         desc='Licht, visuals en programmering voor carnavalsfeesten, pleinfeesten, carnavalsfinales en carnavalsradio in Limburg. Van Groëte Gulpener Vastelaoves Finale tot Carnaval Radio.',
+         lead='Carnaval is in Limburg geen feestje, het is een seizoen. Van finale op het marktplein tot pleinfeest en live radio: wij zorgen dat het er groot uitziet.',
+         body=['Carnaval vraagt om licht dat feest uitstraalt en toch strak loopt. Optredens, uitreikingen en live uitzendingen wisselen elkaar snel af, en alles moet in één keer goed.',
+               'We werkten op onder meer de Groëte Gulpener Vastelaoves Finale, Carnaval Radio, Koning Carnaval en Halfvasten. We weten hoe zo’n avond loopt en wat er op het juiste moment moet gebeuren.'],
+         points=['Licht voor zalen, tenten en pleinen', 'Programmering voor live tv en radio', 'Visuals op schermen', 'Ervaring met het Limburgse carnavalsseizoen'],
+         keys=['Carnaval', 'Gulpener', 'Halfvasten', 'Pleinfeest', 'Gulden Humor']),
+    dict(slug='voor-verenigingen', short='Scholen en verenigingen', h1='Licht voor<br><em>verenigingen.</em>',
+         seo='Licht en stage voor jubilea, scholen en verenigingen | MATRIX E.I.L.',
+         desc='Stage- en lichtontwerp voor jubilea, talentenshows, schuttersfeesten en verenigingsfeesten. Zoals 100 jaar Sportclub’25, 90 jaar G.V. Wilhelmina en ZLF 2025.',
+         lead='Een jubileum, een talentenshow of een schuttersfeest verdient net zo goed een show om nooit te vergeten. Wij maken het groot, binnen jullie mogelijkheden.',
+         body=['Bij verenigingen en scholen draait het om de mensen op het podium: leden, leerlingen, vrijwilligers. Wij zorgen dat zij er op hun mooist uitzien, met licht dat het verhaal van de avond vertelt.',
+               'We denken mee vanaf het eerste idee, ontwerpen het podium en het licht, en draaien de show zelf. Zo hoeft de organisatie zich alleen nog druk te maken over het feest.'],
+         points=['Stage- en lichtontwerp op maat', 'Meedenken vanaf het eerste idee', 'Show op muziek of timecode', 'Eén aanspreekpunt van begin tot eind'],
+         keys=['Sportclub', 'Wilhelmina', 'Talentenshow', 'ZLF', 'USC', 'Gulden Humor']),
+]
+
+
+def doelgroep_page(d):
+    rows = [r for r in SHOWLOG if any(k.lower() in r[1].lower() for k in d['keys'])]
+    pages = {slug for slug, *_ in PROJECTS}
+    lis = ''.join(f'<li><span class="sl-show">{f"<a href=\'project-{r[4]}.html\'>{r[1]}</a>" if r[4] in pages else r[1]}</span><span class="sl-role">{r[2]}</span><span class="sl-client">{r[0]}</span></li>' for r in reversed(rows))
+    others = ''.join(f'<a href="{o["slug"]}.html">{o["short"]} →</a>' for o in DOELGROEPEN if o is not d)
+    svc_ld = {'@context': 'https://schema.org', '@type': 'Service', 'name': f"Licht en visuals voor {d['short'].lower()}", 'description': d['desc'],
+              'provider': {'@id': BASE + '#matrix'}, 'areaServed': 'Nederland'}
+    ld = [ORG, svc_ld, crumbs((d['short'], d['slug'] + '.html'))]
+    body = ''.join(f'<p>{b}</p>' for b in d['body'])
+    points = ''.join(f'<li>{p}</li>' for p in d['points'])
+    return f'''{head(d['seo'], d['desc'], ld=ld)}
+<body class="page-svc">
+{header(d['slug'] + '.html')}
+<main>
+<section class="section page-top" data-cue="Q1" data-cue-name="{d['short']}">
+  <div class="wrap">
+    {cue_head('Q1', 'Voor ' + d['short'].lower())}
+    <div class="intro-line">
+      <h1 class="display reveal">{d['h1']}</h1>
+      <p class="lead reveal">{d['lead']}</p>
+    </div>
+  </div>
+</section>
+<section class="section" style="padding-top:0" data-cue="Q2" data-cue-name="Aanpak">
+  <div class="wrap">
+    {cue_head('Q2', 'Aanpak')}
+    <div class="svc-body">
+      <div class="body-text reveal">{body}</div>
+      <ul class="svc-points reveal">{points}</ul>
+    </div>
+  </div>
+</section>
+<section class="section" style="padding-top:0" data-cue="Q3" data-cue-name="Gedraaid">
+  <div class="wrap">
+    {cue_head('Q3', 'Uit het logboek', f'{len(rows)} producties')}
+    <div class="sl-year reveal"><h3><b>Gedraaid</b><span>selectie uit het <a href="projecten.html#showlog">showlog</a></span></h3><ul>{lis}</ul></div>
+  </div>
+</section>
+<section class="section" style="padding-top:0">
+  <div class="wrap others reveal"><span class="tag">Ook voor</span>{others}<a href="operators.html">Operators →</a></div>
+</section>
+{contact_block('Q4')}
+</main>
+{footer()}'''
+
+
+# ---------------------------------------------------------------- FAQ
+FAQ = [
+    ('Wat doet MATRIX E.I.L. precies?', 'We verzorgen het visuele plaatje van live producties: stage- en lichtontwerp, lichtprogrammering, live operation, VJ en visuals, en LED-techniek. Dat kan los, of alles in één hand.'),
+    ('Wat kost een lichtontwerp of een operator?', 'Dat hangt af van de grootte van het podium, het aantal showdagen en hoeveel voorbereiding er nodig is. Stuur ons je datum, locatie en wat je in gedachten hebt, dan krijg je snel een voorstel op maat.'),
+    ('Hoe ver van tevoren moet ik boeken?', 'Hoe eerder, hoe beter, zeker in het festival- en carnavalsseizoen. Voor een ontwerp hebben we graag een paar weken tot maanden voorbereiding. Voor een operator op een bestaande rig kan het soms ook op korte termijn, vraag het gerust.'),
+    ('Leveren jullie ook het materiaal?', 'Dat verschilt per productie. Vaak werken we samen met verhuur- en techniekbedrijven die het materiaal leveren, terwijl wij het ontwerp, de programmering en de show verzorgen. We denken graag mee over de beste oplossing.'),
+    ('Op welke lichttafels werken jullie?', 'Vooral op grandMA3 en Infinity Chimp. Voor video werken we met Resolume, en shows bouwen we vooraf op in Capture. <a href="operators.html">Lees meer over onze operators</a>.'),
+    ('Werken jullie alleen in Limburg?', 'We werken veel in Limburg, maar draaien net zo goed shows in de rest van het land, van Paaspop en Pinkpop tot Decibel Outdoor.'),
+    ('Kunnen jullie ook alleen programmeren, zonder ontwerp?', 'Zeker. We stappen in op een bestaand ontwerp of rig, programmeren de show en draaien hem live. Of we programmeren vooraf en geven de showfile door aan jullie eigen operator.'),
+    ('Wat is ARGUS Systems?', 'ARGUS Systems is de softwaretak van MATRIX. We bouwen tools voor productie en showoperators, ontstaan uit problemen die we op de vloer zelf tegenkwamen. <a href="argus.html">Bekijk ARGUS</a>.'),
+    ('Hoe neem ik contact op?', f'Het snelst via <a href="{WHATSAPP}" target="_blank" rel="noopener">WhatsApp</a> of mail naar <a href="mailto:{MAIL}">{MAIL}</a>. Je kunt ons ook vinden op <a href="{INSTA}" target="_blank" rel="noopener">Instagram</a>.'),
+]
+
+
+def faq():
+    import re as _re
+    items = ''.join(f'<details class="qa reveal"><summary><span class="qn">Q{i + 1:02d}</span>{q}</summary><div><p>{a}</p></div></details>' for i, (q, a) in enumerate(FAQ))
+    faq_ld = {'@context': 'https://schema.org', '@type': 'FAQPage', 'mainEntity': [
+        {'@type': 'Question', 'name': q, 'acceptedAnswer': {'@type': 'Answer', 'text': _re.sub('<[^>]+>', '', a)}} for q, a in FAQ]}
+    return f'''{head("Veelgestelde vragen | MATRIX E.I.L.", "Antwoorden op veelgestelde vragen over lichtontwerp, lichtoperators, VJ en LED: wat het kost, hoe ver vooruit je boekt en op welke tafels we werken.", ld=[ORG, faq_ld, crumbs(('FAQ', 'faq.html'))])}
+<body class="page-svc">
+{header('faq.html')}
+<main>
+<section class="section page-top" data-cue="Q1" data-cue-name="FAQ">
+  <div class="wrap">
+    {cue_head('Q1', 'Veelgestelde vragen', f'{len(FAQ)} vragen')}
+    <div class="intro-line">
+      <h1 class="display reveal">Vragen<br><em>uit de zaal.</em></h1>
+      <p class="lead reveal">De vragen die we het vaakst krijgen, met een eerlijk antwoord. Staat jouw vraag er niet bij? Stuur hem gerust.</p>
+    </div>
+    <div class="faq">{items}</div>
+  </div>
+</section>
+{contact_block('Q2')}
+</main>
+{footer()}'''
+
+
+# ---------------------------------------------------------------- Woordenlijst
+TERMEN = [
+    ('Art-Net', 'Een protocol om DMX-data over een gewoon netwerk te sturen. Zo gaan veel universes over één kabel.'),
+    ('Beam', 'Een lamp met een smalle, strakke lichtbundel. Goed zichtbaar in rook, voor scherpe lijnen in de lucht.'),
+    ('Blinder', 'Een felle lamp die op het publiek is gericht, voor korte momenten van verblinding bij een drop of climax.'),
+    ('Busking', 'Live licht draaien zonder vaste cues, op gevoel en op de muziek. Veel gebruikt bij dance-acts.'),
+    ('Capture', 'Software om een lichtshow vooraf in 3D te bouwen en te programmeren, zodat je op locatie tijd wint.'),
+    ('Changeover', 'De ombouw tussen twee acts op hetzelfde podium.'),
+    ('Cue', 'Een opgeslagen moment in de show: welke lampen aan staan, in welke kleur, positie en intensiteit.'),
+    ('Cuelijst', 'Een reeks cues achter elkaar, die je met GO één voor één afspeelt.'),
+    ('DMX', 'Het standaard stuursignaal voor licht. Eén DMX-universe stuurt tot 512 kanalen aan.'),
+    ('FOH', 'Front of house: de plek in de zaal waar licht, geluid en video worden bediend.'),
+    ('Fixture', 'Een lamp of apparaat dat je vanaf de lichttafel aanstuurt.'),
+    ('grandMA3', 'Een veelgebruikte lichttafel voor grote shows en festivals.'),
+    ('Haze', 'Fijne nevel die de lichtbundels zichtbaar maakt in de lucht.'),
+    ('Infinity Chimp', 'Een lichttafel van Highlite, snel en flexibel voor podia en tours.'),
+    ('LD', 'Lighting designer: de lichtontwerper die bepaalt hoe de show eruitziet.'),
+    ('LED-wand', 'Een groot scherm opgebouwd uit LED-panelen, voor visuals en live beeld.'),
+    ('Moving head', 'Een lamp met een draaiende kop die je op afstand kunt richten, kleuren en laten bewegen.'),
+    ('MVR', 'My Virtual Rig: een bestandsformaat om een complete rig met posities en patch uit te wisselen tussen programma’s.'),
+    ('Operator', 'De persoon die tijdens de show de lichttafel of video bedient.'),
+    ('Patch', 'De koppeling tussen de lampen en hun DMX-adressen, zodat de tafel weet welke lamp waar zit.'),
+    ('Pixel pitch', 'De afstand tussen de pixels van een LED-scherm. Hoe kleiner, hoe scherper het beeld van dichtbij.'),
+    ('Pixelmapping', 'Video of effecten over losse lampen of LED-strips verdelen alsof het pixels van een scherm zijn.'),
+    ('Programmeur', 'Degene die de show in de lichttafel bouwt: cues, effecten en paletten.'),
+    ('Resolume', 'Software voor live visuals en VJ, veel gebruikt op festivals en in clubs.'),
+    ('sACN', 'Een netwerkprotocol voor DMX-data, net als Art-Net.'),
+    ('Speedmaster', 'Een regelaar op de lichttafel die de snelheid van effecten op het tempo van de muziek zet.'),
+    ('Strobe', 'Een lamp die zeer kort en fel flitst.'),
+    ('Timecode', 'Een tijdsignaal waarmee licht, video en muziek precies synchroon lopen.'),
+    ('Truss', 'De aluminium constructie waaraan lampen, schermen en speakers hangen.'),
+    ('VJ', 'Video jockey: maakt en mixt live visuals op het ritme van de muziek.'),
+    ('Volgspot', 'Een lamp die een artiest over het podium volgt, met de hand of automatisch.'),
+    ('Wash', 'Een lamp met een brede, zachte lichtbundel om vlakken en mensen in te kleuren.'),
+]
+
+
+def woordenlijst():
+    letters = sorted({t[0][0].upper() for t in TERMEN})
+    idx = ''.join(f'<a href="#l-{l}">{l}</a>' for l in letters)
+    groups = ''
+    for l in letters:
+        items = ''.join(f'<div class="term" id="t-{t.lower().replace(" ", "-")}"><dt>{t}</dt><dd>{d}</dd></div>' for t, d in TERMEN if t[0].upper() == l)
+        groups += f'<section class="tg reveal" id="l-{l}"><h2>{l}</h2><dl>{items}</dl></section>'
+    term_ld = {'@context': 'https://schema.org', '@type': 'DefinedTermSet', 'name': 'Woordenlijst licht en video', 'hasDefinedTerm': [
+        {'@type': 'DefinedTerm', 'name': t, 'description': d} for t, d in TERMEN]}
+    return f'''{head("Woordenlijst licht en video: van DMX tot volgspot | MATRIX E.I.L.", "Wat is een cue, DMX, haze of pixel pitch? De woordenlijst van MATRIX E.I.L. legt de belangrijkste termen uit licht, video en LED kort en helder uit.", ld=[ORG, term_ld, crumbs(('Woordenlijst', 'woordenlijst.html'))])}
+<body class="page-svc">
+{header('woordenlijst.html')}
+<main>
+<section class="section page-top" data-cue="Q1" data-cue-name="Woordenlijst">
+  <div class="wrap">
+    {cue_head('Q1', 'Woordenlijst', f'{len(TERMEN)} termen')}
+    <div class="intro-line">
+      <h1 class="display reveal">Vaktaal,<br><em>vertaald.</em></h1>
+      <p class="lead reveal">Op de vloer praten we in afkortingen. Hier staat wat ze betekenen, van Art-Net tot wash.</p>
+    </div>
+    <nav class="az reveal" aria-label="Letters">{idx}</nav>
+    <div class="terms">{groups}</div>
+  </div>
+</section>
+{contact_block('Q2')}
+</main>
+{footer()}'''
+
+
 PAGES = {'index.html': home, 'diensten.html': diensten, 'projecten.html': projecten, 'over.html': over,
-         'argus.html': argus, 'privacy.html': privacy, '404.html': not_found}
+         'argus.html': argus, 'privacy.html': privacy, '404.html': not_found,
+         'operators.html': operators, 'faq.html': faq, 'woordenlijst.html': woordenlijst}
+for _g in DOELGROEPEN:
+    PAGES[_g['slug'] + '.html'] = (lambda g: lambda: doelgroep_page(g))(_g)
 for _d in DIENSTEN:
     PAGES[_d['slug'] + '.html'] = (lambda d: lambda: dienst_page(d))(_d)
 for _i, _p in enumerate(PROJECTS):

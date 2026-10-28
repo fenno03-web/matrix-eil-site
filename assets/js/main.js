@@ -352,6 +352,10 @@ addEventListener('keydown', e => {
     setTimeout(() => document.body.classList.remove('leaving'), 420);
     toast('<b>GO.</b> Volgende cue.', 1800);
   }
+  if (k === 'f') fohPanel();
+  if (k === 'h') hazer();
+  if (k === 's' && !reduce) strobe();
+  if (e.key === '?') cheatSheet();
 });
 black.addEventListener('click', () => document.body.classList.remove('blackout'));
 
@@ -412,8 +416,113 @@ if (!reduce) {
   wake();
 }
 
+// FOH-modus: faders voor kleur, licht en rook
+function fohPanel() {
+  let p = document.querySelector('.foh');
+  if (p) { p.classList.toggle('show'); document.body.classList.toggle('foh-open', p.classList.contains('show')); return; }
+  p = document.createElement('div');
+  p.className = 'foh show';
+  document.body.classList.add('foh-open');
+  p.innerHTML = '<div class="foh-head"><b>FOH</b><span>Jij hebt nu de tafel</span><button aria-label="Sluit">×</button></div>' +
+    ['Kleur', 'Master', 'Haze', 'Strobe'].map((n, i) => `<label class="fdr"><input type="range" min="0" max="100" value="${[0, 100, 30, 0][i]}" data-f="${i}" orient="vertical"><span>${n}</span><b>${[0, 100, 30, 0][i]}</b></label>`).join('');
+  document.body.appendChild(p);
+  const root = document.documentElement, base = getComputedStyle(root).getPropertyValue('--accent');
+  let strobeId = null;
+  p.querySelector('button').addEventListener('click', () => { p.classList.remove('show'); document.body.classList.remove('foh-open'); });
+  p.querySelectorAll('input').forEach(inp => inp.addEventListener('input', () => {
+    const v = +inp.value; inp.nextElementSibling.nextElementSibling.textContent = v;
+    if (inp.dataset.f === '0') root.style.setProperty('--accent', v ? `hsl(${(325 + v * 3.6) % 360} 90% 55%)` : base);
+    if (inp.dataset.f === '1') document.querySelector('main').style.filter = v < 100 ? `brightness(${.15 + v / 117})` : '';
+    if (inp.dataset.f === '2') { const sm = document.querySelector('.smoke'); if (sm) sm.style.opacity = .3 + v / 30; }
+    if (inp.dataset.f === '3') {
+      clearInterval(strobeId); document.body.classList.remove('flash-on');
+      if (v > 0 && !reduce) strobeId = setInterval(() => document.body.classList.toggle('flash-on'), 600 - v * 3.5);
+      if (v === 0) document.body.classList.remove('flash-on');
+    }
+  }));
+  toast('<b>FOH-modus.</b> Niet aan de master komen. Grapje, ga je gang.');
+}
+
+// Rookmachine: de pagina loopt even vol haze
+function hazer() {
+  if (document.querySelector('.haze-burst')) return;
+  const h = document.createElement('div');
+  h.className = 'haze-burst';
+  h.innerHTML = '<i></i><i></i><i></i><i></i>';
+  document.body.appendChild(h);
+  setTimeout(() => h.remove(), 9000);
+  toast(['<b>Hazer aan.</b> Hopelijk heeft iemand de rookmelders overbrugd.', '<b>Hazer aan.</b> Nu zie je pas wat de beams doen.', '<b>Hazer op 100%.</b> De fotograaf is blij, de brandweer minder.'][Math.floor(Math.random() * 3)]);
+}
+
+// Strobe: kort, en onder de drie flitsen per seconde
+function strobe() {
+  if (document.body.classList.contains('strobing')) return;
+  document.body.classList.add('strobing');
+  let n = 0;
+  const id = setInterval(() => { document.body.classList.toggle('flash-on'); if (++n >= 6) { clearInterval(id); document.body.classList.remove('flash-on', 'strobing'); } }, 360);
+  toast('<b>Strobe.</b> Even kort. Epilepsiewaarschuwing staat op de flyer.', 2200);
+}
+
+// Spiekbriefje met de sneltoetsen
+function cheatSheet() {
+  toast('<b>Tafeltoetsen</b> · B blackout · G go · F FOH · H hazer · S strobe · typ “argus”', 6000);
+}
+
+// Knoppen die je niet mag indrukken
+const NOPE = [
+  ['Dat was de clear-knop. De programmer is leeg. Succes.', 'shake'],
+  ['Grand master op 0. Het publiek klapt alvast.', 'dim'],
+  ['Je hebt net de intro van de headliner gestart. Tien minuten te vroeg.', ''],
+  ['Fixture 101 zit nu op adres 1. En adres 1 is weg.', 'shake'],
+  ['Timecode kwijt. De DJ draait toch een andere track.', ''],
+  ['Dat was de noodstop van de kinetics. Grapje. Toch?', 'shake'],
+  ['Highlight aan. Iedereen ziet er nu slecht uit.', 'bright'],
+  ['Je hebt de showfile overschreven met “test_final_echt_v2”. TARTARUS heeft hem gelukkig nog.', ''],
+  ['De rookmelder gaat af. De zaal staat buiten.', 'haze'],
+  ['Changeover gestart. De drummer staat nog op het podium.', ''],
+  ['Alle moving heads kijken nu naar de bar.', 'shake'],
+  ['Strobe op 100% tijdens de ballad. De zanger kijkt je aan.', 'strobe'],
+  ['Je hebt de productieleider gebeld. Om 04:00.', ''],
+  ['Universe 1 ging net offline. Universe 2 doet solidair mee.', 'dim'],
+  ['Niet indrukken, stond er. Hier is een quote als straf: “Karakter is lotsbestemming.” · Heraclitus', ''],
+];
+let nopeBag = [];
+function nope() {
+  if (!nopeBag.length) nopeBag = NOPE.map((_, i) => i).sort(() => Math.random() - .5);
+  const [txt, fx] = NOPE[nopeBag.pop()];
+  if (fx === 'shake') { document.body.classList.remove('shake'); void document.body.offsetWidth; document.body.classList.add('shake'); }
+  if (fx === 'dim') { document.body.classList.add('dim'); setTimeout(() => document.body.classList.remove('dim'), 1600); }
+  if (fx === 'bright') { document.body.classList.add('bright'); setTimeout(() => document.body.classList.remove('bright'), 1400); }
+  if (fx === 'haze') hazer();
+  if (fx === 'strobe' && !reduce) strobe();
+  toast(txt, 3600);
+}
+document.querySelectorAll('.foot-bottom').forEach(fb => {
+  const b = document.createElement('button');
+  b.className = 'nope'; b.type = 'button'; b.innerHTML = '<i></i>Niet indrukken';
+  b.addEventListener('click', nope);
+  fb.appendChild(b);
+});
+
+// Load-out: wie de site met de muis bovenaan verlaat, krijgt een vrachtwagen te zien
+if (finePointer) {
+  let shown = false;
+  try { shown = sessionStorage.getItem('matrix-loadout') === '1'; } catch (e) {}
+  document.addEventListener('mouseout', e => {
+    if (shown || e.relatedTarget || e.clientY > 8) return;
+    shown = true;
+    try { sessionStorage.setItem('matrix-loadout', '1'); } catch (err) {}
+    const t = document.createElement('div');
+    t.className = 'loadout';
+    t.innerHTML = '<span class="truck" aria-hidden="true"><b>MATRIX</b></span>';
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 5200);
+    toast('<b>Load-out?</b> Vergeet de gaffa niet. En ons nummer: wa.me/31630971404', 4800);
+  });
+}
+
 // Voor wie in de console kijkt
-console.log('%cMATRIX E.I.L.%c\nExecution is the chariot of genius.\n\nZelfstandige specialist met een eigen blik? info@matrixeventsupport.nl\nTip: typ "argus" op de site, of probeer B.', 'font: 700 28px sans-serif; color: #ec0a8c', 'font: 13px monospace; color: #9a938a');
+console.log('%cMATRIX E.I.L.%c\nExecution is the chariot of genius.\n\nZelfstandige specialist met een eigen blik? info@matrixeventsupport.nl\nTip: typ "argus" op de site, of druk op ? voor de tafeltoetsen.', 'font: 700 28px sans-serif; color: #ec0a8c', 'font: 13px monospace; color: #9a938a');
 
 // ---------------------------------------------------------------- Organisch: rook, stof, vuur en hittetrilling
 const SVGNS = 'http://www.w3.org/2000/svg';
