@@ -84,20 +84,58 @@ if (expList && finePointer) {
   });
 }
 
-// Galerij groot bekijken
+// Fotoreeksen groot bekijken (projecten en galerij)
+const box = document.createElement('div');
+box.className = 'lightbox';
+box.setAttribute('role', 'dialog');
+box.setAttribute('aria-modal', 'true');
+box.innerHTML = '<button class="lb-close" aria-label="Sluiten">✕</button><figure><img alt=""></figure>' +
+  '<div class="lb-bar"><button class="lb-prev" aria-label="Vorige">←</button><span class="lb-title"></span><span class="lb-count"></span><button class="lb-next" aria-label="Volgende">→</button></div>';
+const lbImg = box.querySelector('img');
+let lbList = [], lbIdx = 0;
+function lbShow(i) {
+  lbIdx = (i + lbList.length) % lbList.length;
+  lbImg.src = lbList[lbIdx];
+  box.querySelector('.lb-count').textContent = lbList.length > 1 ? `${lbIdx + 1} / ${lbList.length}` : '';
+  box.querySelectorAll('.lb-prev, .lb-next').forEach(b => { b.style.visibility = lbList.length > 1 ? 'visible' : 'hidden'; });
+  const next = new Image(); next.src = lbList[(lbIdx + 1) % lbList.length];
+}
+function lbOpen(list, i, title) {
+  if (!box.isConnected) document.body.appendChild(box);
+  lbList = list;
+  box.querySelector('.lb-title').textContent = title || '';
+  lbShow(i);
+  box.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function lbClose() { box.classList.remove('open'); document.body.style.overflow = ''; }
+box.addEventListener('click', e => {
+  if (e.target.closest('.lb-prev')) lbShow(lbIdx - 1);
+  else if (e.target.closest('.lb-next')) lbShow(lbIdx + 1);
+  else if (e.target === lbImg) lbShow(lbIdx + 1);
+  else if (!e.target.closest('.lb-bar')) lbClose();
+});
+document.addEventListener('keydown', e => {
+  if (!box.classList.contains('open')) return;
+  if (e.key === 'Escape') lbClose();
+  if (e.key === 'ArrowRight') lbShow(lbIdx + 1);
+  if (e.key === 'ArrowLeft') lbShow(lbIdx - 1);
+});
+let touchX = null;
+box.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; }, { passive: true });
+box.addEventListener('touchend', e => {
+  if (touchX === null) return;
+  const dx = e.changedTouches[0].clientX - touchX;
+  if (Math.abs(dx) > 40) lbShow(lbIdx + (dx < 0 ? 1 : -1));
+  touchX = null;
+});
+document.querySelectorAll('[data-gallery]').forEach(el => {
+  el.addEventListener('click', () => lbOpen(JSON.parse(el.dataset.gallery), 0, el.dataset.title));
+});
 const gallery = document.querySelector('.gallery');
 if (gallery) {
-  const box = document.createElement('div');
-  box.className = 'lightbox';
-  box.innerHTML = '<img alt="">';
-  document.body.appendChild(box);
-  gallery.addEventListener('click', e => {
-    if (e.target.tagName !== 'IMG') return;
-    box.firstChild.src = e.target.src;
-    box.classList.add('open');
-  });
-  box.addEventListener('click', () => box.classList.remove('open'));
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') box.classList.remove('open'); });
+  const imgs = [...gallery.querySelectorAll('img')];
+  imgs.forEach((img, i) => img.addEventListener('click', () => lbOpen(imgs.map(x => x.src), i, 'Uit het veld')));
 }
 
 // Zachte overgang bij het wisselen van pagina

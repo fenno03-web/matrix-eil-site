@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """Bouwt de HTML-pagina's van de site uit gedeelde onderdelen. Draai: python3 build.py"""
+import json
 from pathlib import Path
 
 ROOT = Path(__file__).parent
 MAIL = 'info@matrixeventsupport.nl'
 TEL = '+31630971404'
 TEL_TXT = '+31 6 30971404'
-INSTA = 'https://www.instagram.com/'
+INSTA = 'https://www.instagram.com/matrix.eil/'
 
 FONTS = ('https://fonts.googleapis.com/css2?family=Archivo:wght@800;900'
          '&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400'
@@ -97,44 +98,43 @@ def contact_block():
 </section>'''
 
 
-ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X']
+ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII', 'XIII', 'XIV', 'XV']
 
 # ---------------------------------------------------------------- Home
 WORK = [
-    ('woeesj-stock-wide.jpg', 1285, 559, 'Woeësj-Stock', 'Simpelveld, 2026',
+    ('proj/woeesj-stock/01.jpg', 1600, 1067, 'Woeësj-Stock', 'Simpelveld, 2026', 'woeesj-stock',
      'Stage design · Lighting design<br>Programming · Live operation<br>Commissioned by GTF Franzen'),
-    ('electrisize.jpg', 1345, 745, 'Electrisize', 'Main Stage &amp; Tapuya, 2026',
+    ('electrisize.jpg', 1345, 745, 'Electrisize', 'Main Stage &amp; Tapuya, 2026', 'electrisize',
      'LED systems · Infrastructure<br>Setup &amp; commissioning<br>For Djem LED Screens'),
-    ('parkcity.jpg', 1600, 1066, 'Parkcity Live', 'Dance Stage, 2026',
-     'VJ · Custom visual content<br>Live visual operation<br>For WE-AV'),
-    ('boiler-room.jpg', 704, 481, 'Boiler Room', 'Complex Maastricht, 2026',
+    ('proj/parkcity-live/01.jpg', 1600, 1067, 'Parkcity Live', 'Dance tent, 2026', 'parkcity-live',
+     'Custom visual content · VJ<br>For WE-AV'),
+    ('boiler-room.jpg', 704, 481, 'Boiler Room', 'Complex Maastricht, 2026', 'boiler-room',
      'Programming · Live operation'),
 ]
 
 EXPERTISE = [
-    ('woeesj-stock-wide.jpg', 'Stage &amp; lighting design',
+    ('proj/woeesj-stock/01.jpg', 'Stage &amp; lighting design',
      'Van eerste schets tot complete rig: een ontwerp dat past bij de plek, het publiek en de muziek.'),
-    ('over-matrix.jpg', 'Programming &amp; live operation',
+    ('proj/paul-elstak/01.jpg', 'Programming &amp; live operation',
      'De show programmeren en live bedienen, zodat licht en muziek op elk moment samenvallen.'),
-    ('parkcity.jpg', 'VJ &amp; custom visual content',
+    ('proj/parkcity-live/01.jpg', 'VJ &amp; custom visual content',
      'Eigen visuals en live VJ, gemaakt voor het podium en de artiesten van jouw productie.'),
     ('electrisize.jpg', 'LED systems &amp; infrastructure',
      'LED-schermen en de techniek erachter: opbouw, signaal en inregelen.'),
 ]
 
-
 def home():
     rows = ''.join(f'''
       <article class="work-row">
-        <a class="work-media unveil" href="projecten.html"><img src="assets/img/{img}" alt="{t}" width="{w}" height="{h}" loading="lazy"></a>
+        <a class="work-media unveil" href="projecten.html#{slug}"><img src="assets/img/{img}" alt="{t}" width="{w}" height="{h}" loading="lazy"></a>
         <div class="work-copy reveal">
           <span class="numeral">{ROMAN[i]}.</span>
           <h3>{t}</h3>
           <span class="meta">{meta}</span>
           <p class="disc">{disc}</p>
-          <a class="link-arrow" href="projecten.html">Bekijk project</a>
+          <a class="link-arrow" href="projecten.html#{slug}">Bekijk project</a>
         </div>
-      </article>''' for i, (img, w, h, t, meta, disc) in enumerate(WORK))
+      </article>''' for i, (img, w, h, t, meta, slug, disc) in enumerate(WORK))
     exp = ''.join(f'''
       <li class="reveal" data-img="assets/img/{img}"><span class="numeral">{ROMAN[i]}.</span><h3>{t}</h3><p>{d}</p><div class="exp-img"><img src="assets/img/{img}" alt="" loading="lazy"></div></li>''' for i, (img, t, d) in enumerate(EXPERTISE))
     ticker = ''.join(f'<span>{t}</span><i>✦</i>' for _, t, _ in EXPERTISE) * 2
@@ -221,28 +221,44 @@ def home():
 
 
 # ---------------------------------------------------------------- Projecten
+# (slug, titel, plaats/jaar, rol, opdrachtgever, losse foto als er geen set is)
 PROJECTS = [
-    ('woeesj-stock.jpg', 'Woeësj-Stock', 'Simpelveld, 2026', 'Stage &amp; lighting design · Programming · Live operation'),
-    ('electrisize.jpg', 'Electrisize', 'Main Stage &amp; Tapuya, 2026', 'LED systems · Infrastructure · Setup &amp; commissioning'),
-    ('parkcity.jpg', 'Parkcity Live', 'Dance Stage, 2026', 'VJ · Custom visual content · Live visual operation'),
-    (None, 'Sportclub ’25 Jubileum', '2025', 'Stage &amp; lighting design · Visuals · Programming · Live operation · VJ'),
-    ('boiler-room.jpg', 'Boiler Room', 'Complex Maastricht, 2026', 'Programming · Live operation'),
-    ('harmony-of-hardcore.jpg', 'Harmony of Hardcore &amp; 7th Sunday', 'Hardnature · The High · Losjes, 2026', 'LED systems &amp; infrastructure'),
+    ('woeesj-stock', 'Woeësj-Stock', 'Simpelveld, 2026', 'Stage design · Lighting design · Programming · Live operation', 'Commissioned by GTF Franzen', None),
+    ('sportclub-jubileum', 'Sportclub ’25 Jubileum', '2025', 'Stage &amp; lighting design · Visuals · Programming · Live operation · VJ', '', None),
+    ('parkcity-live', 'Parkcity Live', 'Dance tent, 2026', 'Custom visual content · VJ', 'For WE-AV', None),
+    ('electrisize', 'Electrisize', 'Main Stage &amp; Tapuya, 2026', 'LED systems · Infrastructure · Setup &amp; commissioning', 'For Djem LED Screens', 'electrisize.jpg'),
+    ('carnaval-radio', 'Carnaval Radio', '', 'VJ · Programming · Live operation (licht)', 'For Heijnens Audio Light', None),
+    ('paul-elstak', 'Complex × Paul Elstak', '', 'Programming · Live operation', 'For Stod', None),
+    ('usc-lustrum', 'USC Lustrum', '', 'Programming · Live operation', 'For Spectrum AV', None),
+    ('outrageous', 'Outrageous Festival', '2025', 'Programming · Live operation (licht)', 'For Bongers BLG', None),
+    ('oranjeroes', 'OranjeRoes Festival', '', 'Programming · Live operation', 'With and for T.Y.S. Productions', None),
+    ('fissafari', 'Fissafari', '2026', 'Programming · Live operation (licht)', 'For Bongers BLG', None),
+    ('k3', 'K3', '2026', 'Programming · Live operation (licht)', 'For Bongers BLG', None),
+    ('boiler-room', 'Boiler Room', 'Complex Maastricht, 2026', 'Programming · Live operation', '', 'boiler-room.jpg'),
+    ('harmony', 'Harmony of Hardcore &amp; 7th Sunday', 'Hardnature · The High · Losjes, 2026', 'LED systems &amp; infrastructure', '', 'harmony-of-hardcore.jpg'),
 ]
+SETS = json.loads((ROOT / 'src' / 'projects.json').read_text())
 
 
 def projecten():
     cards = ''
-    for i, (img, t, meta, disc) in enumerate(PROJECTS):
-        media = (f'<div class="proj-img unveil"><img src="assets/img/{img}" alt="{t}" loading="lazy"></div>' if img
-                 else f'<div class="proj-img empty reveal"><span>{ROMAN[i]}</span></div>')
+    for i, (slug, t, meta, disc, client, single) in enumerate(PROJECTS):
+        if single:
+            cover, photos = f'assets/img/{single}', [f'assets/img/{single}']
+        else:
+            cover = f'assets/img/proj/{slug}/cover.jpg'
+            photos = [f'assets/img/proj/{slug}/{f}' for f, _, _ in SETS[slug]]
+        count = f'<span class="count">{len(photos)} foto\'s</span>' if len(photos) > 1 else ''
+        meta_html = f'<span class="meta">{meta}</span>' if meta else ''
+        client_html = f'<p class="client">{client}</p>' if client else ''
         cards += f'''
-      <article class="proj">
-        {media}
+      <article class="proj" id="{slug}">
+        <button class="proj-img unveil" data-title="{t}" data-gallery='{json.dumps(photos)}' aria-label="Bekijk foto's van {t}"><img src="{cover}" alt="{t}" loading="lazy">{count}</button>
         <span class="numeral">{ROMAN[i]}.</span>
         <h3>{t}</h3>
-        <span class="meta">{meta}</span>
+        {meta_html}
         <p class="disc">{disc}</p>
+        {client_html}
       </article>'''
     gal = '\n'.join(f'      <img src="assets/img/galerij/{i:02d}.jpg" alt="" width="1400" height="933" loading="lazy">' for i in range(1, 13))
     return f'''{head("Projecten | MATRIX E.I.L.", "Een selectie van producties waar MATRIX E.I.L. licht, visuals en LED verzorgde.", "assets/img/electrisize.jpg")}

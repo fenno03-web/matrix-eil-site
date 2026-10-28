@@ -381,7 +381,7 @@ body::after {
 .gallery { columns: 3 300px; column-gap: 12px; }
 .gallery img { width: 100%; height: auto; margin-bottom: 12px; cursor: zoom-in; break-inside: avoid; transition: opacity .3s, filter .3s; filter: saturate(.92); }
 .gallery img:hover { filter: saturate(1.12); }
-.lightbox { position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,.95); display: none; place-items: center; padding: 20px; cursor: zoom-out; }
+.lightbox { position: fixed; inset: 0; z-index: 100; background: rgba(3,3,3,.98); display: none; place-items: center; padding: 20px; cursor: zoom-out; }
 .lightbox.open { display: grid; }
 .lightbox img { max-width: 100%; max-height: 90vh; width: auto; height: auto; }
 
@@ -471,3 +471,20 @@ body::after {
   .reveal, .unveil, .unveil img { opacity: 1; transform: none; clip-path: none; transition: none; }
   .spot, .exp-float { display: none; }
 }
+
+/* Projectkaart opent een fotoreeks */
+button.proj-img { display: block; width: 100%; padding: 0; border: 0; cursor: zoom-in; color: inherit; font: inherit; }
+.proj-img .count { position: absolute; left: 12px; bottom: 12px; font-family: var(--mono); font-size: 11px; letter-spacing: .2em; text-transform: uppercase; background: rgba(5,5,5,.7); backdrop-filter: blur(6px); padding: 6px 10px; border-radius: 999px; }
+.proj .client { font-size: 14px; color: #cfc8bd; }
+.proj:target h3 { color: var(--magenta); }
+.proj { scroll-margin-top: 110px; }
+
+/* Lightbox met vorige/volgende */
+.lightbox { grid-template-rows: 1fr auto; gap: 14px; }
+.lightbox figure { margin: 0; display: grid; place-items: center; min-height: 0; }
+.lightbox img { max-height: 82vh; }
+.lightbox .lb-bar { display: flex; justify-content: center; align-items: center; gap: 22px; font-family: var(--mono); font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); cursor: default; }
+.lightbox .lb-title { color: var(--fg); }
+.lightbox button { background: none; border: 1px solid rgba(239,233,223,.3); color: var(--fg); width: 46px; height: 46px; border-radius: 50%; cursor: pointer; font-size: 18px; transition: background .2s, border-color .2s; }
+.lightbox button:hover { background: var(--magenta); border-color: var(--magenta); }
+.lightbox .lb-close { position: absolute; top: 18px; right: 18px; }
