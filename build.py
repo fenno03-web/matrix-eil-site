@@ -10,6 +10,7 @@ MAIL = 'info@matrixeventsupport.nl'
 TEL = '+31630971404'
 TEL_TXT = '+31 6 30971404'
 INSTA = 'https://www.instagram.com/matrix.eil/'
+WHATSAPP = 'https://wa.me/31630971404'
 
 FONTS = ('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500'
          '&family=Space+Grotesk:wght@300;400;500;600;700&display=swap')
@@ -19,6 +20,7 @@ def ver(path):
 
 
 NAV = [('projecten.html', 'Projecten'), ('over.html', 'Over'), ('argus.html', 'Argus')]
+PORTAL = '<div class="portal" aria-hidden="true"><div class="void"></div><div class="ring"></div></div>'
 
 
 def head(title, desc, image='assets/img/hero.jpg', icon='assets/img/favicon.png'):
@@ -44,7 +46,9 @@ def head(title, desc, image='assets/img/hero.jpg', icon='assets/img/favicon.png'
 def header(current):
     cur = ' aria-current="page"'
     links = ''.join(f'<a href="{href}"{cur if href == current else ""}>{label}</a>' for href, label in NAV)
-    return f'''<div class="standby" aria-hidden="true"><div class="sb">Standby<b class="go">GO</b></div></div>
+    portal_in = '<div class="portal-in" aria-hidden="true"></div>\n' if current == 'argus.html' else ''
+    return f'''{portal_in}{PORTAL}
+<div class="standby" aria-hidden="true"><div class="sb">Standby<b class="go">GO</b></div></div>
 <div class="haze" aria-hidden="true"><i></i><i></i></div>
 <header class="site-header">
   <div class="wrap">
@@ -71,7 +75,7 @@ def footer(extra_js=''):
       </div>
       <div>
         <h4>Contact</h4>
-        <ul><li><a href="mailto:{MAIL}">{MAIL}</a></li><li><a href="tel:{TEL}">{TEL_TXT}</a></li><li><a href="{INSTA}" target="_blank" rel="noopener">Instagram</a></li></ul>
+        <ul><li><a href="{WHATSAPP}" target="_blank" rel="noopener">WhatsApp</a></li><li><a href="mailto:{MAIL}">{MAIL}</a></li><li><a href="tel:{TEL}">{TEL_TXT}</a></li><li><a href="{INSTA}" target="_blank" rel="noopener">Instagram</a></li></ul>
       </div>
       <div>
         <h4>Fotografie</h4>
@@ -106,10 +110,11 @@ def contact_block(q='Q6'):
     {cue_head(q, 'Contact', 'Standby for your call')}
     <div class="reveal">
       <div class="standby-line">Standby</div>
-      <h2 class="display">Een productie in<br><em>voorbereiding?</em></h2>
+      <h2 class="display">Plan je volgende<br><em>editie met ons.</em></h2>
+      <p class="lead contact-lead">Werk je aan een festival of evenement en zoek je één partij voor het complete visuele plaatje? Stuur een app of mail, dan denken we vrijblijvend mee.</p>
       <div class="contact-links">
+        <a class="wa" href="{WHATSAPP}" target="_blank" rel="noopener">WhatsApp · {TEL_TXT}</a>
         <a href="mailto:{MAIL}">{MAIL}</a>
-        <a href="tel:{TEL}">{TEL_TXT}</a>
         <a class="ig" href="{INSTA}" target="_blank" rel="noopener">Instagram · @matrix.eil</a>
       </div>
     </div>
@@ -176,9 +181,10 @@ def home():
   <div class="hud">
     <span class="tl">Q1 · <b>Opening</b></span>
     <span class="tr">Scene <b>01</b> / 06</span>
-    <span class="bl">Licht · Video · LED · Content</span>
-    <a href="#werk" class="bc">GO<i></i></a>
-    <span class="br">Stage &amp; show design</span>
+  </div>
+  <div class="hero-pitch wrap">
+    <p>Het complete visuele plaatje voor festivals en evenementen. Van lichtontwerp tot laatste cue.</p>
+    <div class="btns"><a class="btn fill" href="#contact">Plan een gesprek</a><a class="btn" href="{WHATSAPP}" target="_blank" rel="noopener">WhatsApp</a></div>
   </div>
 </section>
 

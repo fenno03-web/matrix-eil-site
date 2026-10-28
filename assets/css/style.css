@@ -647,3 +647,51 @@ body.intro.go .standby { opacity: 0; }
 }
 [id] { scroll-margin-top: 90px; }
 @media (max-width: 900px) { .log td.empty { display: none !important; } }
+
+/* ------------------------------------------------ v3.1: strakkere koppen, organisaties, portaal */
+@property --r { syntax: "<length-percentage>"; inherits: false; initial-value: 0%; }
+body::after { opacity: .04; }
+.display { font-size: clamp(52px, 9.4vw, 152px); line-height: .86; letter-spacing: -.055em; text-transform: uppercase; font-weight: 700; }
+.title { font-size: clamp(40px, 6.2vw, 98px); line-height: .9; letter-spacing: -.05em; text-transform: uppercase; font-weight: 700; }
+.photo-break h2 { text-transform: uppercase; font-weight: 700; }
+.display em, .title em, h1 em, h2 em { -webkit-text-stroke-width: 1.5px; }
+.work-copy h3, .ch h3, .log tr.row td.show strong, .clause h2, .tool h3 { text-transform: uppercase; letter-spacing: -.04em; font-weight: 600; }
+.ar-hero h1 { text-transform: uppercase; font-weight: 700; }
+
+.hero { grid-template-rows: 1fr auto; }
+.hero h1 { align-self: center; justify-self: center; }
+.hero-pitch { position: relative; z-index: 2; display: grid; grid-template-columns: 1fr auto; gap: 24px 40px; align-items: end; padding-bottom: clamp(30px, 5vw, 56px); animation: pitchIn 1.4s 1s var(--ease) both; }
+@keyframes pitchIn { from { opacity: 0; transform: translateY(24px); } }
+.hero-pitch p { font-size: clamp(18px, 1.6vw, 22px); font-weight: 300; line-height: 1.45; max-width: 540px; }
+.btns { display: flex; flex-wrap: wrap; gap: 10px; }
+.btn.fill { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.btn.fill::before { background: var(--accent); box-shadow: none; }
+.btn.fill:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn.fill:hover::before { background: #fff; }
+.contact-lead { max-width: 620px; margin-top: 34px; color: #cfc8bd; }
+.contact-links .wa { color: var(--fg); }
+
+/* Portaal naar en van ARGUS */
+.portal { position: fixed; inset: 0; z-index: 210; pointer-events: none; display: grid; place-items: center; }
+.portal .void { position: absolute; inset: 0; background: #020405; clip-path: circle(0% at 50% 50%); }
+.portal .ring { position: relative; width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid var(--gold); box-shadow: 0 0 30px var(--petrol), inset 0 0 30px rgba(60, 203, 224, .5); opacity: 0; }
+.portal .ring::after { content: ""; position: absolute; inset: 8px; border-radius: 50%; border: 1px solid var(--petrol); }
+.portal.go { pointer-events: auto; }
+.portal.go .void { animation: portalClose 1s var(--ease) forwards; }
+.portal.go .ring { animation: ringIn 1s var(--ease) forwards; }
+@keyframes portalClose { to { clip-path: circle(75% at 50% 50%); } }
+@keyframes ringIn { 0% { opacity: 0; transform: scale(.2); } 40% { opacity: 1; } 100% { opacity: 1; transform: scale(3.2); } }
+.portal-in { position: fixed; inset: 0; z-index: 210; pointer-events: none; background: radial-gradient(circle at 50% 50%, transparent var(--r), #020405 calc(var(--r) + 1px)); animation: portalOpen 1.5s .15s var(--ease) both; }
+.portal-in::after { content: ""; position: absolute; left: 50%; top: 50%; width: 120px; height: 120px; margin: -60px 0 0 -60px; border-radius: 50%; border: 1.5px solid var(--gold); box-shadow: 0 0 40px var(--petrol); animation: ringOut 1.5s .15s var(--ease) both; }
+@keyframes portalOpen { from { --r: 0%; } to { --r: 120%; } }
+@keyframes ringOut { from { transform: scale(.3); opacity: 1; } to { transform: scale(16); opacity: 0; } }
+.argus-page .standby { animation: none; }
+.nav a[href="argus.html"]:not([aria-current]) { color: var(--gold); }
+
+@media (max-width: 900px) {
+  .hero-pitch { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) { .portal, .portal-in { display: none; } }
+:root { --petrol: #3fd8ee; }
+.eye .dot:nth-child(3n) { fill: var(--petrol); }
+.ar-hero h1 em { -webkit-text-stroke-color: var(--petrol); }

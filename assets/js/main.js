@@ -245,6 +245,13 @@ if (standby && !reduce) {
     a.addEventListener('click', e => {
       if (e.metaKey || e.ctrlKey || e.shiftKey || a.target === '_blank') return;
       e.preventDefault();
+      const target = a.getAttribute('href').split('#')[0];
+      const portal = document.querySelector('.portal');
+      if (portal && (target === 'argus.html') !== document.body.classList.contains('argus-page')) {
+        portal.classList.add('go');
+        setTimeout(() => { location.href = a.href; }, 950);
+        return;
+      }
       const page = { 'index.html': 'Home', 'projecten.html': 'Projecten', 'over.html': 'Over', 'argus.html': 'Argus', 'privacy.html': 'Privacy' };
       sb.innerHTML = `Standby<b>${page[a.getAttribute('href').split('#')[0]] || 'GO'}</b>`;
       document.body.classList.remove('intro', 'go');
@@ -252,5 +259,5 @@ if (standby && !reduce) {
       setTimeout(() => { location.href = a.href; }, 380);
     });
   });
-  addEventListener('pageshow', e => { if (e.persisted) document.body.classList.remove('leaving'); });
+  addEventListener('pageshow', e => { if (e.persisted) { document.body.classList.remove('leaving'); const pt = document.querySelector('.portal'); if (pt) pt.classList.remove('go'); } });
 }
