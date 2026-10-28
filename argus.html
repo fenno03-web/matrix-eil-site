@@ -12,150 +12,274 @@
 <link rel="icon" href="assets/img/argus/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@800;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@300;400;500;600;700&display=swap">
 <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body class="argus-page">
+<div class="standby" aria-hidden="true"><div class="sb">Standby<b class="go">GO</b></div></div>
+<div class="haze" aria-hidden="true"><i></i><i></i></div>
 <header class="site-header">
   <div class="wrap">
     <a class="logo" href="index.html" aria-label="MATRIX E.I.L. home"><img src="assets/img/logo-matrix.png" alt="MATRIX E.I.L." width="600" height="179"></a>
+    <div class="showbar" aria-hidden="true"><span class="live">Live</span><span class="sep"></span><span class="tc-wrap">TC <span class="tc">00:00:00:00</span></span><span class="sep s2"></span><span class="cue-now"></span></div>
     <button class="menu-btn" aria-label="Menu" aria-expanded="false" aria-controls="nav"><span></span><span></span><span></span></button>
     <nav class="nav" id="nav" aria-label="Hoofdmenu"><a href="projecten.html">Projecten</a><a href="over.html">Over</a><a href="argus.html" aria-current="page">Argus</a><a class="nav-cta" href="#contact">Contact</a></nav>
   </div>
 </header>
 <main>
-<section class="argus-hero">
+<section class="ar-hero" data-cue="Q1" data-cue-name="Het oog">
   <div class="wrap">
-    <img class="argus-logo reveal" src="assets/img/argus/argus-systems.png" alt="ARGUS Systems" width="1200" height="390">
-    <span class="label reveal">De softwaretak van MATRIX</span>
-    <h1 class="reveal">Gebouwd vanuit<br><em>de praktijk.</em></h1>
-    <p class="myth reveal">Argus Panoptes, de wachter met honderd ogen, sliep nooit met alle ogen tegelijk. Zo houden onze tools de show in de gaten.</p>
-    <p class="reveal">Op de vloer zien we elke week waar het schuurt: timetables die niet meer kloppen, planningen verspreid over losse lijstjes, informatie die net te laat aankomt. ARGUS Systems ontwikkelt de software die we zelf misten. Getest op echte producties, door de mensen die er elke dag mee werken.</p>
+    <div>
+      <img class="logo-ar reveal" src="assets/img/argus/argus-systems.png" alt="ARGUS Systems" width="1200" height="390">
+      <h1 class="reveal">Honderd ogen.<br><em>Eén show.</em></h1>
+      <p class="myth reveal">Argus Panoptes, de wachter met honderd ogen, sliep nooit met alle ogen tegelijk. Er keek er altijd wel één. Dat is precies wat een productie nodig heeft.</p>
+    </div>
+    <div class="eye-wrap reveal">
+      <svg class="eye" viewBox="0 0 600 600" aria-hidden="true">
+      <defs><radialGradient id="irisG"><stop offset="0" stop-color="#3ccbe0" stop-opacity=".9"/><stop offset=".45" stop-color="#d9ad4f" stop-opacity=".85"/><stop offset="1" stop-color="#1a140a"/></radialGradient></defs>
+      <circle class="ring dash" cx="300" cy="300" r="292"/>
+      <circle class="ring" cx="300" cy="300" r="250"/>
+      <circle class="ring dash2" cx="300" cy="300" r="214"/>
+      <circle class="dot" cx="562.7" cy="353.2" r="3.4"/><circle class="dot" cx="552.4" cy="390.1" r="3.4"/><circle class="dot" cx="537.0" cy="425.1" r="3.4"/><circle class="dot" cx="516.8" cy="457.5" r="3.4"/><circle class="dot" cx="492.2" cy="486.8" r="3.4"/><circle class="dot" cx="463.6" cy="512.2" r="3.4"/><circle class="dot" cx="431.8" cy="533.4" r="3.4"/><circle class="dot" cx="397.2" cy="549.7" r="3.4"/><circle class="dot" cx="360.7" cy="561.0" r="3.4"/><circle class="dot" cx="322.9" cy="567.0" r="3.4"/><circle class="dot" cx="284.7" cy="567.6" r="3.4"/><circle class="dot" cx="246.8" cy="562.7" r="3.4"/><circle class="dot" cx="209.9" cy="552.4" r="3.4"/><circle class="dot" cx="174.9" cy="537.0" r="3.4"/><circle class="dot" cx="142.5" cy="516.8" r="3.4"/><circle class="dot" cx="113.2" cy="492.2" r="3.4"/><circle class="dot" cx="87.8" cy="463.6" r="3.4"/><circle class="dot" cx="66.6" cy="431.8" r="3.4"/><circle class="dot" cx="50.3" cy="397.2" r="3.4"/><circle class="dot" cx="39.0" cy="360.7" r="3.4"/><circle class="dot" cx="33.0" cy="322.9" r="3.4"/><circle class="dot" cx="32.4" cy="284.7" r="3.4"/><circle class="dot" cx="37.3" cy="246.8" r="3.4"/><circle class="dot" cx="47.6" cy="209.9" r="3.4"/><circle class="dot" cx="63.0" cy="174.9" r="3.4"/><circle class="dot" cx="83.2" cy="142.5" r="3.4"/><circle class="dot" cx="107.8" cy="113.2" r="3.4"/><circle class="dot" cx="136.4" cy="87.8" r="3.4"/><circle class="dot" cx="168.2" cy="66.6" r="3.4"/><circle class="dot" cx="202.8" cy="50.3" r="3.4"/><circle class="dot" cx="239.3" cy="39.0" r="3.4"/><circle class="dot" cx="277.1" cy="33.0" r="3.4"/><circle class="dot" cx="315.3" cy="32.4" r="3.4"/><circle class="dot" cx="353.2" cy="37.3" r="3.4"/><circle class="dot" cx="390.1" cy="47.6" r="3.4"/><circle class="dot" cx="425.1" cy="63.0" r="3.4"/><circle class="dot" cx="457.5" cy="83.2" r="3.4"/><circle class="dot" cx="486.8" cy="107.8" r="3.4"/><circle class="dot" cx="512.2" cy="136.4" r="3.4"/><circle class="dot" cx="533.4" cy="168.2" r="3.4"/><circle class="dot" cx="549.7" cy="202.8" r="3.4"/><circle class="dot" cx="561.0" cy="239.3" r="3.4"/><circle class="dot" cx="567.0" cy="277.1" r="3.4"/><circle class="dot" cx="567.6" cy="315.3" r="3.4"/><circle class="dot" cx="530.8" cy="323.2" r="2.8"/><circle class="dot" cx="521.9" cy="367.8" r="2.8"/><circle class="dot" cx="504.4" cy="409.7" r="2.8"/><circle class="dot" cx="479.1" cy="447.5" r="2.8"/><circle class="dot" cx="446.9" cy="479.6" r="2.8"/><circle class="dot" cx="409.0" cy="504.8" r="2.8"/><circle class="dot" cx="366.9" cy="522.1" r="2.8"/><circle class="dot" cx="322.3" cy="530.9" r="2.8"/><circle class="dot" cx="276.8" cy="530.8" r="2.8"/><circle class="dot" cx="232.2" cy="521.9" r="2.8"/><circle class="dot" cx="190.3" cy="504.4" r="2.8"/><circle class="dot" cx="152.5" cy="479.1" r="2.8"/><circle class="dot" cx="120.4" cy="446.9" r="2.8"/><circle class="dot" cx="95.2" cy="409.0" r="2.8"/><circle class="dot" cx="77.9" cy="366.9" r="2.8"/><circle class="dot" cx="69.1" cy="322.3" r="2.8"/><circle class="dot" cx="69.2" cy="276.8" r="2.8"/><circle class="dot" cx="78.1" cy="232.2" r="2.8"/><circle class="dot" cx="95.6" cy="190.3" r="2.8"/><circle class="dot" cx="120.9" cy="152.5" r="2.8"/><circle class="dot" cx="153.1" cy="120.4" r="2.8"/><circle class="dot" cx="191.0" cy="95.2" r="2.8"/><circle class="dot" cx="233.1" cy="77.9" r="2.8"/><circle class="dot" cx="277.7" cy="69.1" r="2.8"/><circle class="dot" cx="323.2" cy="69.2" r="2.8"/><circle class="dot" cx="367.8" cy="78.1" r="2.8"/><circle class="dot" cx="409.7" cy="95.6" r="2.8"/><circle class="dot" cx="447.5" cy="120.9" r="2.8"/><circle class="dot" cx="479.6" cy="153.1" r="2.8"/><circle class="dot" cx="504.8" cy="191.0" r="2.8"/><circle class="dot" cx="522.1" cy="233.1" r="2.8"/><circle class="dot" cx="530.9" cy="277.7" r="2.8"/><circle class="dot" cx="496.0" cy="300.0" r="2.3"/><circle class="dot" cx="489.3" cy="350.7" r="2.3"/><circle class="dot" cx="469.7" cy="398.0" r="2.3"/><circle class="dot" cx="438.6" cy="438.6" r="2.3"/><circle class="dot" cx="398.0" cy="469.7" r="2.3"/><circle class="dot" cx="350.7" cy="489.3" r="2.3"/><circle class="dot" cx="300.0" cy="496.0" r="2.3"/><circle class="dot" cx="249.3" cy="489.3" r="2.3"/><circle class="dot" cx="202.0" cy="469.7" r="2.3"/><circle class="dot" cx="161.4" cy="438.6" r="2.3"/><circle class="dot" cx="130.3" cy="398.0" r="2.3"/><circle class="dot" cx="110.7" cy="350.7" r="2.3"/><circle class="dot" cx="104.0" cy="300.0" r="2.3"/><circle class="dot" cx="110.7" cy="249.3" r="2.3"/><circle class="dot" cx="130.3" cy="202.0" r="2.3"/><circle class="dot" cx="161.4" cy="161.4" r="2.3"/><circle class="dot" cx="202.0" cy="130.3" r="2.3"/><circle class="dot" cx="249.3" cy="110.7" r="2.3"/><circle class="dot" cx="300.0" cy="104.0" r="2.3"/><circle class="dot" cx="350.7" cy="110.7" r="2.3"/><circle class="dot" cx="398.0" cy="130.3" r="2.3"/><circle class="dot" cx="438.6" cy="161.4" r="2.3"/><circle class="dot" cx="469.7" cy="202.0" r="2.3"/><circle class="dot" cx="489.3" cy="249.3" r="2.3"/>
+      <path class="lid" d="M120,300 Q300,140 480,300 Q300,460 120,300 Z"/>
+      <g class="pupil-g"><circle class="iris" cx="300" cy="300" r="74"/><circle class="pupil" cx="300" cy="300" r="30"/><circle class="glint" cx="314" cy="286" r="6"/></g>
+    </svg>
+      <div class="eye-cap"><b>100</b> ogen · <span class="open-count">100</span> open</div>
+    </div>
   </div>
 </section>
 
-<nav class="tool-index" aria-label="Tools">
+<section class="section" style="padding-top:clamp(40px,6vw,90px)" data-cue="Q2" data-cue-name="Systeemstart">
   <div class="wrap">
-    <a href="#chronos"><span class="nm">CHRONOS</span><span class="ds">Eén klok voor de hele productie</span><span class="status field">Alpha · in het veld</span></a>
-    <a href="#axis"><span class="nm">AXIS</span><span class="ds">Planning, magazijn en show</span><span class="status">In test</span></a>
-    <a href="#metron"><span class="nm">METRON</span><span class="ds">Timing voor lichtoperators</span><span class="status">In test</span></a>
-    <a href="#horos"><span class="nm">HOROS</span><span class="ds">Navigatie voor productietransport</span><span class="status">In test</span></a>
+    <div class="cue-head reveal"><span class="q">Q2</span><span class="nm">Systeemstart</span><span class="ln"></span><span class="tc">argus://boot</span></div>
+    <div class="why">
+      <div class="boot reveal" aria-label="Status van de ARGUS-tools">
+        <div class="bar"><i></i><i></i><i></i><span>argus — regie</span></div>
+        <pre class="boot-out"></pre>
+      </div>
+      <div class="reveal">
+        <p class="lead">Op de vloer zien we elke week waar het schuurt.</p>
+        <p>Timetables die niet meer kloppen. Planningen verspreid over losse lijstjes. Informatie die net te laat aankomt. Tappen op een knop terwijl je eigenlijk de show wilt vormgeven.</p>
+        <p>ARGUS Systems bouwt de software die we zelf misten. Niet achter een bureau, maar tussen de cases, op echte producties, door de mensen die er elke dag mee werken. Elke tool wordt eerst in het veld getest voordat hij verder gaat.</p>
+      </div>
+    </div>
   </div>
-</nav>
+</section>
 
-<section class="tool" id="chronos">
+<section class="section" style="padding-top:0" data-cue="Q3" data-cue-name="Roadmap">
   <div class="wrap">
-    <div class="copy">
+    <div class="cue-head reveal"><span class="q">Q3</span><span class="nm">Ontwikkeling</span><span class="ln"></span><span class="tc">Status 2026</span></div>
+    <h2 class="title reveal">Van idee<br>naar <em>het veld.</em></h2>
+    <div class="roadmap reveal">
+      <span class="prog"></span>
+      <div class="stage done"><div class="pt"></div><h4>Concept</h4><p>Een probleem dat we op de vloer zelf tegenkwamen.</p></div>
+      <div class="stage done"><div class="pt"></div><h4>Bouw</h4><p>Eerste versies, gebouwd rond hoe een productie echt loopt.</p></div>
+      <div class="stage now"><div class="pt"></div><h4>Test</h4><p>Intern en met operators uittesten en bijschaven.</p><div class="who"><span>AXIS</span><span>METRON</span><span>HOROS</span></div></div>
+      <div class="stage now"><div class="pt"></div><h4>Alpha in het veld</h4><p>Draaien op echte evenementen, onder echte druk.</p><div class="who"><span class="f">CHRONOS</span></div></div>
+      <div class="stage"><div class="pt"></div><h4>Release</h4><p>Beschikbaar voor andere producties en operators.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="tool" id="chronos" data-cue="Q4" data-cue-name="CHRONOS">
+  <span class="bigno" aria-hidden="true">01</span>
+  <div class="wrap">
+    <div class="copy reveal">
       <span class="status field">Alpha · in het veld</span>
       <h2 class="tool-logo"><img src="assets/img/argus/chronos.png" alt="ARGUS CHRONOS" width="900" height="323" loading="lazy"></h2>
       <h3>Eén klok voor de hele productie.</h3>
       <p>Regie, backstage, kleedkamers en FOH zien live dezelfde tijd. Op elk scherm, zonder internet. CHRONOS houdt alle stages bij, laat uitloop direct zien en zorgt dat iedereen weet wie er nu staat en hoe lang nog.</p>
       <ul class="feat">
-        <li><span>Alle stages naast elkaar: live, changeover, wie er hierna komt en de marge tot curfew</span></li>
-        <li><span>Uitloop en nieuwe starttijden direct in de tijdlijn; timetable importeren vanuit PDF, foto of Excel</span></li>
-        <li><span>Schermen voor backstage, kleedkamers en crewruimte, met berichten van regie</span></li>
-        <li><span>Artiesten en crew volgen hun eigen tijden via één link op hun telefoon</span></li>
-        <li><span>Volledig offline, zonder accounts of cloud, op je eigen productienetwerk</span></li>
+        <li>Alle stages naast elkaar: live, changeover, wie er hierna komt en de marge tot curfew</li>
+        <li>Uitloop en nieuwe starttijden direct in de tijdlijn; timetable importeren vanuit PDF, foto of Excel</li>
+        <li>Schermen voor backstage, kleedkamers en crewruimte, met berichten van regie</li>
+        <li>Artiesten en crew volgen hun eigen tijden via één link op hun telefoon</li>
+        <li>Volledig offline, zonder accounts of cloud, op je eigen productienetwerk</li>
       </ul>
     </div>
-    <div class="unveil visual stack">
-      <img src="assets/img/chronos-timeline.jpg" alt="CHRONOS tijdlijn met drie stages, changeovers en uitloop" loading="lazy">
-      <img src="assets/img/chronos-backstage.jpg" alt="CHRONOS backstagescherm met resterende speeltijd" loading="lazy">
+    <div class="reveal">
+      <div class="console chronos-demo" aria-label="Demo van CHRONOS met drie stages">
+        <div class="cbar"><span><b>CHRONOS</b> · Regie</span><span class="lv">Live</span></div>
+        <div class="cbody">
+          <div class="stg" data-left="2472" data-len="3600"><div class="sn">Stage<b>MAIN</b></div><div class="act">Headliner<small>Hierna: Closing set</small><div class="pb"><i></i></div></div><div class="cd"><span>41:12</span><small>Resterend</small></div></div>
+          <div class="stg chg" data-left="390" data-len="900"><div class="sn">Stage<b>TENT</b></div><div class="act">Changeover<small>Hierna: Live act</small><div class="pb"><i></i></div></div><div class="cd"><span>06:30</span><small>Tot start</small></div></div>
+          <div class="stg over" data-left="-134" data-len="2700"><div class="sn">Stage<b>GREEN</b></div><div class="act">B2B-set<small>Uitloop · regie op de hoogte</small><div class="pb"><i></i></div></div><div class="cd"><span>+02:14</span><small>Uitloop</small></div></div>
+          <div class="curfew"><span>Marge tot curfew</span><b class="cf" data-left="1120">00:18:40</b></div>
+        </div>
+        <div class="hint">Demo met voorbeelddata</div>
+      </div>
+      <div class="shots">
+        <img class="rm" src="assets/img/chronos-timeline.jpg" alt="CHRONOS tijdlijn met drie stages, changeovers en uitloop" loading="lazy">
+        <img class="rm" src="assets/img/chronos-backstage.jpg" alt="CHRONOS backstagescherm met resterende speeltijd" loading="lazy">
+      </div>
     </div>
   </div>
 </section>
 
-<section class="tool flip" id="axis">
+<section class="tool flip" id="axis" data-cue="Q5" data-cue-name="AXIS">
+  <span class="bigno" aria-hidden="true">02</span>
   <div class="wrap">
-    <div class="copy">
+    <div class="copy reveal">
       <span class="status">In test</span>
       <h2 class="tool-logo"><img src="assets/img/argus/axis.png" alt="ARGUS AXIS" width="900" height="302" loading="lazy"></h2>
       <h3>Planning, magazijn en show in één systeem.</h3>
       <p>AXIS is een plannings- en magazijnplatform voor de evenementenbranche, opgebouwd uit modules. Naast planning en materiaalbeheer brengt AXIS ook de productie zelf onder: van de aansturing van schermen tot accreditatie. Zo groeit het mee met wat je nodig hebt.</p>
       <ul class="feat">
-        <li><span><b>Planning &amp; magazijn:</b> projecten, crew en materiaal op één plek</span></li>
-        <li><span><b>LIVE:</b> schermen en zones aansturen tijdens het evenement</span></li>
-        <li><span><b>Accreditatie:</b> professionele accreditatie, ook haalbaar voor kleinere evenementen</span></li>
+        <li><b>Planning &amp; magazijn:</b> projecten, crew en materiaal op één plek</li>
+        <li><b>LIVE:</b> schermen en zones aansturen tijdens het evenement</li>
+        <li><b>Accreditatie:</b> professionele accreditatie, ook haalbaar voor kleinere evenementen</li>
       </ul>
     </div>
-    <div class="unveil visual"><div class="placeholder"><div><div class="big">AXIS</div><div class="cap">Screenshot volgt</div></div></div></div>
+    <div class="reveal">
+      <div class="console axis-demo" data-plan="1" data-live="1" data-acc="0" aria-label="Demo van AXIS met modules en zones">
+        <div class="cbar"><span><b>AXIS</b> · Evenement</span><span>Modules</span></div>
+        <div class="cbody">
+          <div class="mods">
+            <button class="mod" type="button" data-mod="plan" aria-pressed="true"><i></i>Planning &amp; magazijn</button>
+            <button class="mod" type="button" data-mod="live" aria-pressed="true"><i></i>LIVE</button>
+            <button class="mod" type="button" data-mod="acc" aria-pressed="false"><i></i>Accreditatie</button>
+          </div>
+          <div class="zones">
+            <div class="zone"><h5>Main stage</h5><div class="r plan ok">Materiaal <b>48 / 48 ✓</b></div><div class="r live">Scherm <b>Timetable</b></div><div class="r acc">Toegang <b>Crew · Artiest</b></div></div>
+            <div class="zone"><h5>Backstage</h5><div class="r plan ok">Materiaal <b>12 / 12 ✓</b></div><div class="r live">Scherm <b>Countdown</b></div><div class="r acc">Gescand <b>86</b></div></div>
+            <div class="zone"><h5>Crew catering</h5><div class="r plan">Crew ingepland <b>24</b></div><div class="r live">Scherm <b>Bericht regie</b></div><div class="r acc">Toegang <b>Crew</b></div></div>
+            <div class="zone"><h5>Entree</h5><div class="r plan">Opbouw <b>07:00</b></div><div class="r live">Scherm <b>Welkom</b></div><div class="r acc">Gescand <b>1.204</b></div></div>
+          </div>
+          <div class="zones-empty">Geen modules actief</div>
+        </div>
+        <div class="hint">Zet modules aan en uit · voorbeelddata</div>
+      </div>
+    </div>
   </div>
 </section>
 
-<section class="tool" id="metron">
+<section class="tool" id="metron" data-cue="Q6" data-cue-name="METRON">
+  <span class="bigno" aria-hidden="true">03</span>
   <div class="wrap">
-    <div class="copy">
+    <div class="copy reveal">
       <span class="status">In test</span>
       <h2 class="tool-logo"><img src="assets/img/argus/metron.jpg" alt="ARGUS METRON" width="900" height="420" loading="lazy"></h2>
       <h3>Zicht op de muziek. Grip op het moment.</h3>
       <p>METRON is een muzikale informatie- en timingomgeving voor lichtoperators. Het combineert Pro DJ Link en BPM-detectie uit audio, en geeft het tempo rechtstreeks door aan de speedmasters op je lichtmixer. De operator bepaalt wanneer METRON het overneemt. Zo verschuift de aandacht van tappen naar het vormgeven van de show.</p>
       <ul class="feat">
-        <li><span>Tempo uit Pro DJ Link of audio, direct naar je speedmasters</span></li>
-        <li><span>Inzicht in decks en tracks</span></li>
-        <li><span>Eigen showmarkeringen met aftelling naar belangrijke momenten</span></li>
-        <li><span>Muzikale tijdsberekeningen voor fades en delays</span></li>
+        <li>Tempo uit Pro DJ Link of audio, direct naar je speedmasters</li>
+        <li>Inzicht in decks en tracks</li>
+        <li>Eigen showmarkeringen met aftelling naar belangrijke momenten</li>
+        <li>Muzikale tijdsberekeningen voor fades en delays</li>
       </ul>
     </div>
-    <div class="unveil visual"><img src="assets/img/metron.jpg" alt="METRON op een laptop naast de lichttafel tijdens een show" loading="lazy"></div>
+    <div class="reveal">
+      <div class="console metron-demo" aria-label="Demo van METRON met tempo en tap-knop">
+        <div class="cbar"><span><b>METRON</b> · Tempo</span><span class="lv">Sync</span></div>
+        <div class="cbody">
+          <div>
+            <div class="bpm"><span class="bpm-v">128.0</span><small>BPM · <span class="src">Pro DJ Link · deck 2</span></small></div>
+            <div class="beats"><i></i><i></i><i></i><i></i></div>
+          </div>
+          <div class="mside">
+            <div class="rowv"><span>Maat</span><b class="bar-v">1.1</b></div>
+            <div class="rowv"><span>Marker over</span><b class="drop-v">32</b></div>
+            <div class="rowv"><span>1/4 fade</span><b class="fade-v">469 ms</b></div>
+            <div class="rowv"><span>Speedmaster 1</span><b class="g">Synced</b></div>
+            <button class="tap" type="button">Tap tempo</button>
+          </div>
+        </div>
+        <div class="hint">Tik mee op de knop of op de spatiebalk</div>
+      </div>
+      <div class="shots one"><img class="rm" src="assets/img/metron.jpg" alt="METRON op een laptop naast de lichttafel tijdens een show" loading="lazy"></div>
+    </div>
   </div>
 </section>
 
-<section class="tool flip" id="horos">
+<section class="tool flip" id="horos" data-cue="Q7" data-cue-name="HOROS">
+  <span class="bigno" aria-hidden="true">04</span>
   <div class="wrap">
-    <div class="copy">
+    <div class="copy reveal">
       <span class="status">In test</span>
       <h2 class="tool-logo"><img src="assets/img/argus/horos.png" alt="ARGUS HOROS" width="900" height="347" loading="lazy"></h2>
       <h3>Weet wat er op je route ligt, voordat je vertrekt.</h3>
       <p>HOROS is een navigatie-app voor iedereen die met bus of truck van productie naar productie rijdt. Op basis van actuele RDW-gegevens waarschuwt HOROS voor milieuzones en, als je de afmetingen van je voertuig invult, voor bruggen en viaducten waar je niet onderdoor past.</p>
       <ul class="feat">
-        <li><span><b>Live navigatie:</b> meldingen onderweg, terwijl je rijdt</span></li>
-        <li><span><b>Routecheck:</b> de hele route vooraf laten nalopen op knelpunten</span></li>
-        <li><span><b>Locatiecheck:</b> snel zien of een adres bereikbaar is met jouw voertuig</span></li>
+        <li><b>Live navigatie:</b> meldingen onderweg, terwijl je rijdt</li>
+        <li><b>Routecheck:</b> de hele route vooraf laten nalopen op knelpunten</li>
+        <li><b>Locatiecheck:</b> snel zien of een adres bereikbaar is met jouw voertuig</li>
       </ul>
     </div>
-    <div class="unveil visual"><div class="placeholder"><div><div class="big">HOROS</div><div class="cap">Screenshot volgt</div></div></div></div>
+    <div class="reveal">
+      <div class="console horos-demo" aria-label="Demo van HOROS met een routecheck">
+        <div class="cbar"><span><b>HOROS</b> · Routecheck</span><span class="lv">GPS</span></div>
+        <div class="cbody">
+          <svg viewBox="0 0 520 300" aria-hidden="true">
+            <g class="grid"></g>
+            <path class="zonepoly" d="M350,20 L500,20 L510,150 L380,170 Z"/>
+            <text class="lbl" x="400" y="40">MILIEUZONE</text>
+            <path class="road" id="route" d="M30,262 C120,262 130,190 210,186 S320,150 360,118 S440,64 492,52"/>
+            <path class="road-lit" d="M30,262 C120,262 130,190 210,186 S320,150 360,118 S440,64 492,52"/>
+            <text class="lbl" x="22" y="290">LAADPLEIN</text>
+            <text class="lbl" x="420" y="82">VENUE</text>
+            <g class="br" data-h="3.6" data-at=".3"><rect x="-26" y="-11" width="52" height="22" rx="2"/><text x="0" y="4" text-anchor="middle">3,60 m</text></g>
+            <g class="br" data-h="4.0" data-at=".6"><rect x="-26" y="-11" width="52" height="22" rx="2"/><text x="0" y="4" text-anchor="middle">4,00 m</text></g>
+            <circle class="veh-ring" r="11"/><circle class="veh" r="5"/>
+          </svg>
+          <div class="horos-ctl"><label for="vh">Hoogte voertuig</label><input id="vh" type="range" min="2.4" max="4.4" step="0.05" value="3.8"><output for="vh">3,80 m</output></div>
+          <ul class="warns">
+            <li class="w1"></li>
+            <li class="w2"></li>
+            <li class="zn">Milieuzone op de route · check de emissieklasse van je voertuig</li>
+          </ul>
+        </div>
+        <div class="hint">Schuif de hoogte van je voertuig · voorbeeldroute</div>
+      </div>
+    </div>
   </div>
 </section>
 
-
-<section class="section argus-cta" id="contact">
-  <div class="wrap reveal">
-    <span class="label">Meedenken of testen?</span>
-    <h2 class="title">Zet ARGUS in op<br><em>jouw productie.</em></h2>
-    <p>Wil je een van onze tools testen op jouw evenement, of heb je een idee dat hier past? We horen het graag.</p>
-    <a class="btn gold" href="mailto:info@matrixeventsupport.nl">Neem contact op</a>
+<section class="section argus-cta" id="contact" data-cue="Q8" data-cue-name="Meedoen">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="cue-head reveal"><span class="q">Q8</span><span class="nm">Meedoen</span><span class="ln"></span><span class="tc">Testers gezocht</span></div>
+      <h2 class="title">Zet ARGUS in op<br><em>jouw productie.</em></h2>
+    </div>
+    <div class="reveal">
+      <p>Wil je een van onze tools testen op jouw evenement, of heb je een idee dat hier past? Operators en producties die mee willen bouwen, horen we graag.</p>
+      <a class="btn" href="mailto:info@matrixeventsupport.nl?subject=ARGUS%20Systems">Neem contact op</a>
+    </div>
   </div>
 </section>
 </main>
 <footer class="site-footer">
-  <div class="wrap foot-grid">
-    <div class="foot-brand">
-      <img src="assets/img/logo-matrix.png" alt="MATRIX E.I.L." width="600" height="179" loading="lazy">
-      <p>Execution is the chariot of genius.</p>
-    </div>
-    <div>
-      <h4>Pagina's</h4>
-      <ul><li><a href="index.html">Home</a></li><li><a href="projecten.html">Projecten</a></li><li><a href="over.html">Over</a></li><li><a href="argus.html">Argus Systems</a></li></ul>
-    </div>
-    <div>
-      <h4>Contact</h4>
-      <ul><li><a href="mailto:info@matrixeventsupport.nl">info@matrixeventsupport.nl</a></li><li><a href="tel:+31630971404">+31 6 30971404</a></li><li><a href="https://www.instagram.com/matrix.eil/" target="_blank" rel="noopener">Instagram</a></li></ul>
-    </div>
-    <div>
-      <h4>Fotografie</h4>
-      <div class="credits">
-        <img src="assets/img/partner-eleven-media.png" alt="Eleven Media" loading="lazy">
-        <img src="assets/img/partner-highlite.png" alt="Highlite" loading="lazy">
-        <img class="voncken" src="assets/img/partner-voncken.png" alt="Voncken Media Solutions" loading="lazy">
+  <div class="wrap">
+    <div class="eoc">Einde cuelijst · bedankt voor het kijken</div>
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <img src="assets/img/logo-matrix.png" alt="MATRIX E.I.L." width="600" height="179" loading="lazy">
+        <p>Execution is the chariot of genius.</p>
+      </div>
+      <div>
+        <h4>Pagina's</h4>
+        <ul><li><a href="index.html">Home</a></li><li><a href="projecten.html">Projecten</a></li><li><a href="over.html">Over</a></li><li><a href="argus.html">Argus Systems</a></li></ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul><li><a href="mailto:info@matrixeventsupport.nl">info@matrixeventsupport.nl</a></li><li><a href="tel:+31630971404">+31 6 30971404</a></li><li><a href="https://www.instagram.com/matrix.eil/" target="_blank" rel="noopener">Instagram</a></li></ul>
+      </div>
+      <div>
+        <h4>Fotografie</h4>
+        <div class="credits">
+          <img src="assets/img/partner-eleven-media.png" alt="Eleven Media" loading="lazy">
+          <img src="assets/img/partner-highlite.png" alt="Highlite" loading="lazy">
+          <img class="voncken" src="assets/img/partner-voncken.png" alt="Voncken Media Solutions" loading="lazy">
+        </div>
       </div>
     </div>
-  </div>
-  <div class="wrap foot-bottom">
-    <span>&copy; <span data-year>2026</span> MATRIX E.I.L.</span>
-    <a href="privacy.html">Privacy</a>
+    <div class="foot-bottom">
+      <span>&copy; <span data-year>2026</span> MATRIX E.I.L.</span>
+      <a href="privacy.html">Privacy</a>
+    </div>
   </div>
 </footer>
 <button class="to-top" aria-label="Terug naar boven"><svg viewBox="0 0 54 54" aria-hidden="true"><circle class="track" cx="27" cy="27" r="25"/><circle class="bar" cx="27" cy="27" r="25"/></svg><span aria-hidden="true">↑</span></button>
 <script src="assets/js/main.js"></script>
+<script src="assets/js/argus.js"></script>
 </body>
 </html>

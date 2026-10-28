@@ -12,54 +12,61 @@
 <link rel="icon" href="assets/img/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@800;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@300;400;500;600;700&display=swap">
 <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
+<div class="standby" aria-hidden="true"><div class="sb">Standby<b class="go">GO</b></div></div>
+<div class="haze" aria-hidden="true"><i></i><i></i></div>
 <header class="site-header">
   <div class="wrap">
     <a class="logo" href="index.html" aria-label="MATRIX E.I.L. home"><img src="assets/img/logo-matrix.png" alt="MATRIX E.I.L." width="600" height="179"></a>
+    <div class="showbar" aria-hidden="true"><span class="live">Live</span><span class="sep"></span><span class="tc-wrap">TC <span class="tc">00:00:00:00</span></span><span class="sep s2"></span><span class="cue-now"></span></div>
     <button class="menu-btn" aria-label="Menu" aria-expanded="false" aria-controls="nav"><span></span><span></span><span></span></button>
     <nav class="nav" id="nav" aria-label="Hoofdmenu"><a href="projecten.html">Projecten</a><a href="over.html">Over</a><a href="argus.html">Argus</a><a class="nav-cta" href="#contact">Contact</a></nav>
   </div>
 </header>
 <main>
-<section class="section page-top">
+<section class="section page-top" data-cue="Q1" data-cue-name="Privacy">
   <div class="wrap narrow prose">
-    <span class="label"><b>§</b> Privacy</span>
+    <span class="tag"><b>§</b> Privacy</span>
     <h2>Privacy</h2>
     <p>MATRIX E.I.L. verzamelt via deze website geen persoonsgegevens. Er worden geen tracking- of advertentiecookies gebruikt. Neem je contact op via e-mail of telefoon, dan gebruiken we je gegevens alleen om je bericht te beantwoorden.</p>
     <p>Lettertypen worden geladen via Google Fonts. Daarbij wordt je IP-adres door Google verwerkt.</p>
     <p>Vragen over privacy? Mail naar <a href="mailto:info@matrixeventsupport.nl">info@matrixeventsupport.nl</a>.</p>
   </div>
 </section>
+<div id="contact"></div>
 </main>
 <footer class="site-footer">
-  <div class="wrap foot-grid">
-    <div class="foot-brand">
-      <img src="assets/img/logo-matrix.png" alt="MATRIX E.I.L." width="600" height="179" loading="lazy">
-      <p>Execution is the chariot of genius.</p>
-    </div>
-    <div>
-      <h4>Pagina's</h4>
-      <ul><li><a href="index.html">Home</a></li><li><a href="projecten.html">Projecten</a></li><li><a href="over.html">Over</a></li><li><a href="argus.html">Argus Systems</a></li></ul>
-    </div>
-    <div id="contact">
-      <h4>Contact</h4>
-      <ul><li><a href="mailto:info@matrixeventsupport.nl">info@matrixeventsupport.nl</a></li><li><a href="tel:+31630971404">+31 6 30971404</a></li><li><a href="https://www.instagram.com/matrix.eil/" target="_blank" rel="noopener">Instagram</a></li></ul>
-    </div>
-    <div>
-      <h4>Fotografie</h4>
-      <div class="credits">
-        <img src="assets/img/partner-eleven-media.png" alt="Eleven Media" loading="lazy">
-        <img src="assets/img/partner-highlite.png" alt="Highlite" loading="lazy">
-        <img class="voncken" src="assets/img/partner-voncken.png" alt="Voncken Media Solutions" loading="lazy">
+  <div class="wrap">
+    <div class="eoc">Einde cuelijst · bedankt voor het kijken</div>
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <img src="assets/img/logo-matrix.png" alt="MATRIX E.I.L." width="600" height="179" loading="lazy">
+        <p>Execution is the chariot of genius.</p>
+      </div>
+      <div>
+        <h4>Pagina's</h4>
+        <ul><li><a href="index.html">Home</a></li><li><a href="projecten.html">Projecten</a></li><li><a href="over.html">Over</a></li><li><a href="argus.html">Argus Systems</a></li></ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul><li><a href="mailto:info@matrixeventsupport.nl">info@matrixeventsupport.nl</a></li><li><a href="tel:+31630971404">+31 6 30971404</a></li><li><a href="https://www.instagram.com/matrix.eil/" target="_blank" rel="noopener">Instagram</a></li></ul>
+      </div>
+      <div>
+        <h4>Fotografie</h4>
+        <div class="credits">
+          <img src="assets/img/partner-eleven-media.png" alt="Eleven Media" loading="lazy">
+          <img src="assets/img/partner-highlite.png" alt="Highlite" loading="lazy">
+          <img class="voncken" src="assets/img/partner-voncken.png" alt="Voncken Media Solutions" loading="lazy">
+        </div>
       </div>
     </div>
-  </div>
-  <div class="wrap foot-bottom">
-    <span>&copy; <span data-year>2026</span> MATRIX E.I.L.</span>
-    <a href="privacy.html">Privacy</a>
+    <div class="foot-bottom">
+      <span>&copy; <span data-year>2026</span> MATRIX E.I.L.</span>
+      <a href="privacy.html">Privacy</a>
+    </div>
   </div>
 </footer>
 <button class="to-top" aria-label="Terug naar boven"><svg viewBox="0 0 54 54" aria-hidden="true"><circle class="track" cx="27" cy="27" r="25"/><circle class="bar" cx="27" cy="27" r="25"/></svg><span aria-hidden="true">↑</span></button>

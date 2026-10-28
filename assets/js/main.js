@@ -67,23 +67,6 @@ if (finePointer && !reduce) {
   })();
 }
 
-// Expertise: foto beweegt mee met de muis
-const expList = document.querySelector('.exp-list');
-if (expList && finePointer) {
-  const float = document.createElement('div');
-  float.className = 'exp-float';
-  float.innerHTML = '<img alt="">';
-  document.body.appendChild(float);
-  const img = float.firstChild;
-  expList.querySelectorAll('li').forEach(li => {
-    li.addEventListener('mouseenter', () => { img.src = li.dataset.img; float.classList.add('show'); });
-    li.addEventListener('mouseleave', () => float.classList.remove('show'));
-    li.addEventListener('mousemove', e => {
-      float.style.transform = `translate3d(${e.clientX + 30}px, ${e.clientY - 200}px, 0) rotate(${(e.clientX / innerWidth - .5) * 6}deg)`;
-    });
-  });
-}
-
 // Fotoreeksen groot bekijken (projecten en galerij)
 const box = document.createElement('div');
 box.className = 'lightbox';
@@ -138,14 +121,135 @@ if (gallery) {
   imgs.forEach((img, i) => img.addEventListener('click', () => lbOpen(imgs.map(x => x.src), i, 'Uit het veld')));
 }
 
-// Zachte overgang bij het wisselen van pagina
-if (!reduce) {
-  document.querySelectorAll('a[href$=".html"]').forEach(a => {
+// Logboek: foto zweeft mee met de muis, klik opent de reeks
+const logRows = document.querySelectorAll('.log tr.row');
+if (logRows.length) {
+  let float = null;
+  if (finePointer) {
+    float = document.createElement('div');
+    float.className = 'log-float rm';
+    float.innerHTML = '<img alt=""><span></span>';
+    document.body.appendChild(float);
+  }
+  logRows.forEach(row => {
+    const open = () => lbOpen(JSON.parse(row.dataset.gallery), 0, row.dataset.title);
+    row.addEventListener('click', open);
+    row.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
+    if (!float) return;
+    row.addEventListener('mouseenter', () => {
+      float.firstChild.src = row.dataset.cover;
+      float.lastChild.textContent = row.querySelector('.no').firstChild.textContent + ' · ' + row.dataset.title.replace('&amp;', '&');
+      float.classList.add('show');
+    });
+    row.addEventListener('mouseleave', () => float.classList.remove('show'));
+    row.addEventListener('mousemove', e => {
+      const x = Math.min(e.clientX + 36, innerWidth - 360);
+      float.style.transform = `translate3d(${x}px, ${e.clientY - 120}px, 0)`;
+    });
+  });
+}
+
+// Timecode (tijd van de dag, 25 beelden per seconde) in de showbalk en op de monitor
+const tcEls = document.querySelectorAll('.tc');
+const pad = n => String(n).padStart(2, '0');
+function tcNow() {
+  const d = new Date();
+  return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}:${pad(Math.floor(d.getMilliseconds() / 40))}`;
+}
+const tcLive = [...tcEls].filter(el => el.closest('.showbar, .osd'));
+if (tcLive.length) {
+  let last = 0;
+  (function loop(t) {
+    if (t - last > 40) { const v = tcNow(); tcLive.forEach(el => { el.textContent = v; }); last = t; }
+    requestAnimationFrame(loop);
+  })(0);
+}
+
+// Cues: elke sectie met data-cue komt in de cuelijst; de actieve cue staat in de showbalk
+const cues = [...document.querySelectorAll('[data-cue]')];
+const cueNow = document.querySelector('.showbar .cue-now');
+if (cues.length) {
+  let list = null;
+  if (cues.length > 1) {
+    list = document.createElement('nav');
+    list.className = 'cuelist';
+    list.setAttribute('aria-label', 'Cuelijst');
+    list.innerHTML = '<span class="lbl">Cuelijst</span>' + cues.map((c, i) => {
+      if (!c.id) c.id = 'cue-' + (i + 1);
+      return `<a href="#${c.id}"><span class="n">${c.dataset.cueName}</span><span class="q">${c.dataset.cue}</span></a>`;
+    }).join('');
+    document.body.appendChild(list);
+  }
+  const setCue = c => {
+    if (cueNow) cueNow.textContent = `${c.dataset.cue} · ${c.dataset.cueName}`;
+    if (list) list.querySelectorAll('a').forEach((a, i) => a.classList.toggle('on', cues[i] === c));
+  };
+  setCue(cues[0]);
+  const pickCue = () => {
+    const mid = innerHeight * .45;
+    let cur = cues[0];
+    cues.forEach(c => { if (c.getBoundingClientRect().top < mid) cur = c; });
+    setCue(cur);
+  };
+  addEventListener('scroll', pickCue, { passive: true });
+  pickCue();
+}
+
+// Uitlezing linksonder: pan en tilt volgen de muis, intensiteit de scroll
+if (finePointer && !reduce) {
+  const ro = document.createElement('div');
+  ro.className = 'readout';
+  ro.setAttribute('aria-hidden', 'true');
+  ro.innerHTML = '<span>PAN <b class="p">270.0</b>°</span><span>TILT <b class="t">135.0</b>°</span><span>INT <b class="i">100</b>%</span>';
+  document.body.appendChild(ro);
+  const [p, t, i] = ['.p', '.t', '.i'].map(s => ro.querySelector(s));
+  addEventListener('mousemove', e => {
+    p.textContent = (e.clientX / innerWidth * 540).toFixed(1).padStart(5, '0');
+    t.textContent = (e.clientY / innerHeight * 270).toFixed(1).padStart(5, '0');
+  }, { passive: true });
+  addEventListener('scroll', () => {
+    const max = document.documentElement.scrollHeight - innerHeight;
+    i.textContent = String(Math.round(100 - 70 * Math.min(1, scrollY / Math.max(1, max)))).padStart(3, '0');
+  }, { passive: true });
+}
+
+// Manifest: de tekst licht woord voor woord op tijdens het scrollen
+document.querySelectorAll('.scrub').forEach(el => {
+  el.innerHTML = el.textContent.trim().split(/\s+/).map(w => `<span>${w}</span>`).join(' ');
+  const words = [...el.children];
+  const update = () => {
+    const r = el.getBoundingClientRect();
+    const p = reduce ? 1 : Math.min(1, Math.max(0, (innerHeight * .85 - r.top) / (r.height + innerHeight * .35)));
+    const n = Math.round(p * words.length);
+    words.forEach((w, k) => w.classList.toggle('lit', k < n));
+  };
+  addEventListener('scroll', update, { passive: true });
+  update();
+});
+
+// Blackout en GO tussen pagina's; bij het eerste bezoek aan de home een korte intro
+const standby = document.querySelector('.standby');
+const sb = standby && standby.querySelector('.sb');
+if (standby && !reduce) {
+  let first = false;
+  try { first = document.body.classList.contains('home') && !sessionStorage.getItem('matrix-intro'); sessionStorage.setItem('matrix-intro', '1'); } catch (e) { first = false; }
+  if (first) {
+    document.body.classList.add('intro');
+    const steps = [['Zaallicht uit', '…'], ['Standby', 'Q1'], ['', 'GO']];
+    steps.forEach(([small, big], k) => setTimeout(() => {
+      sb.innerHTML = `${small}<b${big === 'GO' ? ' class="go"' : ''}>${big}</b>`;
+    }, k * 650));
+    setTimeout(() => document.body.classList.add('go'), steps.length * 650 + 150);
+  }
+  document.querySelectorAll('a[href$=".html"], a[href*=".html#"]').forEach(a => {
     a.addEventListener('click', e => {
       if (e.metaKey || e.ctrlKey || e.shiftKey || a.target === '_blank') return;
       e.preventDefault();
+      const page = { 'index.html': 'Home', 'projecten.html': 'Projecten', 'over.html': 'Over', 'argus.html': 'Argus', 'privacy.html': 'Privacy' };
+      sb.innerHTML = `Standby<b>${page[a.getAttribute('href').split('#')[0]] || 'GO'}</b>`;
+      document.body.classList.remove('intro', 'go');
       document.body.classList.add('leaving');
-      setTimeout(() => { location.href = a.href; }, 320);
+      setTimeout(() => { location.href = a.href; }, 380);
     });
   });
   addEventListener('pageshow', e => { if (e.persisted) document.body.classList.remove('leaving'); });

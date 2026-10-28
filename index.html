@@ -12,105 +12,137 @@
 <link rel="icon" href="assets/img/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@800;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@300;400;500;600;700&display=swap">
 <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body class="home">
+<div class="standby" aria-hidden="true"><div class="sb">Standby<b class="go">GO</b></div></div>
+<div class="haze" aria-hidden="true"><i></i><i></i></div>
 <header class="site-header">
   <div class="wrap">
     <a class="logo" href="index.html" aria-label="MATRIX E.I.L. home"><img src="assets/img/logo-matrix.png" alt="MATRIX E.I.L." width="600" height="179"></a>
+    <div class="showbar" aria-hidden="true"><span class="live">Live</span><span class="sep"></span><span class="tc-wrap">TC <span class="tc">00:00:00:00</span></span><span class="sep s2"></span><span class="cue-now"></span></div>
     <button class="menu-btn" aria-label="Menu" aria-expanded="false" aria-controls="nav"><span></span><span></span><span></span></button>
     <nav class="nav" id="nav" aria-label="Hoofdmenu"><a href="projecten.html">Projecten</a><a href="over.html">Over</a><a href="argus.html">Argus</a><a class="nav-cta" href="#contact">Contact</a></nav>
   </div>
 </header>
 <main>
-<section class="hero">
+<section class="hero" data-cue="Q1" data-cue-name="Opening">
   <img class="hero-bg" src="assets/img/hero.jpg" alt="" fetchpriority="high">
+  <div class="beams" aria-hidden="true"><i></i><i></i><i></i></div>
   <h1><img class="hero-tekst" src="assets/img/hero-tekst.png" alt="Execution is the chariot of genius." width="1600" height="518"></h1>
-  <div class="hero-foot wrap">
-    <span>Licht · Video · LED · Content</span>
-    <a href="#werk" class="scroll-cue">Scroll<i></i></a>
-    <span>Stage &amp; show design</span>
+  <div class="hud">
+    <span class="tl">Q1 · <b>Opening</b></span>
+    <span class="tr">Scene <b>01</b> / 06</span>
+    <span class="bl">Licht · Video · LED · Content</span>
+    <a href="#werk" class="bc">GO<i></i></a>
+    <span class="br">Stage &amp; show design</span>
   </div>
 </section>
 
-<div class="ticker" aria-hidden="true"><div class="ticker-track"><span>Stage &amp; lighting design</span><i>✦</i><span>Programming &amp; live operation</span><i>✦</i><span>VJ &amp; custom visual content</span><i>✦</i><span>LED systems &amp; infrastructure</span><i>✦</i><span>Stage &amp; lighting design</span><i>✦</i><span>Programming &amp; live operation</span><i>✦</i><span>VJ &amp; custom visual content</span><i>✦</i><span>LED systems &amp; infrastructure</span><i>✦</i></div></div>
+<div class="ticker" aria-hidden="true"><div class="ticker-track"><span>Stage &amp; lighting design</span><i>GO</i><span>Programming &amp; live operation</span><i>GO</i><span>VJ &amp; custom visual content</span><i>GO</i><span>LED systems &amp; infrastructure</span><i>GO</i><span>Stage &amp; lighting design</span><i>GO</i><span>Programming &amp; live operation</span><i>GO</i><span>VJ &amp; custom visual content</span><i>GO</i><span>LED systems &amp; infrastructure</span><i>GO</i></div></div>
 
-<section class="section" id="werk">
+<section class="section" id="werk" data-cue="Q2" data-cue-name="Selected work">
   <div class="wrap">
-    <div class="head">
-      <span class="label reveal"><b>I</b> Selected work · 2024 – 2026</span>
-      <p class="intro-big reveal">MATRIX geeft vorm aan de voorwaarden voor <em>dat moment.</em></p>
+    <div class="cue-head reveal"><span class="q">Q2</span><span class="nm">Selected work</span><span class="ln"></span><span class="tc">2024 – 2026</span></div>
+    <div class="intro-line">
+      <h2 class="title reveal">Selected<br><em>work.</em></h2>
+      <p class="lead reveal">MATRIX geeft vorm aan de voorwaarden voor dat moment. Een greep uit de producties waar we licht, beeld en LED neerzetten.</p>
     </div>
     <div class="work-list">
       <article class="work-row">
-        <a class="work-media unveil" href="projecten.html#woeesj-stock"><img src="assets/img/proj/woeesj-stock/01.jpg" alt="Woeësj-Stock" width="1600" height="1067" loading="lazy"></a>
+        <a class="work-media unveil rm" href="projecten.html#woeesj-stock"><img src="assets/img/proj/woeesj-stock/01.jpg" alt="Woeësj-Stock" width="1600" height="1067" loading="lazy"></a>
         <div class="work-copy reveal">
-          <span class="numeral">I.</span>
+          <span class="cueno">Q2.1</span>
           <h3>Woeësj-Stock</h3>
           <span class="meta">Simpelveld, 2026</span>
           <p class="disc">Stage design · Lighting design<br>Programming · Live operation<br>Commissioned by GTF Franzen</p>
-          <a class="link-arrow" href="projecten.html#woeesj-stock">Bekijk project</a>
+          <a class="link-arrow" href="projecten.html#woeesj-stock">Open in logboek</a>
         </div>
       </article>
       <article class="work-row">
-        <a class="work-media unveil" href="projecten.html#electrisize"><img src="assets/img/electrisize.jpg" alt="Electrisize" width="1345" height="745" loading="lazy"></a>
+        <a class="work-media unveil rm" href="projecten.html#electrisize"><img src="assets/img/electrisize.jpg" alt="Electrisize" width="1345" height="745" loading="lazy"></a>
         <div class="work-copy reveal">
-          <span class="numeral">II.</span>
+          <span class="cueno">Q2.2</span>
           <h3>Electrisize</h3>
           <span class="meta">Main Stage &amp; Tapuya, 2026</span>
           <p class="disc">LED systems · Infrastructure<br>Setup &amp; commissioning<br>For Djem LED Screens</p>
-          <a class="link-arrow" href="projecten.html#electrisize">Bekijk project</a>
+          <a class="link-arrow" href="projecten.html#electrisize">Open in logboek</a>
         </div>
       </article>
       <article class="work-row">
-        <a class="work-media unveil" href="projecten.html#parkcity-live"><img src="assets/img/proj/parkcity-live/01.jpg" alt="Parkcity Live" width="1600" height="1067" loading="lazy"></a>
+        <a class="work-media unveil rm" href="projecten.html#parkcity-live"><img src="assets/img/proj/parkcity-live/01.jpg" alt="Parkcity Live" width="1600" height="1067" loading="lazy"></a>
         <div class="work-copy reveal">
-          <span class="numeral">III.</span>
+          <span class="cueno">Q2.3</span>
           <h3>Parkcity Live</h3>
           <span class="meta">Dance tent, 2026</span>
           <p class="disc">Custom visual content · VJ<br>For WE-AV</p>
-          <a class="link-arrow" href="projecten.html#parkcity-live">Bekijk project</a>
+          <a class="link-arrow" href="projecten.html#parkcity-live">Open in logboek</a>
         </div>
       </article>
       <article class="work-row">
-        <a class="work-media unveil" href="projecten.html#boiler-room"><img src="assets/img/boiler-room.jpg" alt="Boiler Room" width="704" height="481" loading="lazy"></a>
+        <a class="work-media unveil rm" href="projecten.html#boiler-room"><img src="assets/img/boiler-room.jpg" alt="Boiler Room" width="704" height="481" loading="lazy"></a>
         <div class="work-copy reveal">
-          <span class="numeral">IV.</span>
+          <span class="cueno">Q2.4</span>
           <h3>Boiler Room</h3>
           <span class="meta">Complex Maastricht, 2026</span>
           <p class="disc">Programming · Live operation</p>
-          <a class="link-arrow" href="projecten.html#boiler-room">Bekijk project</a>
+          <a class="link-arrow" href="projecten.html#boiler-room">Open in logboek</a>
         </div>
       </article>
     </div>
   </div>
 </section>
 
-<section class="section" style="padding-top:0">
+<section class="section" style="padding-top:0" data-cue="Q3" data-cue-name="Disciplines">
   <div class="wrap">
-    <div class="head">
-      <span class="label reveal"><b>II</b> Expertise</span>
+    <div class="cue-head reveal"><span class="q">Q3</span><span class="nm">Disciplines</span><span class="ln"></span><span class="tc">4 kanalen · 1 beeld</span></div>
+    <div class="intro-line">
       <h2 class="title reveal">Vier disciplines,<br><em>één beeld.</em></h2>
+      <p class="lead reveal">Vier kanalen op dezelfde tafel. Pas als ze samen omhoog gaan, ontstaat het beeld.</p>
     </div>
-    <ol class="exp-list">
-      <li class="reveal" data-img="assets/img/proj/woeesj-stock/01.jpg"><span class="numeral">I.</span><h3>Stage &amp; lighting design</h3><p>Van eerste schets tot complete rig: een ontwerp dat past bij de plek, het publiek en de muziek.</p><div class="exp-img"><img src="assets/img/proj/woeesj-stock/01.jpg" alt="" loading="lazy"></div></li>
-      <li class="reveal" data-img="assets/img/proj/paul-elstak/01.jpg"><span class="numeral">II.</span><h3>Programming &amp; live operation</h3><p>De show programmeren en live bedienen, zodat licht en muziek op elk moment samenvallen.</p><div class="exp-img"><img src="assets/img/proj/paul-elstak/01.jpg" alt="" loading="lazy"></div></li>
-      <li class="reveal" data-img="assets/img/proj/parkcity-live/01.jpg"><span class="numeral">III.</span><h3>VJ &amp; custom visual content</h3><p>Eigen visuals en live VJ, gemaakt voor het podium en de artiesten van jouw productie.</p><div class="exp-img"><img src="assets/img/proj/parkcity-live/01.jpg" alt="" loading="lazy"></div></li>
-      <li class="reveal" data-img="assets/img/electrisize.jpg"><span class="numeral">IV.</span><h3>LED systems &amp; infrastructure</h3><p>LED-schermen en de techniek erachter: opbouw, signaal en inregelen.</p><div class="exp-img"><img src="assets/img/electrisize.jpg" alt="" loading="lazy"></div></li>
-    </ol>
+    <div class="desk">
+      <div class="ch reveal" style="--v:86%">
+        <div class="ph" aria-hidden="true"><img src="assets/img/proj/woeesj-stock/01.jpg" alt="" loading="lazy"></div>
+        <div class="top"><span>CH <b>01</b></span><span>86%</span></div>
+        <div class="fader" aria-hidden="true"><div class="ticks"><span>+10</span><span>0</span><span>-10</span><span>-20</span><span>-∞</span></div><div class="lvl"></div><div class="knob"></div></div>
+        <h3>Stage &amp; lighting design</h3>
+        <p>Van eerste schets tot complete rig: een ontwerp dat past bij de plek, het publiek en de muziek.</p>
+      </div>
+      <div class="ch reveal" style="--v:72%">
+        <div class="ph" aria-hidden="true"><img src="assets/img/proj/paul-elstak/01.jpg" alt="" loading="lazy"></div>
+        <div class="top"><span>CH <b>02</b></span><span>72%</span></div>
+        <div class="fader" aria-hidden="true"><div class="ticks"><span>+10</span><span>0</span><span>-10</span><span>-20</span><span>-∞</span></div><div class="lvl"></div><div class="knob"></div></div>
+        <h3>Programming &amp; live operation</h3>
+        <p>De show programmeren en live bedienen, zodat licht en muziek op elk moment samenvallen.</p>
+      </div>
+      <div class="ch reveal" style="--v:93%">
+        <div class="ph" aria-hidden="true"><img src="assets/img/proj/parkcity-live/01.jpg" alt="" loading="lazy"></div>
+        <div class="top"><span>CH <b>03</b></span><span>93%</span></div>
+        <div class="fader" aria-hidden="true"><div class="ticks"><span>+10</span><span>0</span><span>-10</span><span>-20</span><span>-∞</span></div><div class="lvl"></div><div class="knob"></div></div>
+        <h3>VJ &amp; custom visual content</h3>
+        <p>Eigen visuals en live VJ, gemaakt voor het podium en de artiesten van jouw productie.</p>
+      </div>
+      <div class="ch reveal" style="--v:64%">
+        <div class="ph" aria-hidden="true"><img src="assets/img/electrisize.jpg" alt="" loading="lazy"></div>
+        <div class="top"><span>CH <b>04</b></span><span>64%</span></div>
+        <div class="fader" aria-hidden="true"><div class="ticks"><span>+10</span><span>0</span><span>-10</span><span>-20</span><span>-∞</span></div><div class="lvl"></div><div class="knob"></div></div>
+        <h3>LED systems &amp; infrastructure</h3>
+        <p>LED-schermen en de techniek erachter: opbouw, signaal en inregelen.</p>
+      </div>
+    </div>
   </div>
 </section>
 
-<section class="photo-break">
+<section class="photo-break" data-cue="Q4" data-cue-name="Manifest">
   <img src="assets/img/saloon.jpg" alt="Festivalpodium met licht, rook en publiek" width="2400" height="1600" loading="lazy">
-  <div class="wrap"><span class="label reveal"><b>III</b> Manifest</span><h2 class="reveal">Het bestaat<br>maar <em>even.</em></h2></div>
+  <div class="wrap"><span class="tag reveal"><b>Q4</b> · Manifest</span><h2 class="reveal">Het bestaat<br>maar <em>even.</em></h2></div>
 </section>
 
 <section class="section" style="padding-top:clamp(40px,6vw,80px)">
   <div class="wrap manifest-grid">
-    <p class="big reveal">Maanden voorbereiding voor een moment dat zich nooit precies laat herhalen. Dezelfde ruimte, dezelfde muziek, dezelfde techniek, en toch iedere keer iets anders.</p>
-    <div class="reveal">
+    <p class="scrub">Maanden voorbereiding voor een moment dat zich nooit precies laat herhalen. Dezelfde ruimte, dezelfde muziek, dezelfde techniek, en toch iedere keer iets anders.</p>
+    <div class="side reveal">
       <p>Dat fascineert ons aan liveproducties. Je kunt alles voorbereiden, maar pas met mensen in de ruimte ontdek je wat het wordt.</p>
       <p>MATRIX geeft vorm aan de voorwaarden voor dat moment. Met ideeën, techniek en mensen die hun vak verstaan. Wat het uiteindelijk betekent, ontstaat tussen het podium en het publiek.</p>
     </div>
@@ -119,7 +151,6 @@
 
 <section class="section quote-block" style="padding-top:0">
   <div class="wrap reveal">
-    <span class="ornament">✦✦✦</span>
     <blockquote>Niemand stapt twee keer in dezelfde rivier.</blockquote>
     <cite>Heraclitus</cite>
   </div>
@@ -127,56 +158,65 @@
 
 <div class="strip" aria-hidden="true"><div class="strip-track"><img src="assets/img/galerij/02.jpg" alt="" width="1400" height="933" loading="lazy"><img src="assets/img/galerij/03.jpg" alt="" width="1400" height="933" loading="lazy"><img src="assets/img/galerij/06.jpg" alt="" width="1400" height="933" loading="lazy"><img src="assets/img/galerij/07.jpg" alt="" width="1400" height="933" loading="lazy"><img src="assets/img/galerij/08.jpg" alt="" width="1400" height="933" loading="lazy"><img src="assets/img/galerij/09.jpg" alt="" width="1400" height="933" loading="lazy"><img src="assets/img/galerij/11.jpg" alt="" width="1400" height="933" loading="lazy"><img src="assets/img/galerij/12.jpg" alt="" width="1400" height="933" loading="lazy"><img src="assets/img/galerij/02.jpg" alt="" width="1400" height="933" loading="lazy"><img src="assets/img/galerij/03.jpg" alt="" width="1400" height="933" loading="lazy"><img src="assets/img/galerij/06.jpg" alt="" width="1400" height="933" loading="lazy"><img src="assets/img/galerij/07.jpg" alt="" width="1400" height="933" loading="lazy"><img src="assets/img/galerij/08.jpg" alt="" width="1400" height="933" loading="lazy"><img src="assets/img/galerij/09.jpg" alt="" width="1400" height="933" loading="lazy"><img src="assets/img/galerij/11.jpg" alt="" width="1400" height="933" loading="lazy"><img src="assets/img/galerij/12.jpg" alt="" width="1400" height="933" loading="lazy"></div></div>
 
-<section class="argus-teaser" style="margin-top:clamp(80px,10vw,140px)">
+<section class="argus-teaser" style="margin-top:clamp(80px,10vw,140px)" data-cue="Q5" data-cue-name="Argus">
   <div class="wrap">
-    <div class="copy reveal">
-      <span class="label"><b style="color:var(--gold)">IV</b> Argus Systems</span>
-      <h2 class="title">Honderd ogen<br>op <em>de show.</em></h2>
-      <p>ARGUS Systems is de softwaretak van MATRIX, vernoemd naar Argus Panoptes, de wachter met honderd ogen. We bouwen tools voor licht- en showoperators, getest waar het telt: live, in het veld.</p>
-      <div class="chips"><span>CHRONOS</span><span>AXIS</span><span>METRON</span><span>HOROS</span></div>
-      <a class="btn gold" href="argus.html">Ontdek ARGUS</a>
+    <div class="copy">
+      <div class="cue-head reveal"><span class="q">Q5</span><span class="nm">Argus Systems</span><span class="ln"></span><span class="tc">In ontwikkeling</span></div>
+      <div class="reveal">
+        <h2 class="title">Honderd ogen<br>op <em>de show.</em></h2>
+        <p>ARGUS Systems is de softwaretak van MATRIX, vernoemd naar Argus Panoptes, de wachter met honderd ogen. Vier tools voor productie en showoperators, gebouwd op de vloer en getest waar het telt: live, in het veld.</p>
+        <div class="chips"><span>CHRONOS</span><span class="t">AXIS</span><span class="t">METRON</span><span class="t">HOROS</span></div>
+        <a class="btn" href="argus.html">Open de regiekamer</a>
+      </div>
     </div>
-    <img class="emblem" src="assets/img/argus/argus-embleem.png" alt="ARGUS Systems embleem" width="400" height="399" loading="lazy">
+    <div class="teaser-eye reveal"><img src="assets/img/argus/argus-embleem.png" alt="ARGUS Systems embleem" width="400" height="399" loading="lazy"></div>
   </div>
 </section>
 
-<section class="contact-block" id="contact">
-  <div class="wrap reveal">
-    <span class="label"><b>VI</b> Contact</span>
-    <h2 class="title">Een productie in<br><em>voorbereiding?</em></h2>
-    <div class="contact-links">
-      <a href="mailto:info@matrixeventsupport.nl">info@matrixeventsupport.nl</a>
-      <a href="tel:+31630971404">+31 6 30971404</a>
+<section class="contact-block" id="contact" data-cue="Q6" data-cue-name="Contact">
+  <div class="wrap">
+    <div class="cue-head reveal"><span class="q">Q6</span><span class="nm">Contact</span><span class="ln"></span><span class="tc">Standby for your call</span></div>
+    <div class="reveal">
+      <div class="standby-line">Standby</div>
+      <h2 class="display">Een productie in<br><em>voorbereiding?</em></h2>
+      <div class="contact-links">
+        <a href="mailto:info@matrixeventsupport.nl">info@matrixeventsupport.nl</a>
+        <a href="tel:+31630971404">+31 6 30971404</a>
+        <a class="ig" href="https://www.instagram.com/matrix.eil/" target="_blank" rel="noopener">Instagram · @matrix.eil</a>
+      </div>
     </div>
   </div>
 </section>
 </main>
 <footer class="site-footer">
-  <div class="wrap foot-grid">
-    <div class="foot-brand">
-      <img src="assets/img/logo-matrix.png" alt="MATRIX E.I.L." width="600" height="179" loading="lazy">
-      <p>Execution is the chariot of genius.</p>
-    </div>
-    <div>
-      <h4>Pagina's</h4>
-      <ul><li><a href="index.html">Home</a></li><li><a href="projecten.html">Projecten</a></li><li><a href="over.html">Over</a></li><li><a href="argus.html">Argus Systems</a></li></ul>
-    </div>
-    <div>
-      <h4>Contact</h4>
-      <ul><li><a href="mailto:info@matrixeventsupport.nl">info@matrixeventsupport.nl</a></li><li><a href="tel:+31630971404">+31 6 30971404</a></li><li><a href="https://www.instagram.com/matrix.eil/" target="_blank" rel="noopener">Instagram</a></li></ul>
-    </div>
-    <div>
-      <h4>Fotografie</h4>
-      <div class="credits">
-        <img src="assets/img/partner-eleven-media.png" alt="Eleven Media" loading="lazy">
-        <img src="assets/img/partner-highlite.png" alt="Highlite" loading="lazy">
-        <img class="voncken" src="assets/img/partner-voncken.png" alt="Voncken Media Solutions" loading="lazy">
+  <div class="wrap">
+    <div class="eoc">Einde cuelijst · bedankt voor het kijken</div>
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <img src="assets/img/logo-matrix.png" alt="MATRIX E.I.L." width="600" height="179" loading="lazy">
+        <p>Execution is the chariot of genius.</p>
+      </div>
+      <div>
+        <h4>Pagina's</h4>
+        <ul><li><a href="index.html">Home</a></li><li><a href="projecten.html">Projecten</a></li><li><a href="over.html">Over</a></li><li><a href="argus.html">Argus Systems</a></li></ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul><li><a href="mailto:info@matrixeventsupport.nl">info@matrixeventsupport.nl</a></li><li><a href="tel:+31630971404">+31 6 30971404</a></li><li><a href="https://www.instagram.com/matrix.eil/" target="_blank" rel="noopener">Instagram</a></li></ul>
+      </div>
+      <div>
+        <h4>Fotografie</h4>
+        <div class="credits">
+          <img src="assets/img/partner-eleven-media.png" alt="Eleven Media" loading="lazy">
+          <img src="assets/img/partner-highlite.png" alt="Highlite" loading="lazy">
+          <img class="voncken" src="assets/img/partner-voncken.png" alt="Voncken Media Solutions" loading="lazy">
+        </div>
       </div>
     </div>
-  </div>
-  <div class="wrap foot-bottom">
-    <span>&copy; <span data-year>2026</span> MATRIX E.I.L.</span>
-    <a href="privacy.html">Privacy</a>
+    <div class="foot-bottom">
+      <span>&copy; <span data-year>2026</span> MATRIX E.I.L.</span>
+      <a href="privacy.html">Privacy</a>
+    </div>
   </div>
 </footer>
 <button class="to-top" aria-label="Terug naar boven"><svg viewBox="0 0 54 54" aria-hidden="true"><circle class="track" cx="27" cy="27" r="25"/><circle class="bar" cx="27" cy="27" r="25"/></svg><span aria-hidden="true">↑</span></button>
