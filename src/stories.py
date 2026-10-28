@@ -33,4 +33,16 @@ STORIES = {
         facts=[('4', 'dagen, elke dag een andere tent'), ('2', 'leveranciers, één beeld'), ('10×', 'Ratata')],
         quote='LaFuente wilde nog niet stoppen en zette Ratata een stuk of tien keer in.',
     ),
+    'wilhelmina-90': dict(
+        name='90 jaar G.V. Wilhelmina',
+        meta='Jubileum, drie dagen',
+        title='Een gymzaal die je <em>niet herkent.</em>',
+        body=[
+            'Gymnastiekvereniging Wilhelmina bestond negentig jaar en vierde dat met een driedaags feest. GTF Franzen Sound Light Vision verzorgde de techniek, MATRIX het stage- en lichtontwerp. Het idee: een gewone gymzaal laten voelen als een echte feestlocatie. Je moest binnenkomen en even niet meer weten waar je was.',
+            'De grootste uitdaging was de locatie zelf. De gymzaal lag op de eerste verdieping, dus al het materiaal werd aan de achterkant in een veld uitgeladen en vandaar naar boven gebracht.',
+            'De avond opende met een timecode-lichtshow: een kleine showcase van wat MATRIX kan, met licht dat precies op de muziek liep. Het mooiste moment kwam toen alles stond en de zaal echt niet meer op een standaard sportzaal leek.',
+        ],
+        facts=[('90', 'jaar G.V. Wilhelmina'), ('3', 'dagen feest'), ('1e', 'verdieping, alles via de achterkant')],
+        quote='Dit lijkt niet meer op een standaard zaal.',
+    ),
 }
