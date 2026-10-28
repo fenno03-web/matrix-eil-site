@@ -11,4 +11,14 @@ STORIES = {
         facts=[('100 kg', 'maximaal per spant'), ('4 × 6 m', 'laddertruss'), ('3', 'dagen, elk een eigen look')],
         quote='Toen het hele plaatje echt tot een geheel kwam.',
     ),
+    'sportclub-jubileum': dict(
+        title='Honderd jaar, <em>groots gevierd.</em>',
+        body=[
+            'Sportclub’25 uit Bocholtz bestond honderd jaar, en dat moest groots gevierd worden. Met een line-up waar onder meer Jan Smit, Emma Heesters, Dries Roelvink en Miljo op stonden, was het doel helder: groots uitpakken en GTF Franzen Sound Light Vision weer stevig op de kaart zetten.',
+            'Bij zo’n line-up hoort een show die net zo groot is. We tekenden het stage- en lichtontwerp en zetten uiteindelijk meer dan 130 fixtures in, aangevuld met video en special effects. Programmering en live operation deden we zelf, zodat elke act precies het licht kreeg dat erbij paste.',
+            'Het werd een feest vol hoogtepunten. Feest in de tent met Jan Smit, Dries Roelvink, en een maandagavond die we afsloten met Miljo: kippenvel. Tot op de dag van vandaag krijgen we er nog complimenten over.',
+        ],
+        facts=[('130+', 'fixtures'), ('100', 'jaar clubgeschiedenis'), ('2025', 'Bocholtz')],
+        quote='Er waren alleen maar hoogtepunten eigenlijk, nu ik eraan terugdenk.',
+    ),
 }
