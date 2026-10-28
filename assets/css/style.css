@@ -879,3 +879,17 @@ body.blackout .blackout-layer { opacity: 1; pointer-events: auto; }
 .pp-grid.single .pp-ph { aspect-ratio: auto; grid-column: auto; }
 .pp-grid.single .pp-ph img { height: auto; }
 @media (max-width: 700px) { .pp-grid { grid-template-columns: 1fr 1fr; gap: 8px; } }
+
+/* ------------------------------------------------ v3.3: organisch en mythisch */
+.growth { position: absolute; left: 0; top: 0; width: 100%; z-index: 1; pointer-events: none; overflow: visible; }
+.growth path { fill: none; stroke: #6f9a8b; stroke-width: 1.1; stroke-linecap: round; opacity: .4; }
+.growth path.twig { stroke-width: .7; opacity: .28; }
+.growth circle { fill: var(--bg); stroke: #6f9a8b; stroke-width: 1.1; opacity: 0; transition: opacity .8s, r .8s; }
+.growth circle.hot { stroke: var(--accent); fill: var(--accent); }
+.growth circle.on { opacity: .85; }
+.argus-page .growth path, .argus-page .growth circle { stroke: var(--gold); }
+.argus-page .growth circle.hot { stroke: var(--petrol); fill: var(--petrol); }
+.embers { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; mix-blend-mode: screen; }
+.fire-quote { margin-top: 30px; max-width: 520px; font-size: clamp(17px, 1.5vw, 21px); font-weight: 300; color: #e9d9c4; }
+.fire-quote cite { display: block; margin-top: 8px; font-style: normal; font-family: var(--mono); font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: #ff8a3d; }
+.heat-on { filter: url(#heat); }

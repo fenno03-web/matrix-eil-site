@@ -414,3 +414,124 @@ if (!reduce) {
 
 // Voor wie in de console kijkt
 console.log('%cMATRIX E.I.L.%c\nExecution is the chariot of genius.\n\nZelfstandige specialist met een eigen blik? info@matrixeventsupport.nl\nTip: typ "argus" op de site, of probeer B.', 'font: 700 28px sans-serif; color: #ec0a8c', 'font: 13px monospace; color: #9a938a');
+
+// ---------------------------------------------------------------- Organisch: groei, vuur en hittetrilling
+const SVGNS = 'http://www.w3.org/2000/svg';
+
+// Groeiende lijnen: als wortels of kabels lopen ze door de pagina en groeien mee met het scrollen
+(function growth() {
+  if (innerWidth < 700) return;
+  let seed = [...location.pathname].reduce((a, c) => a + c.charCodeAt(0), 7);
+  const rnd = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
+  const svg = document.createElementNS(SVGNS, 'svg');
+  svg.setAttribute('class', 'growth'); svg.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(svg);
+  let runs = [], nodes = [];
+  function build() {
+    seed = [...location.pathname].reduce((a, c) => a + c.charCodeAt(0), 7);
+    svg.innerHTML = ''; runs = []; nodes = [];
+    const H = document.documentElement.scrollHeight, W = document.documentElement.clientWidth;
+    svg.setAttribute('width', W); svg.setAttribute('height', H); svg.style.height = H + 'px';
+    const wrap = document.querySelector('main .wrap');
+    const r = wrap ? wrap.getBoundingClientRect() : { left: 40, width: W - 80 };
+    const pad = parseFloat(getComputedStyle(wrap || document.body).paddingLeft) || 40;
+    const left = r.left + pad * .5, width = r.width - pad;
+    const cols = [0, .25, .5, .75, 1].map(f => left + f * width);
+    const strands = [0, 4, rnd() > .5 ? 2 : 1];
+    strands.forEach((ci, si) => {
+      let x = cols[ci], y = innerHeight * (.7 + rnd() * .5) + si * 180;
+      let d = `M${x.toFixed(1)},${y.toFixed(1)}`, start = y;
+      while (y < H - 200) {
+        const step = 140 + rnd() * 220;
+        let nx = cols[ci] + (rnd() - .5) * 46;
+        if (rnd() < .16) { // tak naar een buurkolom
+          const nci = Math.max(0, Math.min(4, ci + (rnd() < .5 ? -1 : 1)));
+          const tx = cols[nci], ty = y + step * .6;
+          const tw = `M${x.toFixed(1)},${y.toFixed(1)} C${x.toFixed(1)},${(y + step * .4).toFixed(1)} ${tx.toFixed(1)},${(ty - step * .3).toFixed(1)} ${tx.toFixed(1)},${(ty + step).toFixed(1)}`;
+          runs.push({ d: tw, y0: y, y1: ty + step, twig: true });
+          nodes.push({ x: tx, y: ty + step, hot: rnd() < .3 });
+        }
+        const cy1 = y + step * .35, cy2 = y + step * .7;
+        d += ` C${(x + (rnd() - .5) * 60).toFixed(1)},${cy1.toFixed(1)} ${(nx + (rnd() - .5) * 60).toFixed(1)},${cy2.toFixed(1)} ${nx.toFixed(1)},${(y + step).toFixed(1)}`;
+        x = nx; y += step;
+        if (rnd() < .22) nodes.push({ x, y, hot: rnd() < .25 });
+      }
+      runs.push({ d, y0: start, y1: y, twig: false });
+    });
+    runs.forEach(run => {
+      const p = document.createElementNS(SVGNS, 'path');
+      p.setAttribute('d', run.d);
+      if (run.twig) p.setAttribute('class', 'twig');
+      svg.appendChild(p);
+      run.el = p; run.len = p.getTotalLength();
+      p.style.strokeDasharray = run.len; p.style.strokeDashoffset = run.len;
+    });
+    nodes.forEach(n => {
+      const c = document.createElementNS(SVGNS, 'circle');
+      c.setAttribute('cx', n.x.toFixed(1)); c.setAttribute('cy', n.y.toFixed(1)); c.setAttribute('r', n.hot ? 2.6 : 3.2);
+      if (n.hot) c.setAttribute('class', 'hot');
+      svg.appendChild(c); n.el = c;
+    });
+    draw();
+  }
+  function draw() {
+    const front = scrollY + innerHeight * .8;
+    runs.forEach(run => {
+      const p = Math.max(0, Math.min(1, (front - run.y0) / (run.y1 - run.y0)));
+      run.el.style.strokeDashoffset = reduce ? 0 : run.len * (1 - p);
+    });
+    nodes.forEach(n => n.el.classList.toggle('on', reduce || n.y < front));
+  }
+  let rt;
+  addEventListener('scroll', () => requestAnimationFrame(draw), { passive: true });
+  addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(build, 300); });
+  addEventListener('load', build);
+  build();
+})();
+
+// Vonken die opstijgen boven het manifest
+document.querySelectorAll('canvas.embers').forEach(cv => {
+  if (reduce) return;
+  const ctx = cv.getContext('2d');
+  let w, h, parts = [], running = false;
+  const size = () => { const dpr = Math.min(2, devicePixelRatio || 1); w = cv.clientWidth; h = cv.clientHeight; cv.width = w * dpr; cv.height = h * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); };
+  const spawn = () => ({ x: Math.random() * w, y: h + 10, vx: (Math.random() - .5) * .4, vy: -(.4 + Math.random() * 1.2), r: .6 + Math.random() * 1.8, life: 0, max: 260 + Math.random() * 260, hue: Math.random() < .15 ? 320 : 18 + Math.random() * 22 });
+  size(); addEventListener('resize', size);
+  for (let i = 0; i < 70; i++) { const p = spawn(); p.y = Math.random() * h; p.life = Math.random() * p.max; parts.push(p); }
+  function tick() {
+    if (!running) return;
+    ctx.clearRect(0, 0, w, h);
+    parts.forEach((p, i) => {
+      p.life++; p.x += p.vx + Math.sin((p.life + i * 30) / 40) * .35; p.y += p.vy;
+      const a = Math.sin(Math.PI * p.life / p.max) * (.55 + Math.random() * .45);
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${p.hue}, 100%, ${60 + Math.random() * 15}%, ${Math.max(0, a)})`;
+      ctx.shadowBlur = 8; ctx.shadowColor = `hsla(${p.hue}, 100%, 55%, .8)`;
+      ctx.fill();
+      if (p.life > p.max || p.y < -10) parts[i] = spawn();
+    });
+    requestAnimationFrame(tick);
+  }
+  new IntersectionObserver(es => es.forEach(e => { running = e.isIntersecting; if (running) tick(); })).observe(cv);
+});
+
+// Hittetrilling: foto's trillen even als lucht boven een podium
+if (finePointer && !reduce) {
+  const defs = document.createElementNS(SVGNS, 'svg');
+  defs.setAttribute('width', 0); defs.setAttribute('height', 0); defs.style.position = 'absolute';
+  defs.innerHTML = '<filter id="heat" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="0.008 0.03" numOctaves="2" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="0" xChannelSelector="R" yChannelSelector="G"/></filter>';
+  document.body.appendChild(defs);
+  const turb = defs.querySelector('feTurbulence'), disp = defs.querySelector('feDisplacementMap');
+  let target = null, amt = 0, t = 0, raf = null;
+  const loop = () => {
+    t += 1; amt += ((target ? 16 : 0) - amt) * .08;
+    turb.setAttribute('baseFrequency', `0.008 ${(0.03 + Math.sin(t / 30) * .006).toFixed(4)}`);
+    turb.setAttribute('seed', String(4 + Math.floor(t / 6) % 3));
+    disp.setAttribute('scale', amt.toFixed(2));
+    if (target || amt > .2) raf = requestAnimationFrame(loop); else { document.querySelectorAll('.heat-on').forEach(x => x.classList.remove('heat-on')); raf = null; }
+  };
+  document.querySelectorAll('.work-media img, .mini-img img, .svc-img img, .proj-img img, .strip-track img').forEach(img => {
+    img.addEventListener('mouseenter', () => { document.querySelectorAll('.heat-on').forEach(x => x.classList.remove('heat-on')); img.classList.add('heat-on'); target = img; if (!raf) loop(); });
+    img.addEventListener('mouseleave', () => { target = null; });
+  });
+}

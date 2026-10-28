@@ -280,7 +280,9 @@ def home():
 
 <section class="photo-break" data-cue="Q4" data-cue-name="Manifest">
   <img src="assets/img/saloon.jpg" alt="Festivalpodium met licht, rook en publiek" width="2400" height="1600" loading="lazy">
-  <div class="wrap"><span class="tag reveal"><b>Q4</b> · Manifest</span><h2 class="reveal">Het bestaat<br>maar <em>even.</em></h2></div>
+  <canvas class="embers" aria-hidden="true"></canvas>
+  <div class="wrap"><span class="tag reveal"><b>Q4</b> · Manifest</span><h2 class="reveal">Het bestaat<br>maar <em>even.</em></h2>
+    <p class="fire-quote reveal">“Zij was altijd, is en zal zijn: een eeuwig levend vuur.”<cite>Heraclitus</cite></p></div>
 </section>
 
 <section class="section" style="padding-top:clamp(40px,6vw,80px)">
