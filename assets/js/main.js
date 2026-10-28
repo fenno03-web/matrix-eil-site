@@ -5,11 +5,15 @@ const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matc
 const btn = document.querySelector('.menu-btn');
 const nav = document.querySelector('.nav');
 if (btn && nav) {
-  btn.addEventListener('click', () => {
-    const open = nav.classList.toggle('open');
+  const setMenu = open => {
+    nav.classList.toggle('open', open);
     btn.setAttribute('aria-expanded', open);
+    document.body.classList.toggle('menu-open', open);
     document.body.style.overflow = open ? 'hidden' : '';
-  });
+  };
+  btn.addEventListener('click', () => setMenu(!nav.classList.contains('open')));
+  nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setMenu(false)));
+  addEventListener('keydown', e => { if (e.key === 'Escape') setMenu(false); });
 }
 
 // Jaartal in de footer
