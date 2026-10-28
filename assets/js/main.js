@@ -347,7 +347,7 @@ addEventListener('keydown', e => {
     document.body.classList.toggle('blackout');
     if (document.body.classList.contains('blackout')) toast('<b>Blackout.</b> Druk nog een keer op B voor licht.');
   }
-  if (k === 'g' && !document.body.classList.contains('blackout')) {
+  if (k === 'g' && !typed.endsWith('arg') && !document.body.classList.contains('blackout')) {
     document.body.classList.add('leaving');
     setTimeout(() => document.body.classList.remove('leaving'), 420);
     toast('<b>GO.</b> Volgende cue.', 1800);
@@ -358,8 +358,8 @@ black.addEventListener('click', () => document.body.classList.remove('blackout')
 function bigEye() {
   const wrap = document.createElement('div');
   wrap.className = 'big-eye';
-  wrap.innerHTML = '<svg viewBox="0 0 600 600" aria-hidden="true"><defs><radialGradient id="beG"><stop offset="0" stop-color="#3fd8ee"/><stop offset=".5" stop-color="#d9ad4f"/><stop offset="1" stop-color="#1a140a"/></radialGradient></defs>' +
-    '<g class="lids"><path class="lid" d="M60,300 Q300,80 540,300 Q300,520 60,300 Z"/><g class="pg"><circle cx="300" cy="300" r="96" fill="url(#beG)"/><circle cx="300" cy="300" r="40" fill="#030607"/><circle cx="318" cy="282" r="8" fill="#fff" opacity=".8"/></g></g></svg>' +
+  wrap.innerHTML = '<svg viewBox="0 0 600 600" aria-hidden="true"><defs><radialGradient id="beG"><stop offset="0" stop-color="#3fd8ee"/><stop offset=".5" stop-color="#d9ad4f"/><stop offset="1" stop-color="#1a140a"/></radialGradient><clipPath id="beClip"><path d="M60,300 Q300,80 540,300 Q300,520 60,300 Z"/></clipPath></defs>' +
+    '<g class="lids"><path class="lid" d="M60,300 Q300,80 540,300 Q300,520 60,300 Z"/><g clip-path="url(#beClip)"><g class="pg"><circle cx="300" cy="300" r="96" fill="url(#beG)"/><circle cx="300" cy="300" r="40" fill="#030607"/><circle cx="318" cy="282" r="8" fill="#fff" opacity=".8"/></g></g></g></svg>' +
     '<p>Argus ziet je</p>';
   document.body.appendChild(wrap);
   requestAnimationFrame(() => wrap.classList.add('show'));

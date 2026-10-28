@@ -544,13 +544,13 @@ def eye_svg():
             a = 2 * math.pi * k / count + (radius % 7) * .1
             dots.append(f'<circle class="dot" cx="{300 + radius * math.cos(a):.1f}" cy="{300 + radius * math.sin(a):.1f}" r="{size}"/>')
     return f'''<svg class="eye" viewBox="0 0 600 600" aria-hidden="true">
-      <defs><radialGradient id="irisG"><stop offset="0" stop-color="#3ccbe0" stop-opacity=".9"/><stop offset=".45" stop-color="#d9ad4f" stop-opacity=".85"/><stop offset="1" stop-color="#1a140a"/></radialGradient></defs>
+      <defs><radialGradient id="irisG"><stop offset="0" stop-color="#3ccbe0" stop-opacity=".9"/><stop offset=".45" stop-color="#d9ad4f" stop-opacity=".85"/><stop offset="1" stop-color="#1a140a"/></radialGradient><clipPath id="lidClip"><path d="M120,300 Q300,140 480,300 Q300,460 120,300 Z"/></clipPath></defs>
       <circle class="ring dash" cx="300" cy="300" r="292"/>
       <circle class="ring" cx="300" cy="300" r="250"/>
       <circle class="ring dash2" cx="300" cy="300" r="214"/>
       {''.join(dots)}
       <path class="lid" d="M120,300 Q300,140 480,300 Q300,460 120,300 Z"/>
-      <g class="pupil-g"><circle class="iris" cx="300" cy="300" r="74"/><circle class="pupil" cx="300" cy="300" r="30"/><circle class="glint" cx="314" cy="286" r="6"/></g>
+      <g clip-path="url(#lidClip)"><g class="pupil-g"><circle class="iris" cx="300" cy="300" r="74"/><circle class="pupil" cx="300" cy="300" r="30"/><circle class="glint" cx="314" cy="286" r="6"/></g></g>
     </svg>'''
 
 
