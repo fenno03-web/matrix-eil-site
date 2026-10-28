@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Bouwt de HTML-pagina's van de site uit gedeelde onderdelen. Draai: python3 build.py"""
+import hashlib
 import json
 import math
 from pathlib import Path
@@ -12,6 +13,10 @@ INSTA = 'https://www.instagram.com/matrix.eil/'
 
 FONTS = ('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500'
          '&family=Space+Grotesk:wght@300;400;500;600;700&display=swap')
+
+def ver(path):
+    return hashlib.md5((ROOT / path).read_bytes()).hexdigest()[:8]
+
 
 NAV = [('projecten.html', 'Projecten'), ('over.html', 'Over'), ('argus.html', 'Argus')]
 
@@ -32,7 +37,7 @@ def head(title, desc, image='assets/img/hero.jpg', icon='assets/img/favicon.png'
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="{FONTS}">
-<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/style.css?v={ver('assets/css/style.css')}">
 </head>'''
 
 
@@ -84,7 +89,7 @@ def footer(extra_js=''):
   </div>
 </footer>
 <button class="to-top" aria-label="Terug naar boven"><svg viewBox="0 0 54 54" aria-hidden="true"><circle class="track" cx="27" cy="27" r="25"/><circle class="bar" cx="27" cy="27" r="25"/></svg><span aria-hidden="true">↑</span></button>
-<script src="assets/js/main.js"></script>{extra_js}
+<script src="assets/js/main.js?v={ver('assets/js/main.js')}"></script>{extra_js}
 </body>
 </html>
 '''
@@ -498,7 +503,7 @@ def argus():
   </div>
 </section>
 </main>
-{footer(chr(10) + '<script src="assets/js/argus.js"></script>')}'''
+{footer(chr(10) + '<script src="assets/js/argus.js?v=' + ver('assets/js/argus.js') + '"></script>')}'''
 
 
 # ---------------------------------------------------------------- Privacy
