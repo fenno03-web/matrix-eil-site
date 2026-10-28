@@ -6,6 +6,7 @@ import math
 from pathlib import Path
 
 from src.showlog import SHOWLOG, HIGHLIGHTS, press_for
+from src.stories import STORIES
 
 ROOT = Path(__file__).parent
 MAIL = 'info@matrixeventsupport.nl'
@@ -939,6 +940,24 @@ def dienst_page(d):
 
 
 # ---------------------------------------------------------------- Projectpagina's
+def story_html(slug):
+    st = STORIES.get(slug)
+    if not st:
+        return ''
+    body = ''.join(f'<p>{b}</p>' for b in st['body'])
+    facts = ''.join(f'<div><b>{v}</b><span>{l}</span></div>' for v, l in st['facts'])
+    return f'''<section class="section story" style="padding-top:0" data-cue="Q2.5" data-cue-name="Het verhaal">
+  <div class="wrap">
+    {cue_head('Q2.5', 'Het verhaal')}
+    <div class="story-grid">
+      <h2 class="title reveal">{st['title']}</h2>
+      <div class="body-text reveal">{body}</div>
+    </div>
+    <div class="story-facts reveal">{facts}</div>
+    <blockquote class="story-quote reveal">“{st['quote']}”</blockquote>
+  </div>
+</section>'''
+
 def project_page(idx):
     slug, t, meta, role, client, single = PROJECTS[idx]
     cover, photos = project_photos(slug, single)
@@ -980,6 +999,7 @@ def project_page(idx):
     <div><span class="tag">Disciplines</span><span class="pp-svcs">{svc_links or '—'}</span></div>
   </div>
 </section>
+{story_html(slug)}
 <section class="section" style="padding-top:0" data-cue="Q3" data-cue-name="Foto's">
   <div class="wrap">
     {cue_head('Q3', "Foto's", f'{n} frames')}
