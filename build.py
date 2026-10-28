@@ -326,7 +326,7 @@ def home():
 # (slug, titel, plaats/jaar, rol, opdrachtgever, losse foto als er geen set is)
 PROJECTS = [
     ('woeesj-stock', 'Woeësj-Stock', 'Simpelveld, 2026', 'Stage design · Lighting design · Programming · Live operation', 'Commissioned by GTF Franzen', None),
-    ('sportclub-jubileum', 'Sportclub ’25 Jubileum', '2025', 'Stage &amp; lighting design · Visuals · Programming · Live operation · VJ', '', None),
+    ('sportclub-jubileum', 'Sportclub ’25 Jubileum', '2025', 'Stage &amp; lighting design · Visuals · Programming · Live operation · VJ', 'Commissioned by GTF Franzen', None),
     ('parkcity-live', 'Parkcity Live', 'Dance tent, 2026', 'Custom visual content · VJ', 'For WE-AV', None),
     ('electrisize', 'Electrisize', 'Main Stage &amp; Tapuya, 2026', 'LED systems · Infrastructure · Setup &amp; commissioning', 'For Djem LED Screens', 'electrisize.jpg'),
     ('carnaval-radio', 'Carnaval Radio', '', 'VJ · Programming · Live operation (licht)', 'For Heijnens Audio Light', None),
