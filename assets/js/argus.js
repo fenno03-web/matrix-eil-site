@@ -201,3 +201,19 @@ if (horos) {
   place();
   if (!still) (function drive() { t = (t + .0016) % 1; place(); requestAnimationFrame(drive); })();
 }
+
+// Klik op het oog: heel even sluiten alle honderd ogen
+if (eye) {
+  eye.style.cursor = 'pointer';
+  eye.addEventListener('click', () => {
+    const dots = eye.querySelectorAll('.dot');
+    const cap = document.querySelector('.eye-cap');
+    dots.forEach((d, k) => setTimeout(() => d.classList.add('shut'), k * 6));
+    if (cap) cap.dataset.was = cap.innerHTML;
+    setTimeout(() => {
+      if (cap) cap.innerHTML = '<b>0</b> ogen open · dat gebeurde nog nooit';
+      dots.forEach((d, k) => setTimeout(() => d.classList.remove('shut'), 400 + k * 6));
+      setTimeout(() => { if (cap && cap.dataset.was) cap.innerHTML = cap.dataset.was; }, 2600);
+    }, 700);
+  });
+}

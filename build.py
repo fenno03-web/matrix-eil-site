@@ -11,6 +11,20 @@ TEL = '+31630971404'
 TEL_TXT = '+31 6 30971404'
 INSTA = 'https://www.instagram.com/matrix.eil/'
 WHATSAPP = 'https://wa.me/31630971404'
+# Zet op 'https://matrixeil.nl/' zodra het domein aan GitHub Pages hangt
+BASE = 'https://fenno03-web.github.io/matrix-eil-site/'
+CURRENT = 'index.html'
+
+QUOTES = [
+    ('Niemand stapt twee keer in dezelfde rivier.', 'Heraclitus'),
+    ('Alles stroomt.', 'Heraclitus'),
+    ('De weg omhoog en de weg omlaag zijn één en dezelfde.', 'Heraclitus'),
+    ('Karakter is lotsbestemming.', 'Heraclitus'),
+    ('De verborgen harmonie is sterker dan de zichtbare.', 'Heraclitus'),
+    ('Wie het onverwachte niet verwacht, zal het niet vinden.', 'Heraclitus'),
+    ('De zon is elke dag nieuw.', 'Heraclitus'),
+    ('Execution is the chariot of genius.', 'William Blake'),
+]
 
 FONTS = ('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500'
          '&family=Space+Grotesk:wght@300;400;500;600;700&display=swap')
@@ -19,11 +33,28 @@ def ver(path):
     return hashlib.md5((ROOT / path).read_bytes()).hexdigest()[:8]
 
 
-NAV = [('projecten.html', 'Projecten'), ('over.html', 'Over'), ('argus.html', 'Argus')]
+NAV = [('diensten.html', 'Diensten'), ('projecten.html', 'Projecten'), ('over.html', 'Over'), ('argus.html', 'Argus')]
 PORTAL = '<div class="portal" aria-hidden="true"><div class="void"></div><div class="ring"></div></div>'
 
 
-def head(title, desc, image='assets/img/hero.jpg', icon='assets/img/favicon.png'):
+ORG = {
+    '@context': 'https://schema.org', '@type': 'ProfessionalService', '@id': BASE + '#matrix',
+    'name': 'MATRIX E.I.L.', 'url': BASE, 'logo': BASE + 'assets/img/logo-matrix.png', 'image': BASE + 'assets/img/hero.jpg',
+    'description': 'Stage- en lichtontwerp, lichtprogrammering en live operation, VJ en visual content en LED-infrastructuur voor festivals en evenementen.',
+    'email': MAIL, 'telephone': TEL, 'areaServed': {'@type': 'Country', 'name': 'Nederland'},
+    'sameAs': [INSTA], 'knowsAbout': ['Lichtontwerp', 'Stage design', 'Lichtprogrammering', 'Live operation', 'VJ', 'Visual content', 'LED-schermen'],
+}
+
+
+def crumbs(*items):
+    return {'@context': 'https://schema.org', '@type': 'BreadcrumbList', 'itemListElement': [
+        {'@type': 'ListItem', 'position': i + 1, 'name': n, 'item': BASE + (u if u != 'index.html' else '')} for i, (n, u) in enumerate((('Home', 'index.html'),) + items)]}
+
+
+def head(title, desc, image='assets/img/hero.jpg', icon='assets/img/favicon.png', ld=None):
+    url = BASE + ('' if CURRENT == 'index.html' else CURRENT)
+    ld = ld if ld is not None else [ORG]
+    ld_html = ''.join(f'\n<script type="application/ld+json">{json.dumps(x, ensure_ascii=False)}</script>' for x in ld)
     return f'''<!doctype html>
 <html lang="nl">
 <head>
@@ -31,15 +62,22 @@ def head(title, desc, image='assets/img/hero.jpg', icon='assets/img/favicon.png'
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>{title}</title>
 <meta name="description" content="{desc}">
+<link rel="canonical" href="{url}">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="nl_NL">
+<meta property="og:site_name" content="MATRIX E.I.L.">
+<meta property="og:url" content="{url}">
 <meta property="og:title" content="{title}">
 <meta property="og:description" content="{desc}">
-<meta property="og:image" content="{image}">
+<meta property="og:image" content="{BASE}{image}">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#050505">
 <link rel="icon" href="{icon}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="{FONTS}">
-<link rel="stylesheet" href="assets/css/style.css?v={ver('assets/css/style.css')}">
+<link rel="stylesheet" href="assets/css/style.css?v={ver('assets/css/style.css')}">{ld_html}
 </head>'''
 
 
@@ -64,10 +102,15 @@ def footer(extra_js=''):
     return f'''<footer class="site-footer">
   <div class="wrap">
     <div class="eoc">Einde cuelijst · bedankt voor het kijken</div>
+    <p class="foot-quote" title="Klik voor een nieuwe quote"><span>{QUOTES[0][0]}</span> <cite>{QUOTES[0][1]}</cite></p>
     <div class="foot-grid">
       <div class="foot-brand">
         <img src="assets/img/logo-matrix.png" alt="MATRIX E.I.L." width="600" height="179" loading="lazy">
         <p>Execution is the chariot of genius.</p>
+      </div>
+      <div>
+        <h4>Diensten</h4>
+        <ul>{''.join(f'<li><a href="{d["slug"]}.html">{d["short"]}</a></li>' for d in DIENSTEN)}</ul>
       </div>
       <div>
         <h4>Pagina's</h4>
@@ -150,34 +193,39 @@ EXPERTISE = [
 def home():
     rows = ''.join(f'''
       <article class="work-row">
-        <a class="work-media unveil rm" href="projecten.html#{slug}"><img src="assets/img/{img}" alt="{t}" width="{w}" height="{h}" loading="lazy"></a>
+        <a class="work-media unveil rm" href="project-{slug}.html"><img src="assets/img/{img}" alt="{t}" width="{w}" height="{h}" loading="lazy"></a>
         <div class="work-copy reveal">
           <span class="cueno">Q2.{i + 1}</span>
           <h3>{t}</h3>
           <span class="meta">{meta}</span>
           <p class="disc">{disc}</p>
-          <a class="link-arrow" href="projecten.html#{slug}">Open in logboek</a>
+          <a class="link-arrow" href="project-{slug}.html">Bekijk project</a>
         </div>
       </article>''' for i, (img, w, h, t, meta, slug, disc) in enumerate(WORK))
     ticks = ''.join(f'<span>{n}</span>' for n in ['+10', '0', '-10', '-20', '-∞'])
     desk = ''.join(f'''
-      <div class="ch reveal" style="--v:{v}%">
+      <a class="ch reveal" href="{DIENSTEN[i]['slug']}.html" style="--v:{v}%">
         <div class="ph" aria-hidden="true"><img src="assets/img/{img}" alt="" loading="lazy"></div>
         <div class="top"><span>CH <b>{i + 1:02d}</b></span><span>{v}%</span></div>
         <div class="fader" aria-hidden="true"><div class="ticks">{ticks}</div><div class="lvl"></div><div class="knob"></div></div>
         <h3>{t}</h3>
         <p>{d}</p>
-      </div>''' for i, (img, t, d, v) in enumerate(EXPERTISE))
+        <span class="ch-more">Meer over {DIENSTEN[i]['short'].lower()} →</span>
+      </a>''' for i, (img, t, d, v) in enumerate(EXPERTISE))
     ticker = ''.join(f'<span>{t}</span><i>GO</i>' for _, t, _, _ in EXPERTISE) * 2
+    steps = ''.join(f'''
+      <li class="reveal"><span class="sn">0{i + 1}</span><h3>{t}</h3><p>{d}</p></li>''' for i, (t, d) in enumerate(STEPS))
+    clients = ''.join(f'<li>{c}</li>' for c in CLIENTS)
     strip = ''.join(f'<img src="assets/img/galerij/{n:02d}.jpg" alt="" width="1400" height="933" loading="lazy">' for n in [2, 3, 6, 7, 8, 9, 11, 12])
     return f'''{head("MATRIX E.I.L. | Stage, licht, visuals en LED", "MATRIX E.I.L. verzorgt stage- en lichtontwerp, programmering, live operation, VJ en LED-techniek voor live producties.")}
 <body class="home">
+<span class="visually-hidden">MATRIX E.I.L.: lichtontwerp, lichtprogrammering, VJ en LED voor festivals en evenementen.</span>
 {header('index.html')}
 <main>
 <section class="hero" data-cue="Q1" data-cue-name="Opening">
   <img class="hero-bg" src="assets/img/hero.jpg" alt="" fetchpriority="high">
-  <div class="beams" aria-hidden="true"><i></i><i></i><i></i></div>
-  <h1><img class="hero-tekst" src="assets/img/hero-tekst.png" alt="Execution is the chariot of genius." width="1600" height="518"></h1>
+  <img class="hero-lit" src="assets/img/hero.jpg" alt="" aria-hidden="true">
+  <h1 class="hero-h1"><img class="hero-tekst" src="assets/img/hero-tekst.png" alt="Execution is the chariot of genius." width="1600" height="518"><span class="blake" aria-hidden="true">— William Blake</span></h1>
   <div class="hud">
     <span class="tl">Q1 · <b>Opening</b></span>
     <span class="tr">Scene <b>01</b> / 06</span>
@@ -210,6 +258,22 @@ def home():
       <p class="lead reveal">Vier kanalen op dezelfde tafel. Pas als ze samen omhoog gaan, ontstaat het beeld.</p>
     </div>
     <div class="desk">{desk}
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0">
+  <div class="wrap">
+    {cue_head('Q3.5', 'Zo werken we', 'Voor organisaties')}
+    <div class="intro-line">
+      <h2 class="title reveal">Eén partij,<br><em>één beeld.</em></h2>
+      <p class="lead reveal">Ontwerp, programmering, visuals en LED in één hand. Dat scheelt afstemming, en het beeld op je podium vertelt één verhaal.</p>
+    </div>
+    <ol class="steps">{steps}
+    </ol>
+    <div class="clients reveal">
+      <span class="tag">Ingehuurd door en samengewerkt met</span>
+      <ul>{clients}</ul>
     </div>
   </div>
 </section>
@@ -296,13 +360,13 @@ def projecten():
         small = f'<small>{place}</small>' if place else ''
         label = f"{len(photos)} foto's" if len(photos) > 1 else '1 foto'
         rows += f'''
-        <tr class="row" id="{slug}" data-title="{t}" data-cover="{cover}" data-gallery='{json.dumps(photos)}' tabindex="0">
+        <tr class="row" id="{slug}" data-title="{t}" data-cover="{cover}" data-href="project-{slug}.html" tabindex="0">
           <td class="no">{i + 1:03d}<span class="thumb"><img src="{cover}" alt="" loading="lazy"></span></td>
-          <td class="show"><strong>{t}</strong>{small}</td>
+          <td class="show"><a href="project-{slug}.html"><strong>{t}</strong></a>{small}</td>
           <td class="role">{role}</td>
           <td class="client{'' if client else ' empty'}">{client or '—'}</td>
           <td class="yr">{year_of(meta)}</td>
-          <td class="go"><button type="button" aria-label="Bekijk foto's van {t}">{label} →</button></td>
+          <td class="go"><span class="btnlike">{label} →</span></td>
         </tr>'''
     sheet = '\n'.join(f'      <figure><img src="assets/img/galerij/{i:02d}.jpg" alt="" width="1400" height="933" loading="lazy"><figcaption><b>▸ {i:02d}A</b><span>Uit het veld</span></figcaption></figure>' for i in range(1, 13))
     return f'''{head("Projecten | MATRIX E.I.L.", "Het logboek van MATRIX E.I.L.: producties waar we licht, visuals en LED verzorgden.", "assets/img/electrisize.jpg")}
@@ -315,7 +379,7 @@ def projecten():
     <div class="log-head">
       <h1 class="display reveal">Show<br><em>log.</em></h1>
       <div class="reveal">
-        <p class="lead">Elke regel een productie, elke productie een eigen opdracht. Klik op een show voor de foto's.</p>
+        <p class="lead">Elke regel een productie, elke productie een eigen opdracht. Klik op een show voor het verhaal en de foto's.</p>
         <div class="log-stats"><div><b>{len(PROJECTS)}</b><span>Producties</span></div><div><b>{total}</b><span>Foto's</span></div><div><b>’24–’26</b><span>Seizoenen</span></div></div>
       </div>
     </div>
@@ -532,9 +596,255 @@ def privacy():
 {footer()}'''
 
 
-PAGES = {'index.html': home, 'projecten.html': projecten, 'over.html': over, 'argus.html': argus, 'privacy.html': privacy}
+# ---------------------------------------------------------------- Diensten
+STEPS = [
+    ('Kennismaking', 'We bespreken je evenement: de plek, het publiek, het programma en wat je wilt dat mensen voelen.'),
+    ('Ontwerp', 'Een plan voor stage, licht, visuals en LED dat past bij de ruimte, de tijd en het budget.'),
+    ('Voorbereiding', 'Programmeren, content maken en afstemmen met je productie en technische partners.'),
+    ('Show', 'We staan zelf achter de tafel, zodat het ontwerp op het podium ook echt zo staat.'),
+]
+CLIENTS = ['GTF Franzen', 'WE-AV', 'Djem LED Screens', 'Heijnens Audio Light', 'Stod', 'Spectrum AV', 'Bongers BLG', 'T.Y.S. Productions']
+
+DIENSTEN = [
+    dict(slug='lichtontwerp', short='Stage- en lichtontwerp', img='proj/woeesj-stock/01.jpg', match=('design',),
+         title='Stage- en lichtontwerp voor festivals en evenementen',
+         seo='Stage- en lichtontwerp voor festivals | MATRIX E.I.L.',
+         desc='Stage- en lichtontwerp voor festivals en evenementen. Van eerste schets tot complete rig, afgestemd op plek, publiek en muziek.',
+         h1='Stage- &amp;<br><em>lichtontwerp.</em>',
+         lead='Een ontwerp dat past bij de plek, het publiek en de muziek. Van eerste schets tot complete rig.',
+         body=['Een vertrouwde opstelling is snel gekozen. Toch verdient iedere productie opnieuw de vraag: waarom past dit hier? We kijken naar de ruimte, de zichtlijnen, het programma en de beschikbare tijd en middelen, en vertalen dat naar een ontwerp waarin elk onderdeel een reden heeft.',
+               'Omdat programmering en live operation bij ons in dezelfde hand liggen, weten we hoe een ontwerp zich straks gedraagt tijdens de show. Zo staat wat op papier is bedacht ook echt zo op het podium.'],
+         points=['Concept en sfeer voor stage en licht', 'Ontwerp van de rig, afgestemd op ruimte, tijd en budget', 'Afstemming met productie en verhuurpartners', 'Programmering en bediening door hetzelfde team']),
+    dict(slug='lichtprogrammeur', short='Programmering en live operation', img='proj/paul-elstak/01.jpg', match=('programming',),
+         title='Lichtprogrammeur en live operator voor je show',
+         seo='Lichtprogrammeur en live operator | MATRIX E.I.L.',
+         desc='Een lichtprogrammeur en live operator voor festivals, clubs en evenementen. De show voorbereiden en live bedienen, zodat licht en muziek samenvallen.',
+         h1='Programmering &amp;<br><em>live operation.</em>',
+         lead='De show programmeren en live bedienen, zodat licht en muziek op elk moment samenvallen.',
+         body=['Een goede show begint lang voordat de eerste act op het podium staat. We bereiden de show voor op de lichttafel, bouwen looks en cues op die passen bij de artiesten en het programma, en zorgen dat alles klaarstaat als de deuren opengaan.',
+               'Tijdens de show staan we zelf achter de tafel. We spelen in op wat er gebeurt: op een DJ die anders draait dan gepland, op een publiek dat meer wil, op het moment dat net iets meer of juist minder vraagt.'],
+         points=['Show voorbereiden en programmeren op de lichttafel', 'Live bediening tijdens de show', "Inspelen op DJ's, live acts en het publiek", 'Ingehuurd door producties en verhuurbedrijven']),
+    dict(slug='vj-visuals', short='VJ en visual content', img='proj/parkcity-live/01.jpg', match=('vj', 'visual'),
+         title='VJ en visuals op maat voor je podium',
+         seo='VJ en visual content op maat | MATRIX E.I.L.',
+         desc='Live VJ en custom visual content voor festivals en evenementen. Visuals gemaakt voor het podium, de schermen en de artiesten van jouw productie.',
+         h1='VJ &amp;<br><em>visual content.</em>',
+         lead='Eigen visuals en live VJ, gemaakt voor het podium en de artiesten van jouw productie.',
+         body=['Een scherm kan diepte geven aan een podium, maar ook alle aandacht opeisen. Daarom maken we content die past bij de stage, het licht en de muziek, in plaats van losse clips die toevallig voorbijkomen.',
+               'Live sturen we de visuals mee met de show, zodat beeld en licht samen één geheel vormen.'],
+         points=['Custom visual content voor jouw schermen en stage', 'Live VJ tijdens de show', 'Beeld afgestemd op licht, muziek en artiesten', 'Content en licht uit één hand']),
+    dict(slug='led-schermen', short='LED-schermen en infrastructuur', img='electrisize.jpg', match=('led',),
+         title='LED-schermen en infrastructuur voor evenementen',
+         seo='LED-schermen en infrastructuur voor evenementen | MATRIX E.I.L.',
+         desc='Opbouw, signaal en inregelen van LED-schermen voor festivals en evenementen: LED systems, infrastructuur en setup &amp; commissioning.',
+         h1='LED-schermen &amp;<br><em>infrastructuur.</em>',
+         lead='LED-schermen en de techniek erachter: opbouw, signaal en inregelen.',
+         body=['Achter elk scherm zit een systeem: processors, signaalverdeling, voeding en een opbouw die moet kloppen voordat er ook maar één beeld verschijnt.',
+               'We helpen bij de opbouw en het inregelen van LED-systemen, zodat het beeld scherp, stabiel en op tijd staat. Ook als onderdeel van een groter team of voor een LED-leverancier.'],
+         points=['LED systems en infrastructuur', 'Setup &amp; commissioning op locatie', 'Signaal en inregelen van schermen', 'Samenwerking met LED-leveranciers']),
+]
+
+
+def project_photos(slug, single):
+    if single:
+        return f'assets/img/{single}', [f'assets/img/{single}']
+    return f'assets/img/proj/{slug}/cover.jpg', [f'assets/img/proj/{slug}/{f}' for f, _, _ in SETS[slug]]
+
+
+def projects_for(d):
+    return [p for p in PROJECTS if any(m in p[3].lower() for m in d['match'])]
+
+
+def steps_html():
+    return ''.join(f'''
+      <li class="reveal"><span class="sn">0{i + 1}</span><h3>{t}</h3><p>{d}</p></li>''' for i, (t, d) in enumerate(STEPS))
+
+
+def dienst_cards(projects):
+    out = ''
+    for slug, t, meta, role, client, single in projects:
+        cover, _ = project_photos(slug, single)
+        out += f'''
+      <a class="mini reveal" href="project-{slug}.html"><span class="mini-img rm"><img src="{cover}" alt="{t}" loading="lazy"></span><span class="mini-t"><b>{t}</b><small>{role}</small></span></a>'''
+    return out
+
+
+def diensten():
+    rows = ''.join(f'''
+    <a class="svc reveal" href="{d['slug']}.html">
+      <span class="svc-no">0{i + 1}</span>
+      <span class="svc-img rm"><img src="assets/img/{d['img']}" alt="{d['short']}" loading="lazy"></span>
+      <span class="svc-copy"><h2>{d['short']}</h2><p>{d['lead']}</p><span class="link-arrow">Lees meer</span></span>
+    </a>''' for i, d in enumerate(DIENSTEN))
+    ld = [ORG, crumbs(('Diensten', 'diensten.html'))]
+    return f'''{head("Diensten: lichtontwerp, programmering, VJ en LED | MATRIX E.I.L.", "MATRIX E.I.L. levert stage- en lichtontwerp, lichtprogrammering en live operation, VJ en visual content en LED-infrastructuur voor festivals en evenementen.", ld=ld)}
+<body class="page-svc">
+{header('diensten.html')}
+<main>
+<section class="section page-top" data-cue="Q1" data-cue-name="Diensten">
+  <div class="wrap">
+    {cue_head('Q1', 'Diensten', '4 disciplines')}
+    <div class="intro-line">
+      <h1 class="display reveal">Het complete<br><em>plaatje.</em></h1>
+      <p class="lead reveal">Vier disciplines die samen het beeld van je evenement maken. Los in te huren, en het sterkst als één geheel.</p>
+    </div>
+    <div class="svc-list">{rows}
+    </div>
+  </div>
+</section>
+<section class="section" style="padding-top:0" data-cue="Q2" data-cue-name="Zo werken we">
+  <div class="wrap">
+    {cue_head('Q2', 'Zo werken we', 'Voor organisaties')}
+    <ol class="steps">{steps_html()}
+    </ol>
+  </div>
+</section>
+{contact_block('Q3')}
+</main>
+{footer()}'''
+
+
+def dienst_page(d):
+    i = DIENSTEN.index(d)
+    projs = projects_for(d)
+    others = ''.join(f'<a href="{o["slug"]}.html">{o["short"]} →</a>' for o in DIENSTEN if o is not d)
+    q, src = QUOTES[(i + 2) % len(QUOTES)]
+    svc_ld = {'@context': 'https://schema.org', '@type': 'Service', 'name': d['short'], 'serviceType': d['short'],
+              'description': d['desc'].replace('&amp;', '&'), 'provider': {'@id': BASE + '#matrix'}, 'areaServed': 'Nederland'}
+    ld = [ORG, svc_ld, crumbs(('Diensten', 'diensten.html'), (d['short'], d['slug'] + '.html'))]
+    body = ''.join(f'<p>{b}</p>' for b in d['body'])
+    points = ''.join(f'<li>{pt}</li>' for pt in d['points'])
+    return f'''{head(d['seo'], d['desc'], 'assets/img/' + d['img'], ld=ld)}
+<body class="page-svc">
+{header(d['slug'] + '.html')}
+<main>
+<section class="section page-top" data-cue="Q1" data-cue-name="{d['short']}">
+  <div class="wrap">
+    <nav class="crumb tag" aria-label="Kruimelpad"><a href="diensten.html">Diensten</a> / <b>{d['short']}</b></nav>
+    {cue_head('Q1', d['short'], f'Dienst 0{i + 1} / 04')}
+    <div class="intro-line">
+      <h1 class="display reveal"><span class="visually-hidden">{d['title']}: </span>{d['h1']}</h1>
+      <p class="lead reveal">{d['lead']}</p>
+    </div>
+    <div class="svc-hero unveil rm"><img src="assets/img/{d['img']}" alt="{d['title']}" loading="lazy"></div>
+  </div>
+</section>
+<section class="section" style="padding-top:0" data-cue="Q2" data-cue-name="Wat we doen">
+  <div class="wrap">
+    {cue_head('Q2', 'Wat we doen')}
+    <div class="svc-body">
+      <div class="body-text reveal">{body}</div>
+      <ul class="svc-points reveal">{points}</ul>
+    </div>
+  </div>
+</section>
+<section class="section" style="padding-top:0" data-cue="Q3" data-cue-name="Projecten">
+  <div class="wrap">
+    {cue_head('Q3', 'Projecten', f'{len(projs)} shows')}
+    <div class="minis">{dienst_cards(projs)}
+    </div>
+  </div>
+</section>
+<section class="section quote-block" style="padding-top:0">
+  <div class="wrap reveal"><blockquote>{q}</blockquote><cite>{src}</cite></div>
+</section>
+<section class="section" style="padding-top:0">
+  <div class="wrap others reveal"><span class="tag">Andere diensten</span>{others}</div>
+</section>
+{contact_block('Q4')}
+</main>
+{footer()}'''
+
+
+# ---------------------------------------------------------------- Projectpagina's
+def project_page(idx):
+    slug, t, meta, role, client, single = PROJECTS[idx]
+    cover, photos = project_photos(slug, single)
+    prev_p, next_p = PROJECTS[idx - 1], PROJECTS[(idx + 1) % len(PROJECTS)]
+    svcs = [d for d in DIENSTEN if any(m in role.lower() for m in d['match'])]
+    svc_links = ''.join(f'<a href="{d["slug"]}.html">{d["short"]}</a>' for d in svcs)
+    grid = ''.join(f'<button class="pp-ph reveal" type="button" data-i="{k}" aria-label="Foto {k + 1} groot bekijken"><img src="{ph}" alt="{t}, foto {k + 1}" loading="lazy"></button>' for k, ph in enumerate(photos))
+    plain = t.replace('&amp;', '&')
+    meta_plain = meta.replace('&amp;', '&')
+    role_plain = role.replace('&amp;', '&')
+    desc = f'{plain}{", " + meta_plain if meta else ""}: {role_plain}{". " + client if client else ""}. Een project van MATRIX E.I.L.'
+    work_ld = {'@context': 'https://schema.org', '@type': 'CreativeWork', 'name': plain, 'description': desc,
+               'image': BASE + cover, 'creator': {'@id': BASE + '#matrix'}}
+    ld = [ORG, work_ld, crumbs(('Projecten', 'projecten.html'), (plain, f'project-{slug}.html'))]
+    meta_html = f'<span>{meta}</span>' if meta else ''
+    client_html = f'<div><span class="tag">Voor</span><b>{client}</b></div>' if client else ''
+    n = len(photos)
+    count = f"{n} foto's" if n > 1 else '1 foto'
+    return f'''{head(f"{plain} | Project | MATRIX E.I.L.", desc, cover, ld=ld)}
+<body class="page-project">
+{header(f'project-{slug}.html')}
+<main>
+<section class="pp-hero" data-cue="Q1" data-cue-name="{plain}">
+  <img class="pp-bg" src="{cover}" alt="" fetchpriority="high">
+  <div class="wrap">
+    <nav class="crumb tag" aria-label="Kruimelpad"><a href="projecten.html">Projecten</a> / <b>{t}</b></nav>
+    <h1 class="display">{t}</h1>
+    <div class="pp-meta">{meta_html}<span>{count}</span></div>
+  </div>
+</section>
+<section class="section" data-cue="Q2" data-cue-name="De opdracht">
+  <div class="wrap pp-facts">
+    <div><span class="tag">Rol van MATRIX</span><b>{role}</b></div>
+    {client_html}
+    <div><span class="tag">Disciplines</span><span class="pp-svcs">{svc_links or '—'}</span></div>
+  </div>
+</section>
+<section class="section" style="padding-top:0" data-cue="Q3" data-cue-name="Foto's">
+  <div class="wrap">
+    {cue_head('Q3', "Foto's", f'{n} frames')}
+    <div class="pp-grid{' single' if n == 1 else ''}" data-title="{t}" data-gallery='{json.dumps(photos)}'>{grid}</div>
+  </div>
+</section>
+<section class="section" style="padding-top:0">
+  <div class="wrap pp-nav">
+    <a href="project-{prev_p[0]}.html"><span class="tag">← Vorige show</span><b>{prev_p[1]}</b></a>
+    <a href="projecten.html" class="all"><span class="tag">Overzicht</span><b>Alle projecten</b></a>
+    <a href="project-{next_p[0]}.html" class="nx"><span class="tag">Volgende show →</span><b>{next_p[1]}</b></a>
+  </div>
+</section>
+{contact_block('Q4')}
+</main>
+{footer()}'''
+
+
+# ---------------------------------------------------------------- 404
+def not_found():
+    return f'''{head("Cue niet gevonden | MATRIX E.I.L.", "Deze pagina bestaat niet (meer).")}
+<body class="page-404">
+{header('404.html')}
+<main>
+<section class="section page-top lost" data-cue="Q404" data-cue-name="Cue niet gevonden">
+  <div class="wrap">
+    {cue_head('Q404', 'Cue niet gevonden', 'Error')}
+    <h1 class="display reveal">Deze cue<br><em>bestaat niet.</em></h1>
+    <p class="lead reveal" style="max-width:640px;margin-top:30px">“Wie het onverwachte niet verwacht, zal het niet vinden.” Heraclitus had gelijk, maar deze pagina vind je hier echt niet.</p>
+    <div class="btns reveal" style="margin-top:40px"><a class="btn fill" href="index.html">Terug naar Q1</a><a class="btn" href="projecten.html">Projecten</a><a class="btn" href="diensten.html">Diensten</a></div>
+  </div>
+</section>
+</main>
+{footer()}'''
+
+
+PAGES = {'index.html': home, 'diensten.html': diensten, 'projecten.html': projecten, 'over.html': over,
+         'argus.html': argus, 'privacy.html': privacy, '404.html': not_found}
+for _d in DIENSTEN:
+    PAGES[_d['slug'] + '.html'] = (lambda d: lambda: dienst_page(d))(_d)
+for _i, _p in enumerate(PROJECTS):
+    PAGES[f'project-{_p[0]}.html'] = (lambda i: lambda: project_page(i))(_i)
 
 if __name__ == '__main__':
+    import datetime
     for name, fn in PAGES.items():
+        CURRENT = name
         (ROOT / name).write_text(fn())
-        print('gebouwd:', name)
+    today = datetime.date.today().isoformat()
+    urls = ''.join(f'  <url><loc>{BASE}{"" if n == "index.html" else n}</loc><lastmod>{today}</lastmod></url>\n'
+                   for n in PAGES if n != '404.html')
+    (ROOT / 'sitemap.xml').write_text(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{urls}</urlset>\n')
+    (ROOT / 'robots.txt').write_text(f'User-agent: *\nAllow: /\n\nSitemap: {BASE}sitemap.xml\n')
+    print('gebouwd:', len(PAGES), "pagina's + sitemap.xml + robots.txt")

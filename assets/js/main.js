@@ -1,3 +1,13 @@
+const QUOTES = [
+  ['Niemand stapt twee keer in dezelfde rivier.', 'Heraclitus'],
+  ['Alles stroomt.', 'Heraclitus'],
+  ['De weg omhoog en de weg omlaag zijn één en dezelfde.', 'Heraclitus'],
+  ['Karakter is lotsbestemming.', 'Heraclitus'],
+  ['De verborgen harmonie is sterker dan de zichtbare.', 'Heraclitus'],
+  ['Wie het onverwachte niet verwacht, zal het niet vinden.', 'Heraclitus'],
+  ['De zon is elke dag nieuw.', 'Heraclitus'],
+  ['Execution is the chariot of genius.', 'William Blake'],
+];
 const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
@@ -116,7 +126,7 @@ box.addEventListener('touchend', e => {
   if (Math.abs(dx) > 40) lbShow(lbIdx + (dx < 0 ? 1 : -1));
   touchX = null;
 });
-document.querySelectorAll('[data-gallery]').forEach(el => {
+document.querySelectorAll('[data-gallery]:not(.pp-grid)').forEach(el => {
   el.addEventListener('click', () => lbOpen(JSON.parse(el.dataset.gallery), 0, el.dataset.title));
 });
 const gallery = document.querySelector('.gallery');
@@ -136,7 +146,7 @@ if (logRows.length) {
     document.body.appendChild(float);
   }
   logRows.forEach(row => {
-    const open = () => lbOpen(JSON.parse(row.dataset.gallery), 0, row.dataset.title);
+    const open = () => { const l = row.querySelector('td.show a'); if (l) l.click(); else location.href = row.dataset.href; };
     row.addEventListener('click', open);
     row.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
     if (!float) return;
@@ -256,8 +266,11 @@ if (standby && !reduce) {
         setTimeout(() => { location.href = a.href; }, 950);
         return;
       }
-      const page = { 'index.html': 'Home', 'projecten.html': 'Projecten', 'over.html': 'Over', 'argus.html': 'Argus', 'privacy.html': 'Privacy' };
-      sb.innerHTML = `Standby<b>${page[a.getAttribute('href').split('#')[0]] || 'GO'}</b>`;
+      const page = { 'index.html': 'Home', 'projecten.html': 'Projecten', 'over.html': 'Over', 'argus.html': 'Argus', 'privacy.html': 'Privacy', 'diensten.html': 'Diensten' };
+      const txt = a.textContent.replace(/[←→]/g, '').trim();
+      const label = page[target] || (txt && txt.length < 26 ? txt : 'GO');
+      const [q, who] = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+      sb.innerHTML = `Standby<b>${label}</b><i>“${q}” · ${who}</i>`;
       document.body.classList.remove('intro', 'go');
       document.body.classList.add('leaving');
       setTimeout(() => { location.href = a.href; }, 380);
@@ -265,3 +278,139 @@ if (standby && !reduce) {
   });
   addEventListener('pageshow', e => { if (e.persisted) { document.body.classList.remove('leaving'); const pt = document.querySelector('.portal'); if (pt) pt.classList.remove('go'); } });
 }
+
+// Projectpagina: foto's groot bekijken
+document.querySelectorAll('.pp-grid').forEach(grid => {
+  const list = JSON.parse(grid.dataset.gallery);
+  grid.querySelectorAll('.pp-ph').forEach(b => b.addEventListener('click', () => lbOpen(list, +b.dataset.i, grid.dataset.title)));
+});
+
+// Hero: de volgspot onthult het beeld; zonder muis zwerft hij zelf rond
+const lit = document.querySelector('.hero-lit');
+if (lit && !reduce) {
+  const hero = lit.parentElement;
+  let mx = 50, my = 40, tx = 50, ty = 40, lastMove = 0;
+  hero.addEventListener('pointermove', e => {
+    const r = hero.getBoundingClientRect();
+    tx = (e.clientX - r.left) / r.width * 100; ty = (e.clientY - r.top) / r.height * 100; lastMove = performance.now();
+  });
+  (function sweep(t) {
+    if (t - lastMove > 2500) { tx = 50 + Math.sin(t / 3100) * 32; ty = 42 + Math.sin(t / 2300) * 16; }
+    mx += (tx - mx) * .06; my += (ty - my) * .06;
+    lit.style.setProperty('--mx', mx.toFixed(2) + '%'); lit.style.setProperty('--my', my.toFixed(2) + '%');
+    requestAnimationFrame(sweep);
+  })(0);
+}
+
+// ---------------------------------------------------------------- Easter eggs
+const toastEl = document.createElement('div');
+toastEl.className = 'toast'; toastEl.setAttribute('role', 'status');
+document.body.appendChild(toastEl);
+let toastT;
+function toast(html, ms = 3200) {
+  toastEl.innerHTML = html; toastEl.classList.add('show');
+  clearTimeout(toastT); toastT = setTimeout(() => toastEl.classList.remove('show'), ms);
+}
+
+// Footer-quote: elke keer een andere, klik voor de volgende
+const fq = document.querySelector('.foot-quote');
+if (fq) {
+  let qi = Math.floor(Math.random() * QUOTES.length);
+  const show = () => { fq.querySelector('span').textContent = QUOTES[qi][0]; fq.querySelector('cite').textContent = QUOTES[qi][1]; };
+  show();
+  fq.addEventListener('click', () => { fq.classList.add('swap'); setTimeout(() => { qi = (qi + 1) % QUOTES.length; show(); fq.classList.remove('swap'); }, 300); });
+}
+
+// Klik op LIVE: hoe lang je al meekijkt
+const t0 = Date.now();
+const liveDot = document.querySelector('.showbar .live');
+if (liveDot) liveDot.addEventListener('click', () => {
+  const s = Math.floor((Date.now() - t0) / 1000);
+  toast(`Je kijkt al <b>${pad(Math.floor(s / 60))}:${pad(s % 60)}</b> mee. De show loopt.`);
+});
+
+// Toetsen zoals op een lichttafel: B = blackout, G = GO. Typ "argus" voor het oog, de Konami-code voor een toegift.
+const black = document.createElement('div');
+black.className = 'blackout-layer'; black.textContent = 'Blackout · druk B';
+document.body.appendChild(black);
+let typed = '';
+const KONAMI = 'ArrowUp,ArrowUp,ArrowDown,ArrowDown,ArrowLeft,ArrowRight,ArrowLeft,ArrowRight,b,a';
+let keys = [];
+addEventListener('keydown', e => {
+  if (e.target.closest('input, textarea, select') || e.metaKey || e.ctrlKey || e.altKey) return;
+  keys = [...keys, e.key].slice(-10);
+  if (keys.join(',') === KONAMI) { encore(); keys = []; return; }
+  const k = e.key.toLowerCase();
+  typed = (typed + k).slice(-5);
+  if (typed === 'argus') { bigEye(); typed = ''; return; }
+  if (k === 'b' && keys[keys.length - 2] !== 'ArrowRight') {
+    document.body.classList.toggle('blackout');
+    if (document.body.classList.contains('blackout')) toast('<b>Blackout.</b> Druk nog een keer op B voor licht.');
+  }
+  if (k === 'g' && !document.body.classList.contains('blackout')) {
+    document.body.classList.add('leaving');
+    setTimeout(() => document.body.classList.remove('leaving'), 420);
+    toast('<b>GO.</b> Volgende cue.', 1800);
+  }
+});
+black.addEventListener('click', () => document.body.classList.remove('blackout'));
+
+function bigEye() {
+  const wrap = document.createElement('div');
+  wrap.className = 'big-eye';
+  wrap.innerHTML = '<svg viewBox="0 0 600 600" aria-hidden="true"><defs><radialGradient id="beG"><stop offset="0" stop-color="#3fd8ee"/><stop offset=".5" stop-color="#d9ad4f"/><stop offset="1" stop-color="#1a140a"/></radialGradient></defs>' +
+    '<g class="lids"><path class="lid" d="M60,300 Q300,80 540,300 Q300,520 60,300 Z"/><g class="pg"><circle cx="300" cy="300" r="96" fill="url(#beG)"/><circle cx="300" cy="300" r="40" fill="#030607"/><circle cx="318" cy="282" r="8" fill="#fff" opacity=".8"/></g></g></svg>' +
+    '<p>Argus ziet je</p>';
+  document.body.appendChild(wrap);
+  requestAnimationFrame(() => wrap.classList.add('show'));
+  const pg = wrap.querySelector('.pg');
+  const look = e => {
+    const dx = e.clientX - innerWidth / 2, dy = e.clientY - innerHeight / 2, d = Math.hypot(dx, dy) || 1, k = Math.min(1, d / 300);
+    pg.setAttribute('transform', `translate(${dx / d * 90 * k} ${dy / d * 50 * k})`);
+  };
+  addEventListener('mousemove', look);
+  setTimeout(() => wrap.classList.add('blink'), 1600); setTimeout(() => wrap.classList.remove('blink'), 1780);
+  setTimeout(() => wrap.classList.add('blink'), 3100); setTimeout(() => wrap.classList.remove('blink'), 3280);
+  const close = () => { wrap.classList.remove('show'); removeEventListener('mousemove', look); setTimeout(() => wrap.remove(), 700); };
+  setTimeout(close, 4600); wrap.addEventListener('click', close);
+}
+
+function encore() {
+  const el = document.createElement('div');
+  el.className = 'encore';
+  const [q, who] = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+  el.innerHTML = `<div><h2>Toe<br><em>gift.</em></h2><p>Je vond de verborgen cue. “${q}” · ${who}</p></div>`;
+  document.body.appendChild(el);
+  requestAnimationFrame(() => el.classList.add('show'));
+  const close = () => { el.classList.remove('show'); setTimeout(() => el.remove(), 600); };
+  el.addEventListener('click', close); setTimeout(close, 5000);
+}
+
+// Logo vijf keer snel aanklikken
+const logoEl = document.querySelector('.site-header .logo');
+if (logoEl) {
+  let clicks = 0, ct;
+  logoEl.addEventListener('click', e => {
+    clicks++; clearTimeout(ct); ct = setTimeout(() => { clicks = 0; }, 900);
+    if (clicks >= 3 && document.body.classList.contains('home')) e.preventDefault();
+    if (clicks === 5) { clicks = 0; e.preventDefault(); toast('<b>Encore!</b> Druk ↑↑↓↓←→←→BA voor meer.', 4000); }
+  });
+}
+
+// Wie lang stilstaat, krijgt een pauzescherm
+if (!reduce) {
+  const ss = document.createElement('div');
+  ss.className = 'screensaver';
+  ss.innerHTML = '<div><img src="assets/img/logo-matrix.png" alt=""><p>Pauze tussen twee acts</p><q></q></div>';
+  document.body.appendChild(ss);
+  let idle;
+  const wake = () => {
+    ss.classList.remove('show'); clearTimeout(idle);
+    idle = setTimeout(() => { ss.querySelector('q').textContent = QUOTES[Math.floor(Math.random() * QUOTES.length)][0]; ss.classList.add('show'); }, 120000);
+  };
+  ['mousemove', 'keydown', 'scroll', 'touchstart', 'click'].forEach(ev => addEventListener(ev, wake, { passive: true }));
+  wake();
+}
+
+// Voor wie in de console kijkt
+console.log('%cMATRIX E.I.L.%c\nExecution is the chariot of genius.\n\nZelfstandige specialist met een eigen blik? info@matrixeventsupport.nl\nTip: typ "argus" op de site, of probeer B.', 'font: 700 28px sans-serif; color: #ec0a8c', 'font: 13px monospace; color: #9a938a');
