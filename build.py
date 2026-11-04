@@ -18,6 +18,7 @@ WHATSAPP = 'https://wa.me/31630971404'
 # Zet op 'https://matrixeil.nl/' zodra het domein aan GitHub Pages hangt
 BASE = 'https://fenno03-web.github.io/matrix-eil-site/'
 CURRENT = 'index.html'
+GTF = 'GTF Franzen Sound Light Vision'
 LANG = 'nl'
 # Vertaalde pagina's: NL-bestand -> (Engels, Duits). De rest van de site blijft Nederlands.
 I18N = {'index.html': ('index.html', 'index.html'), 'diensten.html': ('services.html', 'leistungen.html'),
@@ -144,7 +145,7 @@ def footer(extra_js=''):
       </div>
       <div>
         <h4>Pagina's</h4>
-        <ul><li><a href="projecten.html">Projecten</a></li><li><a href="over.html">Over</a></li><li><a href="operators.html">Operators</a></li><li><a href="voor-festivals.html">Festivals</a></li><li><a href="voor-carnaval.html">Carnaval</a></li><li><a href="voor-verenigingen.html">Verenigingen</a></li><li><a href="faq.html">FAQ</a></li><li><a href="woordenlijst.html">Woordenlijst</a></li><li><a href="argus.html">Argus Systems</a></li></ul>
+        <ul><li><a href="projecten.html">Projecten</a></li><li><a href="over.html">Over</a></li><li><a href="operators.html">Operators</a></li><li><a href="samenwerking-gtf.html">MATRIX × GTF</a></li><li><a href="aanvraag.html">Aanvraag</a></li><li><a href="voor-festivals.html">Festivals</a></li><li><a href="voor-carnaval.html">Carnaval</a></li><li><a href="voor-verenigingen.html">Verenigingen</a></li><li><a href="faq.html">FAQ</a></li><li><a href="woordenlijst.html">Woordenlijst</a></li><li><a href="argus.html">Argus Systems</a></li></ul>
       </div>
       <div>
         <h4>Contact</h4>
@@ -186,6 +187,7 @@ def contact_block(q='Q6'):
       <h2 class="display">Plan je volgende<br><em>editie met ons.</em></h2>
       <p class="lead contact-lead">Werk je aan een festival of evenement en zoek je één partij voor het complete visuele plaatje? Stuur een app of mail, dan denken we vrijblijvend mee.</p>
       <div class="contact-links">
+        <a class="wz-cta" href="aanvraag.html">Stel je aanvraag samen →</a>
         <a class="wa" href="{WHATSAPP}" target="_blank" rel="noopener">WhatsApp · {TEL_TXT}</a>
         <a href="mailto:{MAIL}">{MAIL}</a>
         <a class="ig" href="{INSTA}" target="_blank" rel="noopener">Instagram · @matrix.eil</a>
@@ -245,7 +247,7 @@ def home():
     ticker = ''.join(f'<span>{t}</span><i>GO</i>' for _, t, _, _ in EXPERTISE) * 2
     steps = ''.join(f'''
       <li class="reveal"><span class="sn">0{i + 1}</span><h3>{t}</h3><p>{d}</p></li>''' for i, (t, d) in enumerate(STEPS))
-    clients = ''.join(f'<li>{c}</li>' for c in CLIENTS)
+    clients = ''.join(f'<li><a href="samenwerking-gtf.html">{c}</a></li>' if c == GTF else f'<li>{c}</li>' for c in CLIENTS)
     names = ''.join(f'<li>{n}</li>' for n in HIGHLIGHTS)
     strip = ''.join(f'<img src="assets/img/galerij/{n:02d}.jpg" alt="" width="1400" height="933" loading="lazy">' for n in [2, 3, 6, 7, 8, 9, 11, 12])
     return f'''{head("MATRIX E.I.L. | Stage, licht, visuals en LED", "MATRIX E.I.L. verzorgt stage- en lichtontwerp, programmering, live operation, VJ en LED-techniek voor live producties.")}
@@ -263,7 +265,7 @@ def home():
   </div>
   <div class="hero-pitch wrap">
     <p>Het complete visuele plaatje voor festivals en evenementen. Van lichtontwerp tot laatste cue.</p>
-    <div class="btns"><a class="btn fill" href="#contact">Plan een gesprek</a><a class="btn" href="{WHATSAPP}" target="_blank" rel="noopener">WhatsApp</a></div>
+    <div class="btns"><a class="btn fill" href="aanvraag.html">Plan een gesprek</a><a class="btn" href="{WHATSAPP}" target="_blank" rel="noopener">WhatsApp</a></div>
   </div>
 </section>
 
@@ -1001,6 +1003,8 @@ def project_page(idx):
     ld = [ORG, work_ld, crumbs(('Projecten', 'projecten.html'), (plain, f'project-{slug}.html'))]
     meta_html = f'<span>{meta}</span>' if meta else ''
     client_html = f'<div><span class="tag">Voor</span><b>{client}</b></div>' if client else ''
+    if GTF in client:
+        client_html = f'<div><span class="tag">Voor</span><b><a href="samenwerking-gtf.html">{client}</a></b></div>'
     log = next((r for r in SHOWLOG if r[4] == slug), None)
     url = log and press_for(log[0][:4], log[1])
     if url:
@@ -1360,16 +1364,150 @@ def story_page(slug):
 </section>
 {story_html(slug)}
 <section class="section" style="padding-top:0">
-  <div class="wrap others reveal"><span class="tag">Meer</span><a href="projecten.html#showlog">Terug naar het showlog →</a><a href="voor-verenigingen.html">Voor verenigingen →</a></div>
+  <div class="wrap others reveal"><span class="tag">Meer</span><a href="projecten.html#showlog">Terug naar het showlog →</a>{'<a href="samenwerking-gtf.html">Meer met GTF →</a>' if client == GTF else ''}<a href="voor-verenigingen.html">Voor verenigingen →</a></div>
 </section>
 {contact_block('Q4')}
 </main>
 {footer()}'''
 
 
+# ---------------------------------------------------------------- Samenwerking GTF
+
+
+def gtf():
+    rows = [r for r in SHOWLOG if r[3] == GTF]
+    pages = {slug for slug, *_ in PROJECTS} | set(STORIES)
+    cards = ''
+    for span, show, role, client, slug in reversed(rows):
+        if slug not in STORIES:
+            continue
+        st = STORIES[slug]
+        proj = next((p for p in PROJECTS if p[0] == slug), None)
+        name = proj[1] if proj else st['name']
+        if proj:
+            cover, _ = project_photos(slug, proj[5])
+            media = f'<span class="mini-img rm"><img src="{cover}" alt="{name}" loading="lazy"></span>'
+        else:
+            media = f'<span class="gtf-card-t" aria-hidden="true"><span>{span}</span><b>{st["facts"][0][0]}</b><small>{st["facts"][0][1]}</small></span>'
+        cards += f'''
+      <a class="mini gtf-card reveal" href="project-{slug}.html">{media}<span class="mini-t"><b>{name}</b><small>{span} · {st['title'].replace('<em>', '').replace('</em>', '')}</small></span></a>'''
+    lis = ''.join(f'<li><span class="sl-show">{f"<a href=\'project-{r[4]}.html\'>{r[1]} <span aria-hidden=\'true\'>→</span></a>" if r[4] in pages else r[1]}</span><span class="sl-role">{r[2]}</span><span class="sl-client">{r[0]}</span></li>' for r in reversed(rows))
+    years = sorted({r[0][:4] for r in rows})
+    desc = f'MATRIX E.I.L. en {GTF}: {len(rows)} producties sinds {years[0]}, van Woeësj-Stock en Sportclub’25 tot ZLF en carnaval. GTF levert de techniek, MATRIX het ontwerp, de programmering en de bediening.'
+    ld = [ORG, crumbs(('MATRIX × GTF', 'samenwerking-gtf.html'))]
+    return f'''{head(f"MATRIX × GTF Franzen Sound Light Vision | MATRIX E.I.L.", desc, 'assets/img/proj/woeesj-stock/01.jpg', ld=ld)}
+<body class="page-svc page-gtf">
+{header('samenwerking-gtf.html')}
+<main>
+<section class="section page-top" data-cue="Q1" data-cue-name="MATRIX × GTF">
+  <div class="wrap">
+    {cue_head('Q1', 'MATRIX × GTF', f'Sinds {years[0]}')}
+    <div class="intro-line">
+      <h1 class="display reveal">Matrix<br><em>× GTF.</em></h1>
+      <div class="reveal">
+        <p class="lead">Een groot deel van onze eigen ontwerpen maakten we met {GTF}. GTF levert de techniek, MATRIX het stage- en lichtontwerp, de programmering en de bediening. Samen zetten we één beeld neer, van gymzaal tot festivaltent.</p>
+        <div class="log-stats"><div><b>{len(rows)}</b><span>Producties samen</span></div><div><b>’{years[0][2:]}–’{years[-1][2:]}</b><span>Seizoenen</span></div><div><b>{sum(1 for r in rows if r[4] in STORIES)}</b><span>Verhalen</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0" data-cue="Q2" data-cue-name="Rolverdeling">
+  <div class="wrap">
+    {cue_head('Q2', 'Rolverdeling', 'Twee partijen · één beeld')}
+    <div class="gtf-split">
+      <div class="gtf-side reveal"><span class="tag">GTF Franzen</span><h2>De techniek</h2><p>Materiaal, opbouw en de technische basis van de productie.</p></div>
+      <div class="gtf-x reveal" aria-hidden="true">×</div>
+      <div class="gtf-side reveal"><span class="tag">MATRIX</span><h2>Het beeld</h2><p>Stage- en lichtontwerp, programmering en live bediening, en waar nodig video en special FX.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0" data-cue="Q3" data-cue-name="Verhalen">
+  <div class="wrap">
+    {cue_head('Q3', 'Verhalen', 'Uit het veld')}
+    <h2 class="title reveal">Wat we<br><em>samen bouwden.</em></h2>
+    <div class="gtf-cards">{cards}
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0" data-cue="Q4" data-cue-name="Logboek">
+  <div class="wrap">
+    {cue_head('Q4', 'Uit het logboek', f'{len(rows)} producties')}
+    <div class="sl-year reveal"><h3><b>Met GTF</b><span>uit het <a href="projecten.html#showlog">volledige showlog</a></span></h3><ul>{lis}</ul></div>
+  </div>
+</section>
+{contact_block('Q5')}
+</main>
+{footer()}'''
+
+
+# ---------------------------------------------------------------- Aanvraag
+WIZ = [
+    ('type', 'Wat voor evenement?', 'Kies wat het beste past.', False,
+     ['Festival', 'Carnaval', 'Jubileum of vereniging', 'Club- of dance-event', 'Bedrijfsevent', 'Iets anders']),
+    ('need', 'Wat heb je nodig?', 'Meerdere keuzes kan.', True,
+     ['Het complete plaatje', 'Stage- en lichtontwerp', 'Lichtprogrammeur of operator', 'VJ en visuals', 'LED-schermen', 'Weet ik nog niet']),
+    ('size', 'Hoe groot wordt het?', 'Een schatting is genoeg.', False,
+     ['Tot 500 bezoekers', '500 tot 2.000', '2.000 tot 10.000', 'Meer dan 10.000']),
+]
+
+
+def aanvraag():
+    steps = ''
+    for i, (key, q, hint, multi, opts) in enumerate(WIZ):
+        chips = ''.join(f'<button type="button" class="wz-opt" data-v="{o}" aria-pressed="false">{o}</button>' for o in opts)
+        steps += f'''
+      <fieldset class="wz-step{' on' if i == 0 else ''}" data-key="{key}" data-multi="{'1' if multi else '0'}">
+        <legend><span class="q">Q{i + 1}</span>{q}</legend>
+        <p class="wz-hint">{hint}</p>
+        <div class="wz-opts">{chips}</div>
+      </fieldset>'''
+    ld = [ORG, crumbs(('Aanvraag', 'aanvraag.html'))]
+    return f'''{head("Aanvraag: stel je show samen | MATRIX E.I.L.", "Vraag in een minuut licht, visuals of LED aan voor je festival of evenement. Klik aan wat je nodig hebt en stuur het direct via WhatsApp of mail.", ld=ld)}
+<body class="page-svc page-wiz">
+{header('aanvraag.html')}
+<main>
+<section class="section page-top" data-cue="Q1" data-cue-name="Aanvraag">
+  <div class="wrap">
+    {cue_head('Q1', 'Aanvraag', 'Standby')}
+    <div class="intro-line">
+      <h1 class="display reveal">Stel je<br><em>show samen.</em></h1>
+      <p class="lead reveal">Vier korte stappen. Aan het eind staat je aanvraag klaar als WhatsApp-bericht of mail, en wij reageren met een eerste idee.</p>
+    </div>
+    <form class="wz reveal" novalidate>
+      <div class="wz-bar" aria-hidden="true"><span></span></div>
+      <div class="wz-cues" aria-hidden="true"><span class="on">Q1</span><span>Q2</span><span>Q3</span><span>Q4</span><span>GO</span></div>{steps}
+      <fieldset class="wz-step" data-key="info">
+        <legend><span class="q">Q4</span>De details</legend>
+        <p class="wz-hint">Alles is optioneel, maar hoe meer we weten, hoe beter ons eerste idee.</p>
+        <div class="wz-fields">
+          <label><span>Naam evenement</span><input name="event" autocomplete="off"></label>
+          <label><span>Datum</span><input name="date" placeholder="bijv. 14 juni 2027"></label>
+          <label><span>Plaats</span><input name="place"></label>
+          <label><span>Jouw naam</span><input name="name" autocomplete="name"></label>
+          <label class="wide"><span>Organisatie</span><input name="org" autocomplete="organization"></label>
+          <label class="wide"><span>Nog iets dat we moeten weten?</span><textarea name="note" rows="3"></textarea></label>
+        </div>
+      </fieldset>
+      <fieldset class="wz-step wz-go" data-key="go">
+        <legend><span class="q">GO</span>Klaar om te versturen</legend>
+        <pre class="wz-sum"></pre>
+        <div class="btns"><a class="btn fill wz-wa" href="{WHATSAPP}" target="_blank" rel="noopener">Verstuur via WhatsApp</a><a class="btn wz-mail" href="mailto:{MAIL}">Verstuur via mail</a></div>
+      </fieldset>
+      <div class="wz-nav"><button type="button" class="wz-back" hidden>← Terug</button><button type="button" class="btn wz-next">Volgende</button></div>
+    </form>
+  </div>
+</section>
+</main>
+{footer(f'<script src="assets/js/aanvraag.js?v={ver("assets/js/aanvraag.js")}"></script>')}'''
+
+
 PAGES = {'index.html': home, 'diensten.html': diensten, 'projecten.html': projecten, 'over.html': over,
          'argus.html': argus, 'privacy.html': privacy, '404.html': not_found,
-         'operators.html': operators, 'faq.html': faq, 'woordenlijst.html': woordenlijst}
+         'operators.html': operators, 'faq.html': faq, 'woordenlijst.html': woordenlijst,
+         'samenwerking-gtf.html': gtf, 'aanvraag.html': aanvraag}
 for _s in STORIES:
     if _s not in {p[0] for p in PROJECTS}:
         PAGES[f'project-{_s}.html'] = (lambda k: lambda: story_page(k))(_s)

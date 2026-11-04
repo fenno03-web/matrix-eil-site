@@ -14,6 +14,8 @@ TR = [
     ('>Carnaval</a>', '>Carnival</a>', '>Karneval</a>'),
     ('>Verenigingen</a>', '>Clubs &amp; societies</a>', '>Vereine</a>'),
     ('>Woordenlijst</a>', '>Glossary</a>', '>Glossar</a>'),
+    ('Stel je aanvraag samen →', 'Build your enquiry (in Dutch) →', 'Anfrage zusammenstellen (auf Niederländisch) →'),
+    ('>Aanvraag</a>', '>Enquiry</a>', '>Anfrage</a>'),
     ('Terug naar boven', 'Back to top', 'Nach oben'),
     ('aria-label="Hoofdmenu"', 'aria-label="Main menu"', 'aria-label="Hauptmenü"'),
     ('Stage- en lichtontwerp', 'Stage &amp; lighting design', 'Bühnen- &amp; Lichtdesign'),
