@@ -17,8 +17,8 @@ TEL = '+31630971404'
 TEL_TXT = '+31 6 30971404'
 INSTA = 'https://www.instagram.com/matrix.eil/'
 WHATSAPP = 'https://wa.me/31630971404'
-# Zet op 'https://matrixeil.nl/' zodra het domein aan GitHub Pages hangt
-BASE = 'https://fenno03-web.github.io/matrix-eil-site/'
+# Eigen domein (zie CNAME)
+BASE = 'https://matrixeil.nl/'
 CURRENT = 'index.html'
 GTF = 'GTF Franzen Sound Light Vision'
 LANG = 'nl'
