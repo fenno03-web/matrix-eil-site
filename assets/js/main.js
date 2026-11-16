@@ -280,7 +280,7 @@ if (standby && !reduce) {
       e.preventDefault();
       const target = a.getAttribute('href').split('#')[0];
       const portal = document.querySelector('.portal');
-      if (portal && (target.endsWith('argus.html')) !== document.body.classList.contains('argus-page')) {
+      if (portal && /(^|\/)argus(-[a-z-]+)?\.html$/.test(target) !== document.body.classList.contains('argus-page')) {
         portal.classList.add('go');
         setTimeout(() => { location.href = a.href; }, 950);
         return;
