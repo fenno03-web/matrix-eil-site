@@ -37,6 +37,7 @@ SHOWLOG = [
     ('2026', 'Brabants Verbond Festival · Mainstage', 'Licht programming, operating', 'Spectrum AV', None),
     ('2026', 'USC Lustrum · Stelz Vriendendag, Ongemengde dag, Reünistendag, Familiedag, La Grande Finale', 'Licht programming, operating', 'Spectrum AV', 'usc-lustrum'),
     ('2026', 'Electrisize · Tapuya & Mainstage', 'LED-infratechniek, load-in en load-out', 'DJEM LED', 'electrisize'),
+    ('2026', 'Snakepit · Area 2 Future', 'Licht programming, operating', 'Spectrum AV', 'snakepit'),
     ('2026', 'Decibel Outdoor · Area 11 City Hall', 'Licht programming, operating', 'Spectrum AV', None),
     ('2026', 'Woeësj-Stock Festival', 'Stage- en lichtdesign, programming, operating', 'GTF Franzen Sound Light Vision', 'woeesj-stock'),
 ]

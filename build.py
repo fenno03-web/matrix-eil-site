@@ -374,6 +374,7 @@ PROJECTS = [
     ('electrisize', 'Electrisize', 'Main Stage &amp; Tapuya, 2026', 'LED systems · Infrastructure · Setup &amp; commissioning', 'For Djem LED Screens', 'electrisize.jpg'),
     ('carnaval-radio', 'Carnaval Radio', '', 'VJ · Programming · Live operation (licht)', 'For Heijnens Audio - Light - Vision', None),
     ('paul-elstak', 'Complex × Paul Elstak', '', 'Programming · Live operation', 'For Stod', None),
+    ('snakepit', 'Snakepit', 'Area 2 · Future, 2026', 'Programming · Live operation (licht)', 'For Spectrum AV', None),
     ('usc-lustrum', 'USC Lustrum', '2026', 'Programming · Live operation', 'For Spectrum AV', None),
     ('outrageous', 'Outrageous Festival', 'Mainstage, 2025', 'Programming · Live operation (licht)', 'For Bongers BLG', None),
     ('oranjeroes', 'OranjeRoes Festival', '', 'Programming · Live operation', 'With and for T.Y.S. Productions', None),
