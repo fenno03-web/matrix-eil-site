@@ -1,11 +1,13 @@
 // ARGUS OS: een bureaublad in de pagina, met vensters, een terminal en een live impressie per tool
 (() => {
   const os = document.querySelector('.aos');
-  if (!os) return;
-  const desk = os.querySelector('.aos-desk');
-  const winsBar = os.querySelector('.aos-wins');
+  const solo = [...document.querySelectorAll('.solo-demo[data-demo]')];
+  if (!os && !solo.length) return;
   const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const small = () => innerWidth < 760;
+  if (os) {
+  const desk = os.querySelector('.aos-desk');
+  const winsBar = os.querySelector('.aos-wins');
   const NAMES = {};
   os.querySelectorAll('.dk[data-open]').forEach(b => { NAMES[b.dataset.open] = b.querySelector('.dk-n').textContent; });
   let z = 10, cascade = 0;
@@ -185,6 +187,7 @@
     setTimeout(() => { if (!desk.querySelector('.tool-win') && !small()) open('kanon'); }, still ? 0 : 1700);
   }), { threshold: .35 });
   io.observe(os);
+  }
 
   // ---------------------------------------------------------------- Hulpjes voor de demo's
   const loop = (w, fn) => {
@@ -202,7 +205,7 @@
     cv.width = W * dpr; cv.height = H * dpr; ctx.scale(dpr, dpr);
     return [ctx, W, H];
   };
-  const css = v => getComputedStyle(os).getPropertyValue(v).trim();
+  const css = v => getComputedStyle(os || document.body).getPropertyValue(v).trim();
   const GOLD = '#d9ad4f', CYAN = '#3fd8ee';
   const ptr = (cv, e) => { const r = cv.getBoundingClientRect(); return [(e.clientX - r.left) / r.width * cv.width / Math.min(2, devicePixelRatio || 1), (e.clientY - r.top) / r.height * cv.height / Math.min(2, devicePixelRatio || 1)]; };
   const beam = (ctx, x1, y1, x2, y2, col, width = 26, a = .5) => {
@@ -475,4 +478,10 @@
       every(w, 1600, () => { if (!w.matches(':hover')) keys[[1, 4, 6, 8, 2][n++ % 5]].click(); });
     },
   };
+
+  // Losse productpagina's: de impressie staat direct in de pagina, zonder vensters
+  solo.forEach(el => {
+    el._stop = [];
+    (DEMOS[el.dataset.demo] || (() => {}))(el, el);
+  });
 })();

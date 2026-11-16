@@ -3,6 +3,8 @@
 import hashlib
 import json
 import math
+import re
+from urllib.parse import quote
 from pathlib import Path
 
 from src.showlog import SHOWLOG, HIGHLIGHTS, press_for
@@ -15,8 +17,8 @@ TEL = '+31630971404'
 TEL_TXT = '+31 6 30971404'
 INSTA = 'https://www.instagram.com/matrix.eil/'
 WHATSAPP = 'https://wa.me/31630971404'
-# Zet op 'https://matrixeil.nl/' zodra het domein aan GitHub Pages hangt
-BASE = 'https://fenno03-web.github.io/matrix-eil-site/'
+# Eigen domein (zie CNAME)
+BASE = 'https://matrixeil.nl/'
 CURRENT = 'index.html'
 GTF = 'GTF Franzen Sound Light Vision'
 LANG = 'nl'
@@ -113,9 +115,10 @@ def head(title, desc, image='assets/img/hero.jpg', icon='assets/img/favicon.png'
 def header(current):
     cur = ' aria-current="page"'
     labels = NAV_T.get(LANG, [l for _, l in NAV])
-    links = ''.join(f'<a href="{href}"{cur if href == current else ""}>{label}</a>' for (href, _), label in zip(NAV, labels))
+    navcur = 'argus.html' if current.startswith('argus-') else current
+    links = ''.join(f'<a href="{href}"{cur if href == navcur else ""}>{label}</a>' for (href, _), label in zip(NAV, labels))
     langs = ''.join(f'<a href="{lang_href(l, current)}" hreflang="{l}" lang="{l}"{" class=on" if l == LANG else ""}>{l.upper()}</a>' for l in LANGS)
-    portal_in = '<div class="portal-in" aria-hidden="true"></div>\n' if current == 'argus.html' else ''
+    portal_in = '<div class="portal-in" aria-hidden="true"></div>\n' if current.startswith('argus') else ''
     return f'''{portal_in}{PORTAL}
 <div class="standby" aria-hidden="true"><div class="sb">Standby<b class="go">GO</b></div></div>
 <div class="haze" aria-hidden="true"><i></i><i></i></div>
@@ -662,11 +665,11 @@ def aos_templates():
     out = ''
     for slug, name, logo, status, cls, line, desc, pts, acc, demo in ARGUS_TOOLS:
         lis = ''.join(f'<li>{p}</li>' for p in pts)
-        body = (aos_demo(demo) + DEMO_HINT) if demo else f'<ul class="aw-pts">{lis}</ul><a class="btn aw-go" href="#{slug}">Naar de live demo ↓</a>'
+        body = (aos_demo(demo) + DEMO_HINT) if demo else f'<ul class="aw-pts">{lis}</ul><a class="btn aw-go" href="{tool_href(slug)}#impressie">Naar de live demo →</a>'
         out += f'''
 <template id="tpl-{slug}"><section class="win tool-win acc-{acc}" data-win="{slug}" aria-label="{name}">
   <div class="win-bar"><span class="win-dots"><button class="win-x" aria-label="Sluit {name}"></button><i></i><i></i></span><b>{name}</b><span class="st st-{cls}">{status}</span></div>
-  <div class="win-body"><img class="aw-logo" src="assets/img/argus/{logo}" alt="ARGUS {name}" loading="lazy"><p class="aw-line">{line}</p>{body}</div>
+  <div class="win-body"><img class="aw-logo" src="assets/img/argus/{logo}" alt="ARGUS {name}" loading="lazy"><p class="aw-line">{line}</p>{body}<a class="aw-page" href="{tool_href(slug)}">Projectpagina &amp; bèta-aanmelding →</a></div>
 </section></template>'''
     return out
 
@@ -702,7 +705,7 @@ def argus_cards():
         <h3>{line}</h3>
         <p>{desc}</p>
         <ul>{lis}</ul>
-        <button class="btn ac-open" data-open="{slug}">Open in ARGUS OS</button>
+        <div class="ac-acts"><a class="btn" href="{tool_href(slug)}">Bekijk &amp; test</a><button class="link-arrow ac-open" data-open="{slug}">Open in ARGUS OS</button></div>
       </article>'''
     return cards + '''
       <article class="ac ac-next reveal">
@@ -716,6 +719,8 @@ def argus_cards():
 
 def argus():
     tools = (ROOT / 'src' / 'argus-tools.html').read_text()
+    for _t in ARGUS_TOOLS[:4]:
+        tools = re.sub(rf'(id="{_t[0]}".*?</ul>)', lambda m, t=_t: m.group(1) + f'\n      <a class="btn tool-more" href="{tool_href(t[0])}">Meer over {t[1]} · word bèta-tester</a>', tools, count=1, flags=re.S)
     return f'''{head("ARGUS Systems | MATRIX E.I.L.", "ARGUS Systems is de softwaretak van MATRIX E.I.L.: CHRONOS, AXIS, METRON, HOROS, BIFROST, VISUAL INTELLIGENCE, HYPERION, TREEHOUSE, TARTARUS, KANON en IRIS. Software voor licht, video en productie, gebouwd vanuit de praktijk.", "assets/img/chronos-overzicht.jpg", "assets/img/argus/favicon.png")}
 <body class="argus-page">
 {header('argus.html')}
@@ -779,13 +784,197 @@ def argus():
       <h2 class="title">Zet ARGUS in op<br><em>jouw productie.</em></h2>
     </div>
     <div class="reveal">
-      <p>Wil je een van onze tools testen op jouw evenement, of heb je een idee dat hier past? Operators en producties die mee willen bouwen, horen we graag.</p>
+      <p>Wil je een van onze tools testen op jouw evenement? Kies hieronder een tool en meld je aan als bèta-tester. Een idee dat hier past? Operators en producties die mee willen bouwen, horen we graag.</p>
+      <div class="tp-cta-tools">{''.join(f'<a href="{tool_href(t[0])}#beta">{t[1]}</a>' for t in ARGUS_TOOLS)}</div>
       <a class="btn" href="mailto:{MAIL}?subject=ARGUS%20Systems">Neem contact op</a>
     </div>
   </div>
 </section>
 </main>
 {footer(chr(10) + '<script src="assets/js/argus.js?v=' + ver('assets/js/argus.js') + '"></script>' + chr(10) + '<script src="assets/js/argus-os.js?v=' + ver('assets/js/argus-os.js') + '"></script>')}'''
+
+
+# ---------------------------------------------------------------- ARGUS productpagina's
+# Per tool: bestandsnaam, vraag over de setup voor het bèta-formulier, voorbeeld en voor wie de tool is
+TOOL_PAGE = {
+    'chronos': ('argus-chronos.html', 'Hoeveel stages en wat voor evenement?', 'bijv. festival met 3 stages, 8.000 bezoekers',
+                ['Productieleiders en stagemanagers', 'Regie en FOH', 'Festivals met meerdere stages']),
+    'axis': ('argus-axis.html', 'Welke onderdelen interesseren je het meest?', 'bijv. planning, magazijn, LIVE, accreditatie',
+             ['Verhuur- en productiebedrijven', 'Magazijn en planning', 'Kleinere events met accreditatie']),
+    'metron': ('argus-metron.html', 'Welke DJ-spelers en lichttafel gebruik je?', 'bijv. CDJ-3000 en grandMA3 onPC',
+               ['Lichtoperators bij DJ-shows', 'Clubs en dance-events', 'Wie busked op de beat']),
+    'horos': ('argus-horos.html', 'Wat voor voertuig rijd je?', 'bijv. bakwagen 3,80 m hoog, Euro 5',
+              ['Chauffeurs en crew onderweg', 'Verhuurbedrijven met eigen wagenpark', 'Iedereen met een hoge bus of truck']),
+    'bifrost': ('argus-bifrost.html', 'Welke lichttafels gebruik je?', 'bijv. twee tafels, main en backup',
+                ['Lichtoperators en programmeurs', 'Shows met meerdere tafels', 'Producties waar uitval geen optie is']),
+    'visual': ('argus-visual-intelligence.html', 'Welke handheld en welke lampen gebruik je?', 'bijv. MSI Claw, 12 moving heads',
+               ['Lichtprogrammeurs op locatie', 'Snelle focus- en positiesessies', 'Kleine crews met weinig tijd']),
+    'hyperion': ('argus-hyperion.html', 'Wat voor evenementen doe je, met welke lampen?', 'bijv. feesten in een zaal, 16 lampen',
+                 ['Kleine evenementen en verenigingen', 'Zalen zonder vaste lichtman', 'Starters die willen leren']),
+    'treehouse': ('argus-treehouse.html', 'Welke Chimp gebruik je?', 'bijv. Infinity Chimp 300 G3',
+                  ['Gebruikers van de Infinity Chimp G2 en G3', 'Operators die vaak dezelfde handelingen doen', 'Verhuurders met Chimp-tafels']),
+    'tartarus': ('argus-tartarus.html', 'Met welke tafels en software maak je showfiles?', 'bijv. grandMA, Chimp en Resolume',
+                 ['Programmeurs met veel shows', 'Bedrijven met meerdere operators', 'Iedereen die ooit de verkeerde showfile laadde']),
+    'kanon': ('argus-kanon.html', 'Op wat voor podium of locatie wil je testen?', 'bijv. theater, tent of buitenpodium',
+              ['Lichtoperators zonder volgspotter', 'Theater, muziek en presentaties', 'Producties met één artiest in de spot']),
+    'iris': ('argus-iris.html', 'Welke Stream Deck en Resolume-versie gebruik je?', 'bijv. Stream Deck XL, Resolume Arena 7',
+             ['VJ’s en video-operators', 'Resolume-gebruikers met een Stream Deck', 'Shows waar snel schakelen telt']),
+}
+STAGES = ['Concept', 'Ontwikkeling', 'Test', 'Live testing', 'Release']
+STAGE_OF = {'concept': 0, 'dev': 1, 'test': 2, 'live': 3, 'field': 3}
+BETA_ROLES = ['Lichtoperator / programmeur', 'VJ / video', 'Productie / stagemanager', 'Verhuur- of techbedrijf', 'Organisatie / festival', 'Anders']
+
+
+def tool_href(slug):
+    return TOOL_PAGE[slug][0]
+
+
+def tool_section(slug, q):
+    """Haalt de uitgebreide sectie van een van de vier hoofdtools uit src/argus-tools.html."""
+    src = (ROOT / 'src' / 'argus-tools.html').read_text()
+    m = re.search(rf'<section class="tool[^"]*" id="{slug}".*?</section>', src, re.S)
+    sec = m.group(0)
+    sec = re.sub(r'data-cue="Q\d+"', f'data-cue="{q}"', sec, count=1)
+    sec = re.sub(r'<span class="bigno"[^>]*>\d+</span>', '', sec)
+    sec = sec.replace('class="tool flip"', 'class="tool"').replace(f'id="{slug}"', f'id="impressie"', 1)
+    return sec
+
+
+def stage_track(cls, status):
+    cur = STAGE_OF[cls]
+    items = ''.join(f'<li class="{"done" if i < cur else "now" if i == cur else ""}"><i></i><b>{n}</b>{"<small>" + status + "</small>" if i == cur else ""}</li>'
+                    for i, n in enumerate(STAGES))
+    return f'<ol class="tp-track reveal" style="--p:{cur / (len(STAGES) - 1):.3f}">{items}</ol>'
+
+
+def beta_form(slug, name, question, example):
+    roles = ''.join(f'<option>{r}</option>' for r in BETA_ROLES)
+    return f'''<form class="beta-form reveal" data-tool="{name}" action="https://formsubmit.co/{MAIL}" method="POST">
+        <input type="hidden" name="_subject" value="Bèta-aanmelding {name} · ARGUS Systems">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="Tool" value="{name}">
+        <input type="text" name="_honey" class="visually-hidden" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <div class="bf-row">
+          <label><span>Naam</span><input name="Naam" required autocomplete="name"></label>
+          <label><span>E-mail</span><input type="email" name="email" required autocomplete="email"></label>
+        </div>
+        <div class="bf-row">
+          <label><span>Wat doe je?</span><select name="Rol" required><option value="" disabled selected>Kies</option>{roles}</select></label>
+          <label><span>Bedrijf <em>optioneel</em></span><input name="Bedrijf" autocomplete="organization"></label>
+        </div>
+        <label><span>{question}</span><input name="Setup" placeholder="{example}"></label>
+        <label><span>Eerstvolgende show waar je kunt testen <em>optioneel</em></span><input name="Eerstvolgende show" placeholder="bijv. maart 2027, Maastricht"></label>
+        <label><span>Nog iets dat we moeten weten? <em>optioneel</em></span><textarea name="Opmerking" rows="3"></textarea></label>
+        <label class="bf-ok"><input type="checkbox" name="Akkoord" value="ja" required><span>Je mag me mailen over deze bèta. Mijn gegevens worden alleen hiervoor gebruikt (<a href="privacy.html">privacy</a>).</span></label>
+        <button class="btn fill" type="submit">Meld je aan als bèta-tester</button>
+        <p class="bf-msg" role="status" aria-live="polite"></p>
+      </form>'''
+
+
+def tool_page(i):
+    slug, name, logo, status, cls, line, desc, pts, acc, demo = ARGUS_TOOLS[i]
+    fname, question, example, who = TOOL_PAGE[slug]
+    nr = f'{i + 1:02d}'
+    if demo:
+        lis = ''.join(f'<li>{p}</li>' for p in pts)
+        impressie = f'''<section class="section tp-demo" id="impressie" data-cue="Q3" data-cue-name="Impressie">
+  <div class="wrap">
+    {cue_head('Q3', 'Impressie', name.lower() + '://live')}
+    <div class="tp-demo-grid">
+      <div class="reveal">
+        <h2 class="title">Zo voelt<br><em>{name.title() if len(name) > 8 else name}.</em></h2>
+        <ul class="feat">{lis}</ul>
+        <p class="tp-note">Wat je hiernaast ziet is een impressie, geen echte software. Bèta-testers werken met de echte versie.</p>
+      </div>
+      <section class="win solo-win acc-{acc} reveal" aria-label="Impressie van {name}">
+        <div class="win-bar"><span class="win-dots"><i></i><i></i><i></i></span><b>{name}</b><span class="st st-{cls}">{status}</span></div>
+        <div class="win-body solo-demo" data-demo="{demo}">{aos_demo(demo)}</div>
+      </section>
+    </div>
+  </div>
+</section>'''
+    else:
+        impressie = tool_section(slug, 'Q3')
+    others = ''.join(f'<a class="tp-o acc-{t[8]}{" on" if t[0] == slug else ""}" href="{tool_href(t[0])}"><img src="assets/img/argus/{t[2]}" alt="" loading="lazy"><span>{t[1]}</span><i class="dot st-{t[4]}"></i></a>'
+                     for t in ARGUS_TOOLS)
+    prev_t, next_t = ARGUS_TOOLS[i - 1], ARGUS_TOOLS[(i + 1) % len(ARGUS_TOOLS)]
+    who_html = ''.join(f'<li>{w}</li>' for w in who)
+    ld = [ORG, crumbs(('ARGUS Systems', 'argus.html'), (name, fname)),
+          {'@context': 'https://schema.org', '@type': 'SoftwareApplication', 'name': f'ARGUS {name}', 'description': f'{line} {desc}',
+           'applicationCategory': 'BusinessApplication', 'publisher': {'@id': BASE + '#matrix'}, 'url': BASE + fname,
+           'image': BASE + 'assets/img/argus/' + logo}]
+    title = f'{name} · ARGUS Systems | MATRIX E.I.L.'
+    meta = f'ARGUS {name}: {line} {desc.split(". ")[0].rstrip(".")}. Status: {status.lower()}. Meld je aan als bèta-tester.'
+    return f'''{head(title, meta, 'assets/img/argus/' + logo, 'assets/img/argus/favicon.png', ld)}
+<body class="argus-page tool-page tp-{acc}">
+{header(fname)}
+<main>
+<section class="tp-hero" data-cue="Q1" data-cue-name="{name}">
+  <span class="tp-ghost" aria-hidden="true">{name}</span>
+  <div class="wrap">
+    <div class="tp-copy">
+      <nav class="tp-crumbs reveal" aria-label="Kruimelpad"><a href="argus.html">ARGUS Systems</a><span>/</span><b>{name}</b><span class="tp-nr">Oog {nr} / {len(ARGUS_TOOLS)}</span></nav>
+      <span class="st st-{cls} reveal">{status}</span>
+      <h1 class="reveal">{line}</h1>
+      <p class="lead reveal">{desc}</p>
+      <div class="tp-ctas reveal"><a class="btn fill" href="#beta">Word bèta-tester</a><a class="link-arrow" href="#impressie">Bekijk de impressie</a></div>
+    </div>
+    <div class="tp-sigil reveal" aria-hidden="true">
+      <span class="r r1"></span><span class="r r2"></span><span class="r r3"></span><span class="orb"></span><span class="orb o2"></span>
+      <img src="assets/img/argus/{logo}" alt=""{' class="jpg"' if logo.endswith('.jpg') else ''}>
+    </div>
+  </div>
+</section>
+
+<section class="section tp-status" data-cue="Q2" data-cue-name="Status">
+  <div class="wrap">
+    {cue_head('Q2', 'Status', 'build ' + nr)}
+    <div class="tp-status-grid">
+      <h2 class="title reveal">Waar staat<br><em>{name.title() if len(name) > 8 else name}?</em></h2>
+      <div>
+        {stage_track(cls, status)}
+        <div class="tp-who reveal"><h3>Gemaakt voor</h3><ul>{who_html}</ul></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{impressie}
+
+<section class="section tp-beta" id="beta" data-cue="Q4" data-cue-name="Bèta">
+  <div class="wrap">
+    {cue_head('Q4', 'Bèta-programma', 'Testers gezocht')}
+    <div class="tp-beta-grid">
+      <div class="reveal">
+        <h2 class="title">Test {name.title() if len(name) > 8 else name}<br><em>als eerste.</em></h2>
+        <p class="lead">We bouwen ARGUS samen met mensen die op de vloer staan. Als bèta-tester werk je met de echte versie op je eigen productie, en jouw feedback gaat rechtstreeks naar de makers.</p>
+        <ol class="tp-steps">
+          <li><b>01</b><span>Meld je aan met dit formulier.</span></li>
+          <li><b>02</b><span>We nemen persoonlijk contact op zodra er een plek vrij is.</span></li>
+          <li><b>03</b><span>Je test op je eigen show en deelt wat beter kan.</span></li>
+        </ol>
+        <p class="tp-alt">Liever direct contact? <a href="{WHATSAPP}?text={quote('Hoi! Ik wil graag bèta-tester worden voor ARGUS ' + name + '.')}" target="_blank" rel="noopener">WhatsApp</a> of <a href="mailto:{MAIL}?subject={quote('Bèta-tester ARGUS ' + name)}">mail</a>.</p>
+      </div>
+      {beta_form(slug, name, question, example)}
+    </div>
+  </div>
+</section>
+
+<section class="section tp-more" data-cue="Q5" data-cue-name="Alle tools">
+  <div class="wrap">
+    {cue_head('Q5', 'Honderd ogen', 'ARGUS Systems')}
+    <div class="tp-pn reveal">
+      <a href="{tool_href(prev_t[0])}"><small>← Vorige</small><b>{prev_t[1]}</b></a>
+      <a href="argus.html" class="tp-home"><img src="assets/img/argus/argus-embleem.png" alt="" width="60" height="60"><small>Alle tools</small></a>
+      <a href="{tool_href(next_t[0])}"><small>Volgende →</small><b>{next_t[1]}</b></a>
+    </div>
+    <nav class="tp-others reveal" aria-label="Alle ARGUS-tools">{others}</nav>
+  </div>
+</section>
+<div id="contact"></div>
+</main>
+{footer(chr(10) + '<script src="assets/js/argus.js?v=' + ver('assets/js/argus.js') + '"></script>' + chr(10) + '<script src="assets/js/argus-os.js?v=' + ver('assets/js/argus-os.js') + '"></script>' + chr(10) + '<script src="assets/js/beta.js?v=' + ver('assets/js/beta.js') + '"></script>')}'''
 
 
 # ---------------------------------------------------------------- Privacy
@@ -798,7 +987,8 @@ def privacy():
   <div class="wrap narrow prose">
     <span class="tag"><b>§</b> Privacy</span>
     <h2>Privacy</h2>
-    <p>MATRIX E.I.L. verzamelt via deze website geen persoonsgegevens. Er worden geen tracking- of advertentiecookies gebruikt. Neem je contact op via e-mail of telefoon, dan gebruiken we je gegevens alleen om je bericht te beantwoorden.</p>
+    <p>MATRIX E.I.L. verzamelt via deze website alleen persoonsgegevens als je die zelf invult, zoals bij een bèta-aanmelding. Er worden geen tracking- of advertentiecookies gebruikt. Neem je contact op via e-mail of telefoon, dan gebruiken we je gegevens alleen om je bericht te beantwoorden.</p>
+    <p>Meld je je aan als bèta-tester voor een ARGUS-tool, dan worden je naam, e-mailadres en antwoorden via de formulierdienst FormSubmit naar ons e-mailadres gestuurd. We gebruiken die gegevens alleen om contact met je op te nemen over de bèta en bewaren ze niet langer dan nodig. Wil je dat we ze verwijderen? Mail ons.</p>
     <p>Lettertypen worden geladen via Google Fonts. Daarbij wordt je IP-adres door Google verwerkt.</p>
     <p>Vragen over privacy? Mail naar <a href="mailto:{MAIL}">{MAIL}</a>.</p>
   </div>
@@ -1513,6 +1703,8 @@ for _s in STORIES:
         PAGES[f'project-{_s}.html'] = (lambda k: lambda: story_page(k))(_s)
 for _g in DOELGROEPEN:
     PAGES[_g['slug'] + '.html'] = (lambda g: lambda: doelgroep_page(g))(_g)
+for _k, _t in enumerate(ARGUS_TOOLS):
+    PAGES[TOOL_PAGE[_t[0]][0]] = (lambda k: lambda: tool_page(k))(_k)
 for _d in DIENSTEN:
     PAGES[_d['slug'] + '.html'] = (lambda d: lambda: dienst_page(d))(_d)
 for _i, _p in enumerate(PROJECTS):
