@@ -19,18 +19,20 @@
     return (picked[key] || []).length > 0;
   };
 
+  const EN = document.documentElement.lang === 'en';
+  const T = (nl, en) => (EN ? en : nl);
   const message = () => {
     const f = n => form.elements[n].value.trim();
-    const lines = ['Hoi MATRIX, ik wil graag een aanvraag doen.', ''];
+    const lines = [T('Hoi MATRIX, ik wil graag een aanvraag doen.', 'Hi MATRIX, I would like to make an enquiry.'), ''];
     const add = (label, v) => { if (v) lines.push(`${label}: ${v}`); };
-    add('Evenement', [f('event'), (picked.type || []).join('')].filter(Boolean).join(' · '));
-    add('Nodig', (picked.need || []).join(', '));
-    add('Omvang', (picked.size || []).join(''));
-    add('Datum', f('date'));
-    add('Plaats', f('place'));
-    add('Organisatie', f('org'));
+    add(T('Evenement', 'Event'), [f('event'), (picked.type || []).join('')].filter(Boolean).join(' · '));
+    add(T('Nodig', 'Needed'), (picked.need || []).join(', '));
+    add(T('Omvang', 'Size'), (picked.size || []).join(''));
+    add(T('Datum', 'Date'), f('date'));
+    add(T('Plaats', 'Location'), f('place'));
+    add(T('Organisatie', 'Organisation'), f('org'));
     if (f('note')) lines.push('', f('note'));
-    if (f('name')) lines.push('', `Groet, ${f('name')}`);
+    if (f('name')) lines.push('', `${T('Groet', 'Regards')}, ${f('name')}`);
     return lines.join('\n');
   };
 
@@ -41,13 +43,13 @@
     back.hidden = at === 0;
     const last = at === steps.length - 1;
     next.hidden = last;
-    next.textContent = at === steps.length - 2 ? 'GO' : 'Volgende';
+    next.textContent = at === steps.length - 2 ? 'GO' : T('Volgende', 'Next');
     next.disabled = !value(steps[at]);
     if (last) {
       const txt = message();
       sum.textContent = txt;
       wa.href = `https://wa.me/31630971404?text=${encodeURIComponent(txt)}`;
-      mail.href = `mailto:info@matrixeventsupport.nl?subject=${encodeURIComponent('Aanvraag via de site')}&body=${encodeURIComponent(txt)}`;
+      mail.href = `mailto:info@matrixeventsupport.nl?subject=${encodeURIComponent(T('Aanvraag via de site', 'Enquiry via the website'))}&body=${encodeURIComponent(txt)}`;
     }
     const f = steps[at].querySelector('button, input');
     if (f && at) f.focus({ preventScroll: true });

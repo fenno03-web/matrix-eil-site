@@ -4,6 +4,9 @@
   const solo = [...document.querySelectorAll('.solo-demo[data-demo]')];
   if (!os && !solo.length) return;
   const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const EN = document.documentElement.lang === 'en';
+  const T = (nl, en) => (EN ? en : nl);
+  const LOC = EN ? 'en-GB' : 'nl-NL';
   const small = () => innerWidth < 760;
   if (os) {
   const desk = os.querySelector('.aos-desk');
@@ -15,7 +18,7 @@
   // Klok en ogen in de bovenbalk
   const clock = os.querySelector('.aos-clock'), eyes = os.querySelector('.aos-eyes b');
   setInterval(() => {
-    clock.textContent = new Date().toLocaleTimeString('nl-NL');
+    clock.textContent = new Date().toLocaleTimeString(LOC);
     eyes.textContent = 100 - (Math.random() < .3 ? Math.ceil(Math.random() * 3) : 0);
   }, 1000);
 
@@ -87,7 +90,18 @@
   }));
 
   // ---------------------------------------------------------------- Terminal
-  const BOOT = [
+  const BOOT = EN ? [
+    ['pr', 'argus --status'],
+    ['di', 'ARGUS Systems · software branch of MATRIX E.I.L.'],
+    ['di', 'hundred eyes loaded .......................... 100/100'],
+    ['ok', '[ FIELD ] CHRONOS  alpha · running on real productions'],
+    ['ok', '[ LIVE ] BIFROST   console bridge · Heimdall AI'],
+    ['ok', '[ LIVE ] IRIS      Stream Deck ⇄ Resolume'],
+    ['wa', '[ TEST ] AXIS · METRON · HOROS'],
+    ['wa', '[ BUILD ] VISUAL INTELLIGENCE · TREEHOUSE · TARTARUS · KANON'],
+    ['di', '[ IDEA ] HYPERION'],
+    ['pr', 'watcher active. type help for commands.'],
+  ] : [
     ['pr', 'argus --status'],
     ['di', 'ARGUS Systems · softwaretak van MATRIX E.I.L.'],
     ['di', 'honderd ogen geladen ......................... 100/100'],
@@ -99,7 +113,13 @@
     ['di', '[ IDEE ] HYPERION'],
     ['pr', 'wachter actief. typ help voor commando’s.'],
   ];
-  const HELP = [
+  const HELP = EN ? [
+    ['di', 'help                 this list'],
+    ['di', 'ls                   all tools and their status'],
+    ['di', 'open <tool>          open a tool, e.g. open kanon'],
+    ['di', 'heimdall <question>  ask the watcher'],
+    ['di', 'status · whoami · date · clear'],
+  ] : [
     ['di', 'help                 deze lijst'],
     ['di', 'ls                   alle tools en hun status'],
     ['di', 'open <tool>          open een tool, bijv. open kanon'],
@@ -124,6 +144,14 @@
   });
   const heimdall = q => {
     q = q.toLowerCase();
+    if (EN) {
+      if (/backup|sync/.test(q)) return 'Backup console is in sync. Last comparison 0.4 seconds ago, no differences.';
+      if (/overrun|late|time|curfew|chronos/.test(q)) return 'Main is running 2 minutes over. Curfew margin is still 18 minutes. I gave show control a heads-up.';
+      if (/universe|dmx|signal|net/.test(q)) return 'All 12 universes received. Universe 7 had a short 0.2 second dropout at 22:14, stable since.';
+      if (/hello|hi|hey|who/.test(q)) return 'I am Heimdall. I keep watch so you can watch the show.';
+      if (/rain|weather/.test(q)) return 'The rain radar says light rain in 40 minutes. Maybe pull the hazers back already?';
+      return 'I have no answer to that yet. In the real BIFROST I watch your show; this preview only knows a few questions.';
+    }
     if (/backup|sync/.test(q)) return 'Backup-tafel loopt synchroon. Laatste vergelijking 0,4 seconden geleden, geen verschillen.';
     if (/uitloop|tijd|curfew|chronos/.test(q)) return 'Main loopt 2 minuten uit. Curfew-marge is nog 18 minuten. Ik heb regie een seintje gegeven.';
     if (/universe|dmx|signaal|net/.test(q)) return 'Alle 12 universes ontvangen. Universe 7 had om 22:14 een korte onderbreking van 0,2 seconden, sindsdien stabiel.';
@@ -144,20 +172,20 @@
       case 'status': return say(BOOT.slice(3, 9), 40);
       case 'open': {
         const hit = TOOLS.find(t => t === arg || NAMES[t].toLowerCase().startsWith(arg) && arg);
-        if (!hit) return say([['er', `Onbekende tool: ${arg || '(leeg)'}. Probeer ls.`]]);
-        open(hit); return say([['ok', `${NAMES[hit]} geopend.`]]);
+        if (!hit) return say([['er', T(`Onbekende tool: ${arg || '(leeg)'}. Probeer ls.`, `Unknown tool: ${arg || '(empty)'}. Try ls.`)]]);
+        open(hit); return say([['ok', T(`${NAMES[hit]} geopend.`, `${NAMES[hit]} opened.`)]]);
       }
-      case 'heimdall': return say([['hd', 'Heimdall: ' + heimdall(arg || 'hallo')]], 0);
-      case 'whoami': return say([['di', 'gast · honderd ogen kijken mee']]);
-      case 'date': return say([['di', new Date().toLocaleString('nl-NL')]]);
+      case 'heimdall': return say([['hd', 'Heimdall: ' + heimdall(arg || T('hallo', 'hello'))]], 0);
+      case 'whoami': return say([['di', T('gast · honderd ogen kijken mee', 'guest · a hundred eyes are watching')]]);
+      case 'date': return say([['di', new Date().toLocaleString(LOC)]]);
       case 'clear': out.innerHTML = ''; return;
-      case 'sudo': return say([['er', 'Toegang geweigerd. Argus ziet alles.']]);
+      case 'sudo': return say([['er', T('Toegang geweigerd. Argus ziet alles.', 'Access denied. Argus sees everything.')]]);
       case 'matrix': return say([['ok', 'Execution is the chariot of genius. · William Blake']]);
       case 'exit': close(term); return;
-      case 'rm': return say([['er', 'TARTARUS zegt nee. Showfiles gooien we niet weg.']]);
+      case 'rm': return say([['er', T('TARTARUS zegt nee. Showfiles gooien we niet weg.', 'TARTARUS says no. We don\'t throw show files away.')]]);
       default:
-        if (TOOLS.includes(c.toLowerCase())) { open(c.toLowerCase()); return say([['ok', `${NAMES[c.toLowerCase()]} geopend.`]]); }
-        return say([['er', `Onbekend commando: ${c}. Typ help.`]]);
+        if (TOOLS.includes(c.toLowerCase())) { open(c.toLowerCase()); return say([['ok', T(`${NAMES[c.toLowerCase()]} geopend.`, `${NAMES[c.toLowerCase()]} opened.`)]]); }
+        return say([['er', T(`Onbekend commando: ${c}. Typ help.`, `Unknown command: ${c}. Type help.`)]]);
     }
   };
   const initTerm = (t, boot) => {
@@ -169,11 +197,11 @@
   function makeTerminal() {
     const t = document.createElement('section');
     t.className = 'win term'; t.dataset.win = 'terminal';
-    t.innerHTML = `<div class="win-bar"><span class="win-dots"><button class="win-x" aria-label="Sluit terminal"></button><i></i><i></i></span><b>argus — terminal</b><span class="st">tty1</span></div>
-      <div class="win-body term-body"><div class="term-out" aria-live="polite"></div><form class="term-line"><label>argus@matrix:~$</label><input autocomplete="off" spellcheck="false" aria-label="Typ een commando"></form></div>`;
+    t.innerHTML = `<div class="win-bar"><span class="win-dots"><button class="win-x" aria-label="${T('Sluit terminal', 'Close terminal')}"></button><i></i><i></i></span><b>argus — terminal</b><span class="st">tty1</span></div>
+      <div class="win-body term-body"><div class="term-out" aria-live="polite"></div><form class="term-line"><label>argus@matrix:~$</label><input autocomplete="off" spellcheck="false" aria-label="${T('Typ een commando', 'Type a command')}"></form></div>`;
     t._stop = [];
     desk.appendChild(t); place(t); wire(t); initTerm(t, false);
-    say([['di', 'Terug. Typ help.']]);
+    say([['di', T('Terug. Typ help.', 'Back. Type help.')]]);
     return t;
   }
   term._stop = [];
@@ -257,7 +285,14 @@
         ctx.fillStyle = alert ? '#ff5a4d' : CYAN; ctx.beginPath(); ctx.arc(W / 2 + Math.sin(t / 30) * 8, ey, 4.5, 0, 7); ctx.fill();
         if (alert) alert--;
       });
-      const LINES = [
+      const LINES = EN ? [
+        ['ok', 'Bridge active · 12 universes · 0 differences'],
+        ['ok', 'Backup in sync with FOH'],
+        ['wa', 'Universe 7 · 0.2 s no data · recovered'],
+        ['ok', 'Cuelist 3 · GO 47 confirmed on both consoles'],
+        ['ok', 'FOH console temperature normal'],
+        ['wa', 'Heimdall: Main running 2 min over, show control informed'],
+      ] : [
         ['ok', 'Bridge actief · 12 universes · 0 verschillen'],
         ['ok', 'Backup synchroon met FOH'],
         ['wa', 'Universe 7 · 0,2 s geen data · hersteld'],
@@ -270,7 +305,7 @@
         const [c, txt] = LINES[li++ % LINES.length];
         if (c === 'wa') alert = 90;
         const el = document.createElement('li'); el.className = c;
-        el.innerHTML = `<time>${new Date().toLocaleTimeString('nl-NL')}</time>${txt}`;
+        el.innerHTML = `<time>${new Date().toLocaleTimeString(LOC)}</time>${txt}`;
         log.prepend(el);
         while (log.children.length > 4) log.lastChild.remove();
       };
@@ -362,8 +397,10 @@
         'Blackout': ['Master 0', 'Hold'],
         'Kleurpalet': ['Store · Palette 1', 'Color · Amber', 'Store · Palette 2', 'Color · Cyan', 'Store · Palette 3', 'Color · Magenta'],
         'Fan-out': ['Select · Group 2', 'Pan · Fan Ø', 'Tilt · Fan V', 'Store · Position 4'],
-        'Wis alles': ['Clear', 'Clear', 'Clear · Programmer leeg'],
+        'Wis alles': ['Clear', 'Clear', T('Clear · Programmer leeg', 'Clear · Programmer empty')],
       };
+      MACROS['Colour palette'] = MACROS['Kleurpalet'];
+      MACROS['Clear all'] = MACROS['Wis alles'];
       let timer;
       body.querySelectorAll('[data-m]').forEach(b => b.addEventListener('click', () => {
         clearInterval(timer);
@@ -371,7 +408,7 @@
         const steps = MACROS[b.dataset.m]; let i = 0;
         outEl.textContent = `▸ Macro “${b.dataset.m}” · Infinity Chimp\n`;
         timer = setInterval(() => {
-          if (i >= steps.length) { outEl.textContent += `✓ Klaar · ${steps.length} handelingen in 1 druk`; clearInterval(timer); return; }
+          if (i >= steps.length) { outEl.textContent += T(`✓ Klaar · ${steps.length} handelingen in 1 druk`, `✓ Done · ${steps.length} actions in 1 press`); clearInterval(timer); return; }
           outEl.textContent += `  ${String(i + 1).padStart(2, '0')}  ${steps[i++]}\n`;
         }, still ? 0 : 180);
       }));
@@ -383,25 +420,25 @@
     tartarus(body, w) {
       const found = body.querySelector('.ta-found'), vault = body.querySelector('.ta-vault'), st = body.querySelector('.ta-st');
       const FILES = [
-        ['D:/Shows/Woeesj_2026_v3.chimp', 'Woeësj-Stock', 3], ['Bureaublad/woeesj FINAL.chimp', 'Woeësj-Stock', 4],
-        ['USB/woeesj FINAL echt.chimp', 'Woeësj-Stock', 5], ['Downloads/sportclub_v1.show', 'Sportclub’25', 1],
+        ['D:/Shows/Woeesj_2026_v3.chimp', 'Woeësj-Stock', 3], [T('Bureaublad/woeesj FINAL.chimp', 'Desktop/woeesj FINAL.chimp'), 'Woeësj-Stock', 4],
+        [T('USB/woeesj FINAL echt.chimp', 'USB/woeesj FINAL really.chimp'), 'Woeësj-Stock', 5], ['Downloads/sportclub_v1.show', 'Sportclub’25', 1],
         ['D:/Shows/sportclub_v2.show', 'Sportclub’25', 2], ['USB/carnaval_radio.show', 'Carnaval Radio', 1],
-        ['Mail/carnaval_radio_v2.show', 'Carnaval Radio', 2], ['Bureaublad/kopie van kopie.show', 'Carnaval Radio', 1],
+        ['Mail/carnaval_radio_v2.show', 'Carnaval Radio', 2], [T('Bureaublad/kopie van kopie.show', 'Desktop/copy of copy.show'), 'Carnaval Radio', 1],
       ];
       let timers = [];
       const scan = () => {
         timers.forEach(clearTimeout); timers = [];
-        found.innerHTML = ''; vault.innerHTML = ''; st.textContent = 'Zoeken…';
+        found.innerHTML = ''; vault.innerHTML = ''; st.textContent = T('Zoeken…', 'Searching…');
         FILES.forEach((f, i) => timers.push(setTimeout(() => {
           const li = document.createElement('li'); li.innerHTML = `<span>${f[0]}</span><b>v${f[2]}</b>`; found.appendChild(li);
         }, (still ? 0 : 160) * i)));
         timers.push(setTimeout(() => {
-          st.textContent = `${FILES.length} gevonden · kluis bijgewerkt`;
+          st.textContent = T(`${FILES.length} gevonden · kluis bijgewerkt`, `${FILES.length} found · vault updated`);
           const shows = {};
           FILES.forEach(f => { (shows[f[1]] = shows[f[1]] || []).push(f); });
           vault.innerHTML = Object.entries(shows).map(([s, fs]) => {
             const top = fs.reduce((a, b) => (b[2] > a[2] ? b : a));
-            return `<div class="ta-show"><h6>${s}</h6><p class="new">▲ v${top[2]} · nieuwste</p><p>${fs.length - 1} oudere versies veilig bewaard</p></div>`;
+            return `<div class="ta-show"><h6>${s}</h6><p class="new">▲ v${top[2]} · ${T('nieuwste', 'latest')}</p><p>${fs.length - 1} ${T('oudere versies veilig bewaard', 'older versions stored safely')}</p></div>`;
           }).join('');
           found.querySelectorAll('li').forEach((li, i) => {
             const f = FILES[i], top = Math.max(...FILES.filter(x => x[1] === f[1]).map(x => x[2]));

@@ -10,6 +10,8 @@ from pathlib import Path
 from src.showlog import SHOWLOG, HIGHLIGHTS, press_for
 from src.stories import STORIES
 from src.i18n import TR
+from src.i18n_en import TR_EN, SEG_EN, RE_EN
+from src.seg import walk
 
 ROOT = Path(__file__).parent
 MAIL = 'info@matrixeventsupport.nl'
@@ -30,11 +32,23 @@ LANGS = ('nl', 'en', 'de')
 LOCALE = {'nl': 'nl_NL', 'en': 'en_GB', 'de': 'de_DE'}
 
 
+def has_lang(lang, page):
+    """Bestaat deze pagina in deze taal? Engels heeft de hele site, Duits alleen de hoofdpagina's."""
+    return lang in ('nl', 'en') or page in I18N
+
+
+def lang_name(lang, page):
+    """Bestandsnaam van een pagina in de taalmap (bijv. diensten.html -> services.html)."""
+    if page in I18N:
+        return I18N[page][LANGS.index(lang) - 1]
+    return page
+
+
 def lang_path(lang, page):
-    """Pad vanaf de root naar een pagina in een taal."""
+    """Pad vanaf de root naar een pagina in een taal (valt terug op de home van die taal)."""
     if lang == 'nl':
         return page
-    return f'{lang}/' + I18N.get(page, ('index.html', 'index.html'))[LANGS.index(lang) - 1]
+    return f'{lang}/' + (lang_name(lang, page) if has_lang(lang, page) else 'index.html')
 
 
 def lang_href(lang, page):
@@ -83,8 +97,8 @@ def head(title, desc, image='assets/img/hero.jpg', icon='assets/img/favicon.png'
     ld = ld if ld is not None else [ORG]
     ld_html = ''.join(f'\n<script type="application/ld+json">{json.dumps(x, ensure_ascii=False)}</script>' for x in ld)
     alt = ''
-    if CURRENT in I18N:
-        alt = ''.join(f'\n<link rel="alternate" hreflang="{l}" href="{BASE}{lang_path(l, CURRENT).replace("index.html", "")}">' for l in LANGS)
+    if CURRENT != '404.html':
+        alt = ''.join(f'\n<link rel="alternate" hreflang="{l}" href="{BASE}{lang_path(l, CURRENT).replace("index.html", "")}">' for l in LANGS if has_lang(l, CURRENT))
         alt += f'\n<link rel="alternate" hreflang="x-default" href="{BASE}{CURRENT.replace("index.html", "")}">'
     return f'''<!doctype html>
 <html lang="{LANG}">
@@ -1715,6 +1729,18 @@ import re
 
 _TR = sorted(((nl.replace('{N}', str(len(SHOWLOG))), en.replace('{N}', str(len(SHOWLOG))), de.replace('{N}', str(len(SHOWLOG))))
               for nl, en, de in TR), key=lambda t: -len(t[0]))
+_TR_EN = sorted(((nl.replace('{N}', str(len(SHOWLOG))), en.replace('{N}', str(len(SHOWLOG)))) for nl, en in TR_EN),
+                key=lambda t: -len(t[0]))
+
+
+def seg_en(text):
+    """Engelse versie van een stuk tekst, of None als het zo kan blijven."""
+    if text in SEG_EN:
+        return SEG_EN[text]
+    new = text
+    for pat, rep in RE_EN:
+        new = re.sub(pat, rep, new)
+    return new if new != text else None
 
 
 def localize(html, lang):
@@ -1722,17 +1748,24 @@ def localize(html, lang):
     i = LANGS.index(lang)
     for t in _TR:
         html = html.replace(t[0], t[i])
+    if lang == 'en':
+        for nl, en in _TR_EN:
+            html = html.replace(nl, en)
+        html = walk(html, seg_en)
 
     def fix(m):
         attr, val = m.group(1), m.group(2)
         if re.match(r'(https?:|mailto:|tel:|#|\.\./|data:|//)', val) or not val:
             return m.group(0)
         path, _, frag = val.partition('#')
-        if path in I18N:
-            path = I18N[path][i - 1]
+        if path in PAGES and has_lang(lang, path):
+            path = lang_name(lang, path)
         else:
             path = '../' + path
         return f'{attr}="{path}{"#" + frag if frag else ""}"'
+    html = re.sub(r'"item": "' + re.escape(BASE) + r'([^"#]*)"',
+                  lambda m: f'"item": "{BASE}{lang_path(lang, m.group(1) or "index.html").replace("index.html", "")}"'
+                  if (m.group(1) or 'index.html') in PAGES else m.group(0), html)
     return re.sub(r'\b(href|src|data-cover|data-href|poster)="([^"]*)"', fix, html)
 
 
@@ -1743,14 +1776,16 @@ if __name__ == '__main__':
         (ROOT / name).write_text(fn())
     for LANG in LANGS[1:]:
         (ROOT / LANG).mkdir(exist_ok=True)
-        for name in I18N:
+        for name in PAGES:
+            if name == '404.html' or not has_lang(LANG, name):
+                continue
             CURRENT = name
             (ROOT / lang_path(LANG, name)).write_text(localize(PAGES[name](), LANG))
     LANG = 'nl'
     today = datetime.date.today().isoformat()
-    locs = [n for n in PAGES if n != '404.html'] + [lang_path(l, n) for l in LANGS[1:] for n in I18N]
+    locs = [n for n in PAGES if n != '404.html'] + [lang_path(l, n) for l in LANGS[1:] for n in PAGES if n != '404.html' and has_lang(l, n)]
     urls = ''.join(f'  <url><loc>{BASE}{n.replace("index.html", "")}</loc><lastmod>{today}</lastmod></url>\n'
                    for n in locs)
     (ROOT / 'sitemap.xml').write_text(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{urls}</urlset>\n')
     (ROOT / 'robots.txt').write_text(f'User-agent: *\nAllow: /\n\nSitemap: {BASE}sitemap.xml\n')
-    print('gebouwd:', len(PAGES), "pagina's +", 2 * len(I18N), "vertaald + sitemap.xml + robots.txt")
+    print('gebouwd:', len(PAGES), "pagina's +", len(locs) - len(PAGES) + 1, "vertaald + sitemap.xml + robots.txt")
