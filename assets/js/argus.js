@@ -1,4 +1,6 @@
 // ARGUS: het oog, de systeemstart en de werkende demo's van de vier tools
+const EN = document.documentElement.lang === 'en';
+const TA = (nl, en) => (EN ? en : nl);
 const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const two = n => String(n).padStart(2, '0');
 const mmss = s => `${two(Math.floor(Math.abs(s) / 60))}:${two(Math.abs(s) % 60)}`;
@@ -40,7 +42,18 @@ if (eye) {
 
 // Systeemstart: de statusregels worden uitgetypt
 const out = document.querySelector('.boot-out');
-const BOOT = [
+const BOOT = EN ? [
+  ['pr', '> argus --status'],
+  ['di', 'ARGUS Systems · software branch of MATRIX E.I.L.'],
+  ['di', 'hundred eyes loaded .......................... 100/100'],
+  ['', ''],
+  ['ok', '[ FIELD ] CHRONOS  alpha · running on real productions'],
+  ['wa', '[ TEST ] AXIS      planning · warehouse · LIVE · accreditation'],
+  ['wa', '[ TEST ] METRON    Pro DJ Link · BPM · speed masters'],
+  ['wa', '[ TEST ] HOROS     RDW data · bridges · emission zones'],
+  ['', ''],
+  ['pr', '> watcher active. the show is being guarded.'],
+] : [
   ['pr', '> argus --status'],
   ['di', 'ARGUS Systems · softwaretak van MATRIX E.I.L.'],
   ['di', 'honderd ogen geladen ......................... 100/100'],
@@ -177,7 +190,7 @@ if (horos) {
   });
   const slider = horos.querySelector('input'), outV = horos.querySelector('output');
   const w = [horos.querySelector('.w1'), horos.querySelector('.w2')];
-  const nl = v => v.toFixed(2).replace('.', ',');
+  const nl = v => (EN ? v.toFixed(2) : v.toFixed(2).replace('.', ','));
   const check = () => {
     const h = +slider.value;
     outV.textContent = `${nl(h)} m`;
@@ -186,8 +199,8 @@ if (horos) {
       b.g.classList.toggle('bad', bad);
       w[k].classList.toggle('bad', bad);
       w[k].textContent = bad
-        ? `Viaduct · km ${b.km} · doorrijhoogte ${nl(b.h)} m · past niet, omrijden`
-        : `Viaduct · km ${b.km} · doorrijhoogte ${nl(b.h)} m · vrij`;
+        ? TA(`Viaduct · km ${b.km} · doorrijhoogte ${nl(b.h)} m · past niet, omrijden`, `Viaduct · km ${b.km} · clearance ${nl(b.h)} m · won't fit, detour`)
+        : TA(`Viaduct · km ${b.km} · doorrijhoogte ${nl(b.h)} m · vrij`, `Viaduct · km ${b.km} · clearance ${nl(b.h)} m · clear`);
     });
   };
   slider.addEventListener('input', check);
@@ -211,7 +224,7 @@ if (eye) {
     dots.forEach((d, k) => setTimeout(() => d.classList.add('shut'), k * 6));
     if (cap) cap.dataset.was = cap.innerHTML;
     setTimeout(() => {
-      if (cap) cap.innerHTML = '<b>0</b> ogen open · dat gebeurde nog nooit';
+      if (cap) cap.innerHTML = TA('<b>0</b> ogen open · dat gebeurde nog nooit', '<b>0</b> eyes open · that never happened before');
       dots.forEach((d, k) => setTimeout(() => d.classList.remove('shut'), 400 + k * 6));
       setTimeout(() => { if (cap && cap.dataset.was) cap.innerHTML = cap.dataset.was; }, 2600);
     }, 700);

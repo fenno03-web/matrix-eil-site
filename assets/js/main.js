@@ -1,4 +1,5 @@
 const LANG = document.documentElement.lang || 'nl';
+const T = (nl, en) => (LANG === 'en' ? en : nl);
 const QUOTES = LANG === 'en' ? [
   ['No man ever steps in the same river twice.', 'Heraclitus'],
   ['Everything flows.', 'Heraclitus'],
@@ -105,8 +106,8 @@ const box = document.createElement('div');
 box.className = 'lightbox';
 box.setAttribute('role', 'dialog');
 box.setAttribute('aria-modal', 'true');
-box.innerHTML = '<button class="lb-close" aria-label="Sluiten">✕</button><figure><img alt=""></figure>' +
-  '<div class="lb-bar"><button class="lb-prev" aria-label="Vorige">←</button><span class="lb-title"></span><span class="lb-count"></span><button class="lb-next" aria-label="Volgende">→</button></div>';
+box.innerHTML = `<button class="lb-close" aria-label="${T('Sluiten', 'Close')}">✕</button><figure><img alt=""></figure>` +
+  `<div class="lb-bar"><button class="lb-prev" aria-label="${T('Vorige', 'Previous')}">←</button><span class="lb-title"></span><span class="lb-count"></span><button class="lb-next" aria-label="${T('Volgende', 'Next')}">→</button></div>`;
 const lbImg = box.querySelector('img');
 let lbList = [], lbIdx = 0;
 function lbShow(i) {
@@ -151,7 +152,7 @@ document.querySelectorAll('[data-gallery]:not(.pp-grid)').forEach(el => {
 const gallery = document.querySelector('.gallery');
 if (gallery) {
   const imgs = [...gallery.querySelectorAll('img')];
-  imgs.forEach((img, i) => img.addEventListener('click', () => lbOpen(imgs.map(x => x.src), i, 'Uit het veld')));
+  imgs.forEach((img, i) => img.addEventListener('click', () => lbOpen(imgs.map(x => x.src), i, T('Uit het veld', 'From the field'))));
 }
 
 // Logboek: foto zweeft mee met de muis, klik opent de reeks
@@ -207,7 +208,7 @@ if (cues.length) {
     list = document.createElement('nav');
     list.className = 'cuelist';
     list.setAttribute('aria-label', 'Cuelijst');
-    list.innerHTML = '<span class="lbl">Cuelijst</span>' + cues.map((c, i) => {
+    list.innerHTML = `<span class="lbl">${T('Cuelijst', 'Cue list')}</span>` + cues.map((c, i) => {
       if (!c.id) c.id = 'cue-' + (i + 1);
       return `<a href="#${c.id}"><span class="n">${c.dataset.cueName}</span><span class="q">${c.dataset.cue}</span></a>`;
     }).join('');
@@ -285,7 +286,7 @@ if (standby && !reduce) {
         setTimeout(() => { location.href = a.href; }, 950);
         return;
       }
-      const page = { 'index.html': 'Home', 'projecten.html': 'Projecten', 'over.html': 'Over', 'argus.html': 'Argus', 'privacy.html': 'Privacy', 'diensten.html': 'Diensten' };
+      const page = { 'index.html': 'Home', 'projecten.html': 'Projecten', 'over.html': 'Over', 'argus.html': 'Argus', 'privacy.html': 'Privacy', 'diensten.html': 'Diensten', 'projects.html': 'Projects', 'about.html': 'About', 'services.html': 'Services' };
       const txt = a.textContent.replace(/[←→]/g, '').trim();
       const label = page[target] || (txt && txt.length < 26 ? txt : 'GO');
       const [q, who] = QUOTES[Math.floor(Math.random() * QUOTES.length)];
@@ -345,12 +346,12 @@ const t0 = Date.now();
 const liveDot = document.querySelector('.showbar .live');
 if (liveDot) liveDot.addEventListener('click', () => {
   const s = Math.floor((Date.now() - t0) / 1000);
-  toast(`Je kijkt al <b>${pad(Math.floor(s / 60))}:${pad(s % 60)}</b> mee. De show loopt.`);
+  toast(T(`Je kijkt al <b>${pad(Math.floor(s / 60))}:${pad(s % 60)}</b> mee. De show loopt.`, `You've been watching for <b>${pad(Math.floor(s / 60))}:${pad(s % 60)}</b>. The show is running.`));
 });
 
 // Toetsen zoals op een lichttafel: B = blackout, G = GO. Typ "argus" voor het oog, de Konami-code voor een toegift.
 const black = document.createElement('div');
-black.className = 'blackout-layer'; black.textContent = 'Blackout · druk B';
+black.className = 'blackout-layer'; black.textContent = T('Blackout · druk B', 'Blackout · press B');
 document.body.appendChild(black);
 let typed = '';
 const KONAMI = 'ArrowUp,ArrowUp,ArrowDown,ArrowDown,ArrowLeft,ArrowRight,ArrowLeft,ArrowRight,b,a';
@@ -364,12 +365,12 @@ addEventListener('keydown', e => {
   if (typed === 'argus') { bigEye(); typed = ''; return; }
   if (k === 'b' && keys[keys.length - 2] !== 'ArrowRight') {
     document.body.classList.toggle('blackout');
-    if (document.body.classList.contains('blackout')) toast('<b>Blackout.</b> Druk nog een keer op B voor licht.');
+    if (document.body.classList.contains('blackout')) toast(T('<b>Blackout.</b> Druk nog een keer op B voor licht.', '<b>Blackout.</b> Press B again for light.'));
   }
   if (k === 'g' && !typed.endsWith('arg') && !document.body.classList.contains('blackout')) {
     document.body.classList.add('leaving');
     setTimeout(() => document.body.classList.remove('leaving'), 420);
-    toast('<b>GO.</b> Volgende cue.', 1800);
+    toast(T('<b>GO.</b> Volgende cue.', '<b>GO.</b> Next cue.'), 1800);
   }
   if (k === 'f') fohPanel();
   if (k === 'h') hazer();
@@ -383,7 +384,7 @@ function bigEye() {
   wrap.className = 'big-eye';
   wrap.innerHTML = '<svg viewBox="0 0 600 600" aria-hidden="true"><defs><radialGradient id="beG"><stop offset="0" stop-color="#3fd8ee"/><stop offset=".5" stop-color="#d9ad4f"/><stop offset="1" stop-color="#1a140a"/></radialGradient><clipPath id="beClip"><path d="M60,300 Q300,80 540,300 Q300,520 60,300 Z"/></clipPath></defs>' +
     '<g class="lids"><path class="lid" d="M60,300 Q300,80 540,300 Q300,520 60,300 Z"/><g clip-path="url(#beClip)"><g class="pg"><circle cx="300" cy="300" r="96" fill="url(#beG)"/><circle cx="300" cy="300" r="40" fill="#030607"/><circle cx="318" cy="282" r="8" fill="#fff" opacity=".8"/></g></g></g></svg>' +
-    '<p>Argus ziet je</p>';
+    `<p>${T('Argus ziet je', 'Argus sees you')}</p>`;
   document.body.appendChild(wrap);
   requestAnimationFrame(() => wrap.classList.add('show'));
   const pg = wrap.querySelector('.pg');
@@ -402,7 +403,7 @@ function encore() {
   const el = document.createElement('div');
   el.className = 'encore';
   const [q, who] = QUOTES[Math.floor(Math.random() * QUOTES.length)];
-  el.innerHTML = `<div><h2>Toe<br><em>gift.</em></h2><p>Je vond de verborgen cue. “${q}” · ${who}</p></div>`;
+  el.innerHTML = T(`<div><h2>Toe<br><em>gift.</em></h2><p>Je vond de verborgen cue. “${q}” · ${who}</p></div>`, `<div><h2>En<br><em>core.</em></h2><p>You found the hidden cue. “${q}” · ${who}</p></div>`);
   document.body.appendChild(el);
   requestAnimationFrame(() => el.classList.add('show'));
   const close = () => { el.classList.remove('show'); setTimeout(() => el.remove(), 600); };
@@ -416,7 +417,7 @@ if (logoEl) {
   logoEl.addEventListener('click', e => {
     clicks++; clearTimeout(ct); ct = setTimeout(() => { clicks = 0; }, 900);
     if (clicks >= 3 && document.body.classList.contains('home')) e.preventDefault();
-    if (clicks === 5) { clicks = 0; e.preventDefault(); toast('<b>Encore!</b> Druk ↑↑↓↓←→←→BA voor meer.', 4000); }
+    if (clicks === 5) { clicks = 0; e.preventDefault(); toast(T('<b>Encore!</b> Druk ↑↑↓↓←→←→BA voor meer.', '<b>Encore!</b> Press ↑↑↓↓←→←→BA for more.'), 4000); }
   });
 }
 
@@ -442,8 +443,8 @@ function fohPanel() {
   p = document.createElement('div');
   p.className = 'foh show';
   document.body.classList.add('foh-open');
-  p.innerHTML = '<div class="foh-head"><b>FOH</b><span>Jij hebt nu de tafel</span><button aria-label="Sluit">×</button></div>' +
-    ['Kleur', 'Master', 'Haze', 'Strobe'].map((n, i) => `<label class="fdr"><input type="range" min="0" max="100" value="${[0, 100, 30, 0][i]}" data-f="${i}" orient="vertical"><span>${n}</span><b>${[0, 100, 30, 0][i]}</b></label>`).join('');
+  p.innerHTML = `<div class="foh-head"><b>FOH</b><span>${T('Jij hebt nu de tafel', 'The desk is yours now')}</span><button aria-label="${T('Sluit', 'Close')}">×</button></div>` +
+    [T('Kleur', 'Colour'), 'Master', 'Haze', 'Strobe'].map((n, i) => `<label class="fdr"><input type="range" min="0" max="100" value="${[0, 100, 30, 0][i]}" data-f="${i}" orient="vertical"><span>${n}</span><b>${[0, 100, 30, 0][i]}</b></label>`).join('');
   document.body.appendChild(p);
   const root = document.documentElement, base = getComputedStyle(root).getPropertyValue('--accent');
   let strobeId = null;
@@ -459,7 +460,7 @@ function fohPanel() {
       if (v === 0) document.body.classList.remove('flash-on');
     }
   }));
-  toast('<b>FOH-modus.</b> Niet aan de master komen. Grapje, ga je gang.');
+  toast(T('<b>FOH-modus.</b> Niet aan de master komen. Grapje, ga je gang.', '<b>FOH mode.</b> Don\'t touch the master. Just kidding, go ahead.'));
 }
 
 // Rookmachine: de pagina loopt even vol haze
@@ -470,7 +471,7 @@ function hazer() {
   h.innerHTML = '<i></i><i></i><i></i><i></i>';
   document.body.appendChild(h);
   setTimeout(() => h.remove(), 9000);
-  toast(['<b>Hazer aan.</b> Hopelijk heeft iemand de rookmelders overbrugd.', '<b>Hazer aan.</b> Nu zie je pas wat de beams doen.', '<b>Hazer op 100%.</b> De fotograaf is blij, de brandweer minder.'][Math.floor(Math.random() * 3)]);
+  toast(T(['<b>Hazer aan.</b> Hopelijk heeft iemand de rookmelders overbrugd.', '<b>Hazer aan.</b> Nu zie je pas wat de beams doen.', '<b>Hazer op 100%.</b> De fotograaf is blij, de brandweer minder.'], ['<b>Hazer on.</b> Hopefully someone bypassed the smoke detectors.', '<b>Hazer on.</b> Now you can finally see what the beams do.', '<b>Hazer at 100%.</b> The photographer is happy, the fire brigade less so.'])[Math.floor(Math.random() * 3)]);
 }
 
 // Strobe: kort, en onder de drie flitsen per seconde
@@ -479,16 +480,32 @@ function strobe() {
   document.body.classList.add('strobing');
   let n = 0;
   const id = setInterval(() => { document.body.classList.toggle('flash-on'); if (++n >= 6) { clearInterval(id); document.body.classList.remove('flash-on', 'strobing'); } }, 360);
-  toast('<b>Strobe.</b> Even kort. Epilepsiewaarschuwing staat op de flyer.', 2200);
+  toast(T('<b>Strobe.</b> Even kort. Epilepsiewaarschuwing staat op de flyer.', '<b>Strobe.</b> Just briefly. The epilepsy warning is on the flyer.'), 2200);
 }
 
 // Spiekbriefje met de sneltoetsen
 function cheatSheet() {
-  toast('<b>Tafeltoetsen</b> · B blackout · G go · F FOH · H hazer · S strobe · typ “argus”', 6000);
+  toast(T('<b>Tafeltoetsen</b> · B blackout · G go · F FOH · H hazer · S strobe · typ “argus”', '<b>Desk keys</b> · B blackout · G go · F FOH · H hazer · S strobe · type “argus”'), 6000);
 }
 
 // Knoppen die je niet mag indrukken
-const NOPE = [
+const NOPE = LANG === 'en' ? [
+  ['That was the clear button. The programmer is empty. Good luck.', 'shake'],
+  ['Grand master at 0. The crowd is already applauding.', 'dim'],
+  ['You just started the headliner\'s intro. Ten minutes early.', ''],
+  ['Fixture 101 is now on address 1. And address 1 is gone.', 'shake'],
+  ['Timecode lost. The DJ is playing a different track anyway.', ''],
+  ['That was the emergency stop for the kinetics. Just kidding. Right?', 'shake'],
+  ['Highlight on. Everyone looks bad now.', 'bright'],
+  ['You overwrote the show file with “test_final_really_v2”. Luckily TARTARUS still has it.', ''],
+  ['The smoke detector went off. The whole venue is outside.', 'haze'],
+  ['Changeover started. The drummer is still on stage.', ''],
+  ['All moving heads are now pointing at the bar.', 'shake'],
+  ['Strobe at 100% during the ballad. The singer is staring at you.', 'strobe'],
+  ['You called the production manager. At 04:00.', ''],
+  ['Universe 1 just went offline. Universe 2 joins in solidarity.', 'dim'],
+  ['It said don\'t press. Here\'s a quote as punishment: “Character is destiny.” · Heraclitus', ''],
+] : [
   ['Dat was de clear-knop. De programmer is leeg. Succes.', 'shake'],
   ['Grand master op 0. Het publiek klapt alvast.', 'dim'],
   ['Je hebt net de intro van de headliner gestart. Tien minuten te vroeg.', ''],
@@ -518,7 +535,7 @@ function nope() {
 }
 document.querySelectorAll('.foot-bottom').forEach(fb => {
   const b = document.createElement('button');
-  b.className = 'nope'; b.type = 'button'; b.innerHTML = '<i></i>Niet indrukken';
+  b.className = 'nope'; b.type = 'button'; b.innerHTML = `<i></i>${T('Niet indrukken', 'Do not press')}`;
   b.addEventListener('click', nope);
   fb.appendChild(b);
 });
@@ -536,7 +553,7 @@ if (finePointer) {
     t.innerHTML = '<span class="truck" aria-hidden="true"><b>MATRIX</b></span>';
     document.body.appendChild(t);
     setTimeout(() => t.remove(), 5200);
-    toast('<b>Load-out?</b> Vergeet de gaffa niet. En ons nummer: wa.me/31630971404', 4800);
+    toast(T('<b>Load-out?</b> Vergeet de gaffa niet. En ons nummer: wa.me/31630971404', '<b>Load-out?</b> Don\'t forget the gaffa. And our number: wa.me/31630971404'), 4800);
   });
 }
 
