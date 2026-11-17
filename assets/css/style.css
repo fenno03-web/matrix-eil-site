@@ -1397,3 +1397,70 @@ body.bright main { filter: brightness(1.6) contrast(.8); transition: filter .2s;
 .tp-others { background: #040403; gap: 0; border: 1px solid #1c1912; border-top: 0; }
 .tp-o { box-shadow: inset -1px -1px 0 #1c1912; }
 .tp-status { padding-bottom: clamp(60px, 7vw, 100px); }
+
+/* ------------------------------------------------ Headliners: grote festivals groot op de home */
+.headliners { position: relative; background: var(--bg); }
+.hl-stage { position: relative; height: min(100svh, 980px); min-height: 620px; overflow: hidden; isolation: isolate; }
+.hl-slide { position: absolute; inset: 0; opacity: 0; visibility: hidden; transition: opacity 1.1s var(--ease), visibility 0s 1.1s; }
+.hl-slide.on { opacity: 1; visibility: visible; transition: opacity 1.1s var(--ease), visibility 0s; z-index: 1; }
+.hl-pics { position: absolute; inset: 0; z-index: -1; }
+.hl-pics img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.08); transition: opacity .9s var(--ease); }
+.hl-pics img.on { opacity: 1; animation: hlZoom 7s linear both; }
+@keyframes hlZoom { from { transform: scale(1.12); } to { transform: scale(1.02); } }
+.hl-pics::after { content: ""; position: absolute; inset: 0; background:
+  linear-gradient(180deg, rgba(5, 5, 5, .55) 0%, transparent 28%, transparent 45%, rgba(5, 5, 5, .9) 82%, var(--bg) 100%),
+  linear-gradient(90deg, rgba(5, 5, 5, .6), transparent 60%); }
+.hl-copy { position: absolute; left: 0; right: 0; bottom: clamp(110px, 13vw, 150px); margin: 0 auto; }
+.hl-meta { font-family: var(--mono); font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+.hl-meta b { color: var(--bg); background: var(--accent); padding: 3px 7px 2px; font-weight: 500; margin-right: 4px; }
+.hl-title { margin: 14px 0 26px; font-size: clamp(58px, 12.5vw, 210px); line-height: .82; letter-spacing: -.06em; font-weight: 700; text-transform: uppercase;
+  text-shadow: 0 0 60px rgba(0, 0, 0, .45); }
+.hl-title em { display: block; margin-top: .3em; font-size: clamp(22px, 3vw, 50px); line-height: 1; letter-spacing: -.02em; -webkit-text-stroke-width: 1.2px; }
+.hl-slide.on .hl-title { animation: hlTitle 1.2s var(--ease) both; }
+.hl-slide.on .hl-foot { animation: hlTitle 1.2s .15s var(--ease) both; }
+@keyframes hlTitle { from { opacity: 0; transform: translateY(40px); filter: blur(8px); } to { opacity: 1; transform: none; filter: none; } }
+.hl-foot { display: flex; flex-wrap: wrap; align-items: end; gap: 18px clamp(24px, 4vw, 60px); }
+.hl-foot p { font-size: clamp(16px, 1.4vw, 19px); line-height: 1.35; max-width: 340px; }
+.hl-foot p span { display: block; font-family: var(--mono); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+.hl-foot .btn { margin-left: auto; }
+.hl-tabs { position: absolute; left: 0; right: 0; bottom: clamp(24px, 4vw, 44px); margin: 0 auto; z-index: 3; display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(8px, 1.5vw, 20px); }
+.hl-tab { position: relative; padding: 14px 0 0; background: none; border: 0; text-align: left; cursor: pointer; color: var(--muted);
+  font-size: clamp(13px, 1.2vw, 16px); font-weight: 600; letter-spacing: -.01em; text-transform: uppercase; transition: color .3s; }
+.hl-tab span { display: block; font-family: var(--mono); font-size: 10.5px; font-weight: 400; letter-spacing: .16em; margin-bottom: 2px; color: var(--dim); }
+.hl-tab i { position: absolute; top: 0; left: 0; right: 0; height: 2px; background: rgba(239, 233, 223, .18); overflow: hidden; }
+.hl-tab i::after { content: ""; position: absolute; inset: 0; background: var(--accent); box-shadow: 0 0 12px var(--accent); transform: scaleX(0); transform-origin: left; }
+.hl-tab.on, .hl-tab:hover { color: var(--fg); }
+.hl-tab.on i::after { animation: hlBar var(--dur, 7s) linear both; }
+.headliners.paused .hl-tab.on i::after { animation-play-state: paused; }
+@keyframes hlBar { to { transform: scaleX(1); } }
+
+/* Ook op de bühne: grote festivals als lijst */
+.fest-list { list-style: none; margin: 0 0 clamp(40px, 5vw, 60px); padding: 0; border-top: 1px solid var(--line); counter-reset: f; }
+.fest-list li { display: grid; grid-template-columns: 110px minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1.2fr); gap: 8px 28px; align-items: baseline;
+  padding: clamp(14px, 1.8vw, 22px) 0; border-bottom: 1px solid var(--line); transition: background .3s, padding .4s var(--ease); }
+.fest-list .f-yr, .fest-list .f-st, .fest-list .f-rl { font-family: var(--mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.fest-list .f-nm { font-size: clamp(28px, 4.4vw, 64px); font-weight: 700; line-height: .95; letter-spacing: -.045em; text-transform: uppercase; transition: color .3s; }
+.fest-list .f-nm a { text-decoration: none; }
+.fest-list .f-nm a::after { content: " ↗"; font-size: .4em; vertical-align: super; color: var(--accent); }
+.fest-list .f-rl { text-transform: none; letter-spacing: .02em; font-size: 13px; }
+.fest-list li:hover { padding-left: 14px; background: linear-gradient(90deg, rgba(236, 10, 140, .08), transparent 70%); }
+.fest-list li:hover .nm { color: var(--accent); }
+.fest-list li:hover .yr { color: var(--fg); }
+@media (max-width: 900px) {
+  .hl-stage { height: 92svh; min-height: 560px; }
+  .hl-copy { bottom: 128px; }
+  .hl-foot .btn { margin-left: 0; }
+  .hl-tabs { grid-template-columns: repeat(2, 1fr); row-gap: 10px; }
+  .hl-tab { padding-top: 10px; }
+  .hl-tab span { display: none; }
+  .fest-list li { grid-template-columns: 1fr; gap: 4px; }
+  .fest-list .f-yr { order: -1; }
+}
+@media (max-width: 560px) {
+  .hl-foot p { font-size: 15px; max-width: none; flex: 1 1 100%; }
+  .hl-foot { gap: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hl-pics img.on { animation: none; transform: none; }
+  .hl-slide.on .hl-title, .hl-slide.on .hl-foot { animation: none; }
+}
