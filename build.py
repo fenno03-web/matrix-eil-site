@@ -204,8 +204,8 @@ def contact_block(q='Q6'):
 WORK = [
     ('proj/woeesj-stock/01.jpg', 1600, 1067, 'Woeësj-Stock', 'Simpelveld, 2026', 'woeesj-stock',
      'Stage design · Lighting design<br>Programming · Live operation<br>Commissioned by GTF Franzen Sound Light Vision'),
-    ('electrisize.jpg', 1345, 745, 'Electrisize', 'Main Stage &amp; Tapuya, 2026', 'electrisize',
-     'LED systems · Infrastructure<br>Setup &amp; commissioning<br>For Djem LED Screens'),
+    ('proj/sportclub-jubileum/01.jpg', 1600, 1066, 'Sportclub’25', '100 jaar jubileum, Bocholtz, 2025', 'sportclub-jubileum',
+     'Stage &amp; lighting design · Visuals<br>Programming · Live operation · VJ<br>Commissioned by GTF Franzen Sound Light Vision'),
     ('proj/parkcity-live/01.jpg', 1600, 1067, 'ParkCity Live', 'Dance tent, 2026', 'parkcity-live',
      'Custom visual content · VJ<br>For WE-AV'),
     ('boiler-room.jpg', 704, 481, 'Boiler Room', 'Complex Maastricht, 2026', 'boiler-room',
@@ -223,6 +223,75 @@ EXPERTISE = [
     ('electrisize.jpg', 'LED systems &amp; infrastructure',
      'LED-schermen en de techniek erachter: opbouw, signaal en inregelen.', 64),
 ]
+
+
+# Uitgelicht op de home: grote festivals met foto's. Rol en opdrachtgever komen letterlijk uit het showlog.
+# (slug, titel, ondertitel/stage, jaar, showlog-prefix, opdrachtgever, foto's)
+HEADLINERS = [
+    ('snakepit', 'Snakepit', 'Area 2 · Future', '2026', 'Snakepit', 'Spectrum AV',
+     ['proj/snakepit/01.jpg', 'proj/snakepit/11.jpg', 'proj/snakepit/05.jpg', 'proj/snakepit/10.jpg']),
+    ('outrageous', 'Outrageous', 'Festival · Mainstage', '2025', 'Outrageous', 'Bongers BLG',
+     ['proj/outrageous/02.jpg', 'proj/outrageous/01.jpg', 'proj/outrageous/04.jpg', 'proj/outrageous/03.jpg']),
+    ('usc-lustrum', 'USC Lustrum', 'Vijf showdagen', '2026', 'USC Lustrum', 'Spectrum AV',
+     ['proj/usc-lustrum/01.jpg', 'proj/usc-lustrum/04.jpg', 'proj/usc-lustrum/03.jpg', 'proj/usc-lustrum/02.jpg']),
+    ('electrisize', 'Electrisize', 'Main Stage &amp; Tapuya', '2026', 'Electrisize', 'Djem LED Screens',
+     ['electrisize.jpg']),
+]
+# Grote festivals zonder eigen projectpagina, voor de lijst onder de uitgelichte shows (showlog-prefixen)
+ALSO_ON = ['Paaspop', 'Pinkpop', 'Decibel Outdoor', 'Essential Festival · Harddance', 'Soenda Indoor', 'Ohm Herfstfestival',
+           'Groove Garden', 'Brabants Verbond', 'Harmony of Hardcore', 'Deviate', 'Lake Dance']
+
+
+def log_entry(prefix):
+    return next(e for e in reversed(SHOWLOG) if e[1].startswith(prefix))
+
+
+def headliners():
+    slides, tabs = '', ''
+    for i, (slug, t, sub, year, prefix, client, imgs) in enumerate(HEADLINERS):
+        role = log_entry(prefix)[2]
+        pics = ''.join(f'<img src="assets/img/{im}" alt="{t if k == 0 else ""}"{" class=\"on\"" if k == 0 else ""}{"" if i == 0 and k == 0 else " loading=\"lazy\""}>'
+                       for k, im in enumerate(imgs))
+        slides += f'''
+      <article class="hl-slide{" on" if i == 0 else ""}" data-n="{len(imgs)}">
+        <div class="hl-pics">{pics}</div>
+        <div class="hl-copy wrap">
+          <span class="hl-meta"><b>{i + 1:02d}</b> / {len(HEADLINERS):02d} · {year}</span>
+          <h2 class="hl-title">{t}<em>{sub}</em></h2>
+          <div class="hl-foot">
+            <p><span>Rol</span>{role}</p>
+            <p><span>Voor</span>{client}</p>
+            <a class="btn fill" href="project-{slug}.html">Bekijk project</a>
+          </div>
+        </div>
+      </article>'''
+        tabs += f'<button type="button" class="hl-tab{" on" if i == 0 else ""}" data-i="{i}"><i></i><span>{year}</span>{t}</button>'
+    rows = ''
+    for prefix in ALSO_ON:
+        year, show, role, client, slug = log_entry(prefix)
+        name, _, stage = show.partition(' · ')
+        nm = f'<a href="project-{slug}.html">{name}</a>' if slug else name
+        rows += f'''
+        <li class="reveal"><span class="f-yr">{year}</span><span class="f-nm">{nm}</span><span class="f-st">{stage}</span><span class="f-rl">{role}{" · " + client if client else ""}</span></li>'''
+    return f'''
+<section class="headliners" id="festivals" data-cue="Q1.5" data-cue-name="Headliners" aria-roledescription="carousel" aria-label="Uitgelichte festivals">
+  <div class="hl-stage">{slides}
+    <div class="hl-tabs wrap" role="tablist">{tabs}</div>
+  </div>
+</section>
+
+<section class="section also-on" style="padding-top:clamp(70px,9vw,130px)">
+  <div class="wrap">
+    {cue_head('Q1.6', 'Ook op de bühne', 'Festivals')}
+    <div class="intro-line">
+      <h2 class="title reveal">Gedraaid op<br><em>de grote podia.</em></h2>
+      <p class="lead reveal">Van Paaspop tot Decibel Outdoor: festivals waar we het licht programmeerden en live bedienden.</p>
+    </div>
+    <ol class="fest-list">{rows}
+    </ol>
+    <a class="link-arrow reveal" href="projecten.html#showlog">Alle {len(SHOWLOG)} producties sinds 2022</a>
+  </div>
+</section>'''
 
 
 def home():
@@ -251,7 +320,6 @@ def home():
     steps = ''.join(f'''
       <li class="reveal"><span class="sn">0{i + 1}</span><h3>{t}</h3><p>{d}</p></li>''' for i, (t, d) in enumerate(STEPS))
     clients = ''.join(f'<li><a href="samenwerking-gtf.html">{c}</a></li>' if c == GTF else f'<li>{c}</li>' for c in CLIENTS)
-    names = ''.join(f'<li>{n}</li>' for n in HIGHLIGHTS)
     strip = ''.join(f'<img src="assets/img/galerij/{n:02d}.jpg" alt="" width="1400" height="933" loading="lazy">' for n in [2, 3, 6, 7, 8, 9, 11, 12])
     return f'''{head("MATRIX E.I.L. | Stage, licht, visuals en LED", "MATRIX E.I.L. verzorgt stage- en lichtontwerp, programmering, live operation, VJ en LED-techniek voor live producties.")}
 <body class="home">
@@ -273,6 +341,7 @@ def home():
 </section>
 
 <div class="ticker" aria-hidden="true"><div class="ticker-track">{ticker}</div></div>
+{headliners()}
 
 <section class="section" id="werk" data-cue="Q2" data-cue-name="Selected work">
   <div class="wrap">
@@ -307,11 +376,6 @@ def home():
     </div>
     <ol class="steps">{steps}
     </ol>
-    <div class="clients names reveal">
-      <span class="tag">Gewerkt op o.a.</span>
-      <ul>{names}</ul>
-      <a class="link-arrow" href="projecten.html#showlog">{len(SHOWLOG)} producties sinds 2022</a>
-    </div>
     <div class="clients reveal">
       <span class="tag">Ingehuurd door en samengewerkt met</span>
       <ul>{clients}</ul>
