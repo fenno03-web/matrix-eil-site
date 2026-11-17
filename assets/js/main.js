@@ -674,3 +674,46 @@ if (finePointer && !reduce) {
     img.addEventListener('mouseleave', () => { target = null; });
   });
 }
+
+// Headliners: grote festivals wisselen elkaar af; binnen een festival snijden de foto's als cues
+(function headliners() {
+  const box = document.querySelector('.headliners');
+  if (!box) return;
+  const slides = [...box.querySelectorAll('.hl-slide')];
+  const tabs = [...box.querySelectorAll('.hl-tab')];
+  const SHOT = 2000, MIN = 6000;
+  let cur = 0, shot = 0, timer = null, paused = false, visible = true;
+  const dur = i => Math.max(MIN, slides[i].querySelectorAll('.hl-pics img').length * SHOT);
+  function showShot(i, k) {
+    slides[i].querySelectorAll('.hl-pics img').forEach((im, n) => im.classList.toggle('on', n === k));
+  }
+  function go(i) {
+    slides[cur].classList.remove('on'); tabs[cur].classList.remove('on');
+    cur = (i + slides.length) % slides.length; shot = 0;
+    slides[cur].classList.add('on');
+    tabs[cur].style.setProperty('--dur', dur(cur) + 'ms');
+    // animatie van de balk opnieuw starten
+    tabs[cur].classList.remove('on'); void tabs[cur].offsetWidth; tabs[cur].classList.add('on');
+    showShot(cur, 0);
+    schedule();
+  }
+  function schedule() {
+    clearTimeout(timer);
+    if (reduce || paused || !visible) return;
+    const n = slides[cur].querySelectorAll('.hl-pics img').length;
+    const step = dur(cur) / n;
+    timer = setTimeout(() => {
+      if (shot < n - 1) { shot++; showShot(cur, shot); schedule(); } else go(cur + 1);
+    }, step);
+  }
+  tabs.forEach((t, i) => t.addEventListener('click', () => go(i)));
+  box.addEventListener('mouseenter', () => { paused = true; box.classList.add('paused'); clearTimeout(timer); });
+  box.addEventListener('mouseleave', () => { paused = false; box.classList.remove('paused'); schedule(); });
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(([e]) => { visible = e.isIntersecting; box.classList.toggle('paused', !visible || paused); if (visible) schedule(); else clearTimeout(timer); }).observe(box);
+  }
+  let x0 = null;
+  box.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
+  box.addEventListener('touchend', e => { if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 50) go(cur + (dx < 0 ? 1 : -1)); x0 = null; });
+  go(0);
+})();
