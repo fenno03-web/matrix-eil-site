@@ -1063,6 +1063,7 @@ def tool_page(i):
 METRON_BETA = 'argus-metron-beta.html'
 # Foto's uit het veld (assets/img/metron/). Eerste drie: METRON live naast de tafel.
 METRON_FIELD = ['dsc04901', 'dsc04896', 'dsc04907', 'dsc04865']
+METRON_EVENT = 'Aod òp Nuj 2026, Heerlen'
 METRON_STAGE = ['dsc05033', 'dsc04575', 'dsc04881', 'dsc04594', 'dsc04585', 'dsc04649', 'dsc04524', 'dsc04617', 'dsc04570']
 
 
@@ -1072,10 +1073,14 @@ def T(nl, en):
 
 
 def metron_gallery(files, cls=''):
-    alt = T('METRON in het veld', 'METRON in the field')
+    alt = T('METRON in het veld', 'METRON in the field') + ' · ' + METRON_EVENT
     figs = ''.join(f'<figure class="mg-i{" wide" if i == 0 else ""}"><img src="assets/img/metron/{f}.jpg" alt="{alt}, {T("foto", "photo")} {i + 1}" loading="lazy" decoding="async"></figure>'
                    for i, f in enumerate(files))
-    return f'<div class="gallery mg {cls} reveal">{figs}</div>'
+    return f'<div class="gallery mg {cls} reveal">{figs}</div>' + metron_credit()
+
+
+def metron_credit():
+    return f'<p class="mg-cap reveal"><b>{METRON_EVENT}</b><span>{T("Foto’s: MATRIX E.I.L.", "Photos: MATRIX E.I.L.")}</span></p>'
 
 
 def metron_beta():
@@ -1116,7 +1121,7 @@ def metron_beta():
 
 <section class="section mb-field" data-cue="Q2" data-cue-name="{T('In het veld', 'In the field')}">
   <div class="wrap">
-    {cue_head('Q2', T('In het veld', 'In the field'), 'live · 150 BPM')}
+    {cue_head('Q2', T('In het veld', 'In the field'), 'Aod òp Nuj · Heerlen')}
     <div class="intro-line">
       <h2 class="title reveal">{T('Getest waar<br>het <em>telt.</em>', 'Tested where<br>it <em>counts.</em>')}</h2>
       <p class="lead reveal">{T('METRON draait al naast de tafel op echte shows: het tempo groot in beeld, de lichttafel volgt vanzelf. De beta brengt die versie naar jouw productie.',
@@ -1191,8 +1196,8 @@ def metron_beta():
 
 def metron_strip(files):
     """Losse fotostrook (zonder lightbox-groep), voor onder aan de pagina's."""
-    alt = T('Show met METRON naast de lichttafel', 'Show with METRON next to the lighting desk')
-    return '<div class="mb-strip reveal">' + ''.join(f'<img src="assets/img/metron/{f}.jpg" alt="{alt}" loading="lazy" decoding="async">' for f in files) + '</div>'
+    alt = T('Show met METRON naast de lichttafel', 'Show with METRON next to the lighting desk') + ' · ' + METRON_EVENT
+    return '<div class="mb-strip reveal">' + ''.join(f'<img src="assets/img/metron/{f}.jpg" alt="{alt}" loading="lazy" decoding="async">' for f in files) + '</div>' + metron_credit()
 
 
 def metron_cta():
@@ -1208,7 +1213,7 @@ def metron_cta():
 def metron_field_section():
     return f'''<section class="section mb-field" data-cue="Q5" data-cue-name="{T('In het veld', 'In the field')}">
   <div class="wrap">
-    {cue_head('Q5', T('In het veld', 'In the field'), 'live · 150 BPM')}
+    {cue_head('Q5', T('In het veld', 'In the field'), 'Aod òp Nuj · Heerlen')}
     <h2 class="title reveal">{T('Op de vloer,<br><em>op de beat.</em>', 'On the floor,<br><em>on the beat.</em>')}</h2>
     {metron_gallery(METRON_STAGE[:5] + METRON_FIELD)}
   </div>

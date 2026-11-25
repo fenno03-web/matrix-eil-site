@@ -1538,3 +1538,5 @@ body.bright main { filter: brightness(1.6) contrast(.8); transition: filter .2s;
   .mb-bpm { width: 100%; }
 }
 @media (prefers-reduced-motion: reduce) { .mb-bpm .beats i { animation: none; } }
+.mg-cap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 20px; margin: 14px 0 0; font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.mg-cap b { color: var(--gold); font-weight: 400; }
