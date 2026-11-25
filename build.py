@@ -799,7 +799,8 @@ def argus_cards():
 def argus():
     tools = (ROOT / 'src' / 'argus-tools.html').read_text()
     for _t in ARGUS_TOOLS[:4]:
-        tools = re.sub(rf'(id="{_t[0]}".*?</ul>)', lambda m, t=_t: m.group(1) + f'\n      <a class="btn tool-more" href="{tool_href(t[0])}">Meer over {t[1]} · word bèta-tester</a>', tools, count=1, flags=re.S)
+        tools = re.sub(rf'(id="{_t[0]}".*?</ul>)', lambda m, t=_t: m.group(1) + (f'\n      <a class="btn tool-more" href="{tool_href(t[0])}">Meer over {t[1]} · word bèta-tester</a>' if t[0] != 'metron' else
+        f'\n      <div class="tool-more-row"><a class="btn fill tool-more" href="{METRON_BETA}">{T("Meld je aan voor de METRON beta", "Sign up for the METRON beta")}</a><a class="link-arrow" href="{tool_href(t[0])}">{T("Meer over METRON", "More about METRON")}</a></div>'), tools, count=1, flags=re.S)
     return f'''{head("ARGUS Systems | MATRIX E.I.L.", "ARGUS Systems is de softwaretak van MATRIX E.I.L.: CHRONOS, AXIS, METRON, HOROS, BIFROST, VISUAL INTELLIGENCE, HYPERION, TREEHOUSE, TARTARUS, KANON en IRIS. Software voor licht, video en productie, gebouwd vanuit de praktijk.", "assets/img/chronos-overzicht.jpg", "assets/img/argus/favicon.png")}
 <body class="argus-page">
 {header('argus.html')}
@@ -864,7 +865,7 @@ def argus():
     </div>
     <div class="reveal">
       <p>Wil je een van onze tools testen op jouw evenement? Kies hieronder een tool en meld je aan als bèta-tester. Een idee dat hier past? Operators en producties die mee willen bouwen, horen we graag.</p>
-      <div class="tp-cta-tools">{''.join(f'<a href="{tool_href(t[0])}#beta">{t[1]}</a>' for t in ARGUS_TOOLS)}</div>
+      <div class="tp-cta-tools">{''.join(f'<a href="{METRON_BETA if t[0] == "metron" else tool_href(t[0]) + "#beta"}">{t[1]}</a>' for t in ARGUS_TOOLS)}</div>
       <a class="btn" href="mailto:{MAIL}?subject=ARGUS%20Systems">Neem contact op</a>
     </div>
   </div>
@@ -997,7 +998,7 @@ def tool_page(i):
       <span class="st st-{cls} reveal">{status}</span>
       <h1 class="reveal">{line}</h1>
       <p class="lead reveal">{desc}</p>
-      <div class="tp-ctas reveal"><a class="btn fill" href="#beta">Word bèta-tester</a><a class="link-arrow" href="#impressie">Bekijk de impressie</a></div>
+      <div class="tp-ctas reveal"><a class="btn fill" href="{METRON_BETA if slug == 'metron' else '#beta'}">Word bèta-tester</a><a class="link-arrow" href="#impressie">Bekijk de impressie</a></div>
     </div>
     <div class="tp-sigil reveal" aria-hidden="true">
       <span class="r r1"></span><span class="r r2"></span><span class="r r3"></span><span class="orb"></span><span class="orb o2"></span>
@@ -1035,14 +1036,15 @@ def tool_page(i):
         </ol>
         <p class="tp-alt">Liever direct contact? <a href="{WHATSAPP}?text={quote('Hoi! Ik wil graag bèta-tester worden voor ARGUS ' + name + '.')}" target="_blank" rel="noopener">WhatsApp</a> of <a href="mailto:{MAIL}?subject={quote('Bèta-tester ARGUS ' + name)}">mail</a>.</p>
       </div>
-      {beta_form(slug, name, question, example)}
+      {metron_cta() if slug == 'metron' else beta_form(slug, name, question, example)}
     </div>
   </div>
 </section>
+{metron_field_section() if slug == 'metron' else ''}
 
-<section class="section tp-more" data-cue="Q5" data-cue-name="Alle tools">
+<section class="section tp-more" data-cue="{'Q6' if slug == 'metron' else 'Q5'}" data-cue-name="Alle tools">
   <div class="wrap">
-    {cue_head('Q5', 'Honderd ogen', 'ARGUS Systems')}
+    {cue_head('Q6' if slug == 'metron' else 'Q5', 'Honderd ogen', 'ARGUS Systems')}
     <div class="tp-pn reveal">
       <a href="{tool_href(prev_t[0])}"><small>← Vorige</small><b>{prev_t[1]}</b></a>
       <a href="argus.html" class="tp-home"><img src="assets/img/argus/argus-embleem.png" alt="" width="60" height="60"><small>Alle tools</small></a>
@@ -1055,6 +1057,162 @@ def tool_page(i):
 </main>
 {footer(chr(10) + '<script src="assets/js/argus.js?v=' + ver('assets/js/argus.js') + '"></script>' + chr(10) + '<script src="assets/js/argus-os.js?v=' + ver('assets/js/argus-os.js') + '"></script>' + chr(10) + '<script src="assets/js/beta.js?v=' + ver('assets/js/beta.js') + '"></script>')}'''
 
+
+# ---------------------------------------------------------------- METRON bèta-aanmelding
+# Formulier post naar de Supabase-functie metron-apply (zie assets/js/metron-beta.js).
+METRON_BETA = 'argus-metron-beta.html'
+# Foto's uit het veld (assets/img/metron/). Eerste drie: METRON live naast de tafel.
+METRON_FIELD = ['dsc04901', 'dsc04896', 'dsc04907', 'dsc04865']
+METRON_STAGE = ['dsc05033', 'dsc04575', 'dsc04881', 'dsc04594', 'dsc04585', 'dsc04649', 'dsc04524', 'dsc04617', 'dsc04570']
+
+
+def T(nl, en):
+    """Tekst in de taal van de pagina die nu gebouwd wordt (voor nieuwe pagina's)."""
+    return en if LANG == 'en' else nl
+
+
+def metron_gallery(files, cls=''):
+    alt = T('METRON in het veld', 'METRON in the field')
+    figs = ''.join(f'<figure class="mg-i{" wide" if i == 0 else ""}"><img src="assets/img/metron/{f}.jpg" alt="{alt}, {T("foto", "photo")} {i + 1}" loading="lazy" decoding="async"></figure>'
+                   for i, f in enumerate(files))
+    return f'<div class="gallery mg {cls} reveal">{figs}</div>'
+
+
+def metron_beta():
+    roles = [('LD', 'LD'), ('VJ', 'VJ'), ('DJ', 'DJ'), ('Productie', T('Productie', 'Production')), ('Anders', T('Anders', 'Other'))]
+    role_opts = ''.join(f'<option value="{v}">{l}</option>' for v, l in roles)
+    consoles = ''.join(f'<option value="{c}">' for c in ['grandMA3', 'grandMA3 onPC', 'grandMA2', 'Infinity Chimp', 'ChamSys MagicQ', 'Avolites', 'Onyx', T('Anders', 'Other')])
+    gear = ''.join(f'<option value="{c}">' for c in ['CDJ-3000', 'CDJ-3000X', 'CDJ-2000NXS2', 'XDJ-XZ', 'Opus Quad', T('Alleen audio', 'Audio only')])
+    chips = ''.join(f'<li>{c}</li>' for c in ['Pioneer CDJ / Pro DJ Link', T('Audio-analyse', 'Audio analysis'), 'grandMA3', 'Infinity Chimp',
+                                               T('Frases &amp; drops', 'Phrases &amp; drops'), 'Ableton Link', 'MIDI', 'OSC', 'Windows', 'Mac'])
+    title = T('ARGUS Metron beta · meld je aan | MATRIX E.I.L.', 'ARGUS Metron beta · sign up | MATRIX E.I.L.')
+    meta = T('Meld je aan voor de beta van ARGUS Metron: het tempo van de DJ (Pioneer CDJ’s of audio) automatisch naar je grandMA3 of Chimp, met frases en drops, Ableton Link, MIDI en OSC. Voor Windows en Mac.',
+             'Sign up for the ARGUS Metron beta: the DJ’s tempo (Pioneer CDJs or audio) straight to your grandMA3 or Chimp, with phrases and drops, Ableton Link, MIDI and OSC. For Windows and Mac.')
+    ld = [ORG, crumbs(('ARGUS Systems', 'argus.html'), ('METRON', 'argus-metron.html'), ('Beta', METRON_BETA)),
+          {'@context': 'https://schema.org', '@type': 'SoftwareApplication', 'name': 'ARGUS Metron', 'operatingSystem': 'Windows, macOS',
+           'applicationCategory': 'MultimediaApplication', 'description': meta, 'publisher': {'@id': BASE + '#matrix'},
+           'url': BASE + METRON_BETA, 'image': BASE + 'assets/img/argus/metron.jpg'}]
+    opt = f'<em>{T("optioneel", "optional")}</em>'
+    return f'''{head(title, meta, 'assets/img/metron/dsc04901.jpg', 'assets/img/argus/favicon.png', ld)}
+<body class="argus-page tool-page tp-gold metron-beta">
+{header(METRON_BETA)}
+<main>
+<section class="mb-hero" data-cue="Q1" data-cue-name="Metron beta">
+  <div class="mb-bg" aria-hidden="true"><img src="assets/img/metron/dsc04901.jpg" alt=""></div>
+  <span class="tp-ghost" aria-hidden="true">METRON</span>
+  <div class="wrap">
+    <div class="mb-copy">
+      <nav class="tp-crumbs reveal" aria-label="{T('Kruimelpad', 'Breadcrumb')}"><a href="argus.html">ARGUS Systems</a><span>/</span><a href="argus-metron.html">METRON</a><span>/</span><b>Beta</b></nav>
+      <img class="mb-logo reveal" src="assets/img/argus/metron.jpg" alt="ARGUS Metron" width="900" height="420">
+      <h1 class="reveal">ARGUS Metron <em>beta</em></h1>
+      <p class="lead reveal">{T('Het tempo van de DJ, automatisch in je lichttafel. METRON leest de Pioneer CDJ’s via Pro DJ Link of luistert naar de audio, en stuurt de BPM rechtstreeks naar je grandMA3 of Chimp. Je ziet frases en drops aankomen, en koppelt verder via Ableton Link, MIDI en OSC. Voor Windows en Mac.',
+                                  'The DJ’s tempo, straight into your lighting console. METRON reads the Pioneer CDJs over Pro DJ Link or listens to the audio, and sends the BPM directly to your grandMA3 or Chimp. You see phrases and drops coming, and connect further with Ableton Link, MIDI and OSC. For Windows and Mac.')}</p>
+      <ul class="mb-chips reveal">{chips}</ul>
+      <div class="tp-ctas reveal"><a class="btn fill" href="#aanmelden">{T('Meld je aan', 'Sign up')}</a><a class="link-arrow" href="argus-metron.html">{T('Meer over METRON', 'More about METRON')}</a></div>
+    </div>
+    <div class="mb-bpm reveal" aria-hidden="true"><span class="mb-bpm-v">150.0</span><small>BPM · Pro DJ Link</small><div class="beats"><i></i><i></i><i></i><i></i></div></div>
+  </div>
+</section>
+
+<section class="section mb-field" data-cue="Q2" data-cue-name="{T('In het veld', 'In the field')}">
+  <div class="wrap">
+    {cue_head('Q2', T('In het veld', 'In the field'), 'live · 150 BPM')}
+    <div class="intro-line">
+      <h2 class="title reveal">{T('Getest waar<br>het <em>telt.</em>', 'Tested where<br>it <em>counts.</em>')}</h2>
+      <p class="lead reveal">{T('METRON draait al naast de tafel op echte shows: het tempo groot in beeld, de lichttafel volgt vanzelf. De beta brengt die versie naar jouw productie.',
+                                'METRON already runs next to the desk at real shows: the tempo big on screen, the console follows by itself. The beta brings that version to your production.')}</p>
+    </div>
+    {metron_gallery(METRON_FIELD + METRON_STAGE[:5])}
+  </div>
+</section>
+
+<section class="section tp-beta mb-apply" id="aanmelden" data-cue="Q3" data-cue-name="{T('Aanmelden', 'Sign up')}">
+  <div class="wrap">
+    {cue_head('Q3', T('Aanmelden', 'Sign up'), T('Testers gezocht', 'Testers wanted'))}
+    <div class="tp-beta-grid">
+      <div class="reveal">
+        <h2 class="title">{T('Test METRON<br><em>als eerste.</em>', 'Test METRON<br><em>first.</em>')}</h2>
+        <ol class="tp-steps">
+          <li><b>01</b><span>{T('Meld je aan met dit formulier.', 'Sign up with this form.')}</span></li>
+          <li><b>02</b><span>{T('Je krijgt meteen een bevestiging per mail. We bekijken elke aanmelding persoonlijk.', 'You get a confirmation by email right away. We review every sign-up personally.')}</span></li>
+          <li><b>03</b><span>{T('Word je toegelaten, dan krijg je je beta-key en de download voor Windows of Mac.', 'If you are accepted, you get your beta key and the download for Windows or Mac.')}</span></li>
+        </ol>
+        <p class="tp-alt">{T('Vragen?', 'Questions?')} <a href="{WHATSAPP}" target="_blank" rel="noopener">WhatsApp</a> {T('of', 'or')} <a href="mailto:{MAIL}?subject=ARGUS%20Metron%20beta">{T('mail', 'email')}</a>.</p>
+      </div>
+      <div class="mb-formwrap reveal">
+      <form class="beta-form mb-form" data-tool="METRON" data-lang="{LANG}" novalidate>
+        <div class="mb-hp" aria-hidden="true"><label>Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+        <div class="bf-row">
+          <label><span>{T('Naam', 'Name')}</span><input name="name" required minlength="2" maxlength="120" autocomplete="name"></label>
+          <label><span>{T('E-mail', 'Email')}</span><input type="email" name="email" required maxlength="200" autocomplete="email"></label>
+        </div>
+        <div class="bf-row">
+          <label><span>{T('Bedrijf', 'Company')} {opt}</span><input name="company" maxlength="160" autocomplete="organization"></label>
+          <label><span>{T('Wat doe je?', 'What do you do?')}</span><select name="role"><option value="" selected>{T('Kies', 'Choose')}</option>{role_opts}</select></label>
+        </div>
+        <div class="bf-row">
+          <label><span>{T('Lichttafel', 'Lighting console')}</span><input name="console" list="mb-consoles" maxlength="160" placeholder="{T('bijv. grandMA3, Chimp, anders', 'e.g. grandMA3, Chimp, other')}"></label>
+          <label><span>{T('DJ-apparatuur', 'DJ gear')}</span><input name="dj_gear" list="mb-gear" maxlength="200" placeholder="{T('bijv. CDJ-3000, CDJ-2000NXS2', 'e.g. CDJ-3000, CDJ-2000NXS2')}"></label>
+        </div>
+        <datalist id="mb-consoles">{consoles}</datalist><datalist id="mb-gear">{gear}</datalist>
+        <div class="bf-row">
+          <fieldset class="mb-os"><legend>{T('Computer', 'Computer')}</legend><label><input type="radio" name="os" value="Windows"><span>Windows</span></label><label><input type="radio" name="os" value="Mac"><span>Mac</span></label></fieldset>
+          <label><span>{T('Land', 'Country')}</span><input name="country" maxlength="80" autocomplete="country-name" placeholder="{T('bijv. Nederland', 'e.g. Netherlands')}"></label>
+        </div>
+        <label><span>{T('Waarom wil je testen?', 'Why do you want to test?')}</span><textarea name="motivation" rows="4" maxlength="2000" placeholder="{T('Wat voor shows doe je, en wat moet METRON voor je oplossen?', 'What kind of shows do you do, and what should METRON solve for you?')}"></textarea><small class="mb-count" aria-live="off">0 / 2000</small></label>
+        <label><span>{T('Hoe ken je ons?', 'How did you hear about us?')} {opt}</span><input name="source" maxlength="120"></label>
+        <label class="bf-ok"><input type="checkbox" name="consent" value="1" required><span>{T('Ik ga akkoord dat ARGUS mijn gegevens gebruikt om mijn aanmelding te beoordelen en contact op te nemen.', 'I agree that ARGUS uses my details to review my sign-up and to get in touch.')} (<a href="privacy.html">privacy</a>)</span></label>
+        <p class="mb-disc"><b>{T('Let op', 'Please note')}</b>{T('De beta is bewust klein. We bekijken elke aanmelding persoonlijk, dus niet iedereen krijgt (meteen) toegang. Het is beta-software: gebruik het niet als enige sturing in een show zonder back-up.',
+                                                                'The beta is kept small on purpose. We review every sign-up personally, so not everyone gets access (right away). This is beta software: do not use it as the only control in a show without a backup.')}</p>
+        <button class="btn fill" type="submit">{T('Verstuur aanmelding', 'Send sign-up')}</button>
+        <p class="bf-msg" role="alert" aria-live="assertive"></p>
+      </form>
+      <div class="mb-thanks" hidden tabindex="-1">
+        <span class="mb-check" aria-hidden="true"></span>
+        <h3>{T('Je aanmelding is binnen.', 'Your sign-up is in.')}</h3>
+        <p>{T('Je krijgt een bevestiging per mail; word je toegelaten, dan krijg je je beta-key en de download.', 'You will get a confirmation by email; if you are accepted, you will get your beta key and the download.')}</p>
+        <a class="link-arrow" href="argus.html">{T('Terug naar ARGUS Systems', 'Back to ARGUS Systems')}</a>
+      </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section mb-more" data-cue="Q4" data-cue-name="{T('Uit de show', 'From the show')}">
+  <div class="wrap">
+    {cue_head('Q4', T('Uit de show', 'From the show'), 'ARGUS · METRON')}
+    {metron_strip(METRON_STAGE[5:])}
+  </div>
+</section>
+<div id="contact"></div>
+</main>
+{footer(chr(10) + '<script src="assets/js/argus.js?v=' + ver('assets/js/argus.js') + '"></script>' + chr(10) + '<script src="assets/js/metron-beta.js?v=' + ver('assets/js/metron-beta.js') + '"></script>')}'''
+
+
+def metron_strip(files):
+    """Losse fotostrook (zonder lightbox-groep), voor onder aan de pagina's."""
+    alt = T('Show met METRON naast de lichttafel', 'Show with METRON next to the lighting desk')
+    return '<div class="mb-strip reveal">' + ''.join(f'<img src="assets/img/metron/{f}.jpg" alt="{alt}" loading="lazy" decoding="async">' for f in files) + '</div>'
+
+
+def metron_cta():
+    """Op de METRON-pagina: in plaats van het algemene formulier een verwijzing naar de beta-aanmeldpagina."""
+    return f'''<div class="mb-cta beta-form reveal" data-tool="METRON">
+        <img src="assets/img/metron/dsc04896.jpg" alt="{T('METRON met 150 BPM naast de lichttafel tijdens een show', 'METRON showing 150 BPM next to the lighting desk during a show')}" loading="lazy">
+        <h3>{T('De METRON beta is open.', 'The METRON beta is open.')}</h3>
+        <p>{T('Pioneer CDJ’s of audio naar je grandMA3 of Chimp, met frases en drops, Ableton Link, MIDI en OSC. Voor Windows en Mac. De beta is bewust klein: we bekijken elke aanmelding persoonlijk.', 'Pioneer CDJs or audio to your grandMA3 or Chimp, with phrases and drops, Ableton Link, MIDI and OSC. For Windows and Mac. The beta is kept small on purpose: we review every sign-up personally.')}</p>
+        <a class="btn fill" href="{METRON_BETA}">{T('Naar de aanmelding', 'Go to the sign-up')}</a>
+      </div>'''
+
+
+def metron_field_section():
+    return f'''<section class="section mb-field" data-cue="Q5" data-cue-name="{T('In het veld', 'In the field')}">
+  <div class="wrap">
+    {cue_head('Q5', T('In het veld', 'In the field'), 'live · 150 BPM')}
+    <h2 class="title reveal">{T('Op de vloer,<br><em>op de beat.</em>', 'On the floor,<br><em>on the beat.</em>')}</h2>
+    {metron_gallery(METRON_STAGE[:5] + METRON_FIELD)}
+  </div>
+</section>'''
 
 # ---------------------------------------------------------------- Privacy
 def privacy():
@@ -1776,7 +1934,7 @@ def aanvraag():
 PAGES = {'index.html': home, 'diensten.html': diensten, 'projecten.html': projecten, 'over.html': over,
          'argus.html': argus, 'privacy.html': privacy, '404.html': not_found,
          'operators.html': operators, 'faq.html': faq, 'woordenlijst.html': woordenlijst,
-         'samenwerking-gtf.html': gtf, 'aanvraag.html': aanvraag}
+         'samenwerking-gtf.html': gtf, 'aanvraag.html': aanvraag, METRON_BETA: metron_beta}
 for _s in STORIES:
     if _s not in {p[0] for p in PROJECTS}:
         PAGES[f'project-{_s}.html'] = (lambda k: lambda: story_page(k))(_s)
