@@ -1472,7 +1472,7 @@ body.bright main { filter: brightness(1.6) contrast(.8); transition: filter .2s;
 .mb-bg img { width: 100%; height: 100%; object-fit: cover; opacity: .32; filter: saturate(.8) contrast(1.05); }
 .mb-bg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, #040403 18%, rgba(4, 4, 3, .82) 50%, rgba(4, 4, 3, .35)), linear-gradient(0deg, #040403, transparent 40%), radial-gradient(ellipse at 78% 40%, rgba(56, 200, 228, .16), transparent 55%); }
 .mb-hero .wrap { position: relative; z-index: 1; display: grid; grid-template-columns: 1.25fr .75fr; gap: clamp(30px, 5vw, 80px); align-items: center; }
-.mb-logo { width: min(340px, 70%); height: auto; display: block; margin-bottom: 18px; mix-blend-mode: screen; }
+.mb-logo { width: min(340px, 70%); height: auto; display: block; margin-bottom: 18px; filter: drop-shadow(0 0 24px rgba(56, 200, 228, .18)); }
 .mb-hero h1 { font-size: clamp(44px, 6.6vw, 108px); line-height: .9; letter-spacing: -.055em; text-transform: uppercase; font-weight: 700; margin: 0 0 26px; }
 .mb-hero h1 em { font-style: normal; color: transparent; -webkit-text-stroke: 1.5px var(--cy); }
 .mb-hero .lead { color: #d8cfbf; max-width: 640px; }
