@@ -675,7 +675,7 @@ ARGUS_TOOLS = [
     ('axis', 'AXIS', 'axis.png', 'In test', 'test', 'Planning, magazijn en show in één systeem.',
      'Een modulair platform voor de evenementenbranche: van planning en materiaal tot schermen en accreditatie.',
      ['Planning &amp; magazijn', 'LIVE: schermen en zones aansturen', 'Accreditatie, ook voor kleinere events'], 'gold', None),
-    ('metron', 'METRON', 'metron.jpg', 'In test', 'test', 'Licht dat de beat kent.',
+    ('metron', 'METRON', 'metron-logo.png', 'In test', 'test', 'Licht dat de beat kent.',
      'Tempo en positie in de track rechtstreeks van de DJ-set naar je licht, zodat effecten en drops vanzelf kloppen.',
      ['BPM en beatpositie live binnen', 'Tempo naar je speedmasters', 'Markers voor drops en breaks'], 'gold', None),
     ('horos', 'HOROS', 'horos.png', 'In test', 'test', 'Navigatie die weet hoe hoog je truck is.',
@@ -1108,7 +1108,7 @@ def metron_beta():
   <div class="wrap">
     <div class="mb-copy">
       <nav class="tp-crumbs reveal" aria-label="{T('Kruimelpad', 'Breadcrumb')}"><a href="argus.html">ARGUS Systems</a><span>/</span><a href="argus-metron.html">METRON</a><span>/</span><b>Beta</b></nav>
-      <img class="mb-logo reveal" src="assets/img/argus/metron.jpg" alt="ARGUS Metron" width="900" height="420">
+      <img class="mb-logo reveal" src="assets/img/argus/metron-logo.png" alt="ARGUS Metron" width="891" height="414">
       <h1 class="reveal">ARGUS Metron <em>beta</em></h1>
       <p class="lead reveal">{T('Het tempo van de DJ, automatisch in je lichttafel. METRON leest de Pioneer CDJ’s via Pro DJ Link of luistert naar de audio, en stuurt de BPM rechtstreeks naar je grandMA3 of Chimp. Je ziet frases en drops aankomen, en koppelt verder via Ableton Link, MIDI en OSC. Voor Windows en Mac.',
                                   'The DJ’s tempo, straight into your lighting console. METRON reads the Pioneer CDJs over Pro DJ Link or listens to the audio, and sends the BPM directly to your grandMA3 or Chimp. You see phrases and drops coming, and connect further with Ableton Link, MIDI and OSC. For Windows and Mac.')}</p>
